@@ -5,19 +5,55 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 
 @SuppressWarnings("BusyWait")
 public class Application extends JFrame {
+
+    static class LogEntry {
+        final String message;
+        final Long timestamp;
+
+        public LogEntry(String message, Long timestamp) {
+            this.message = message;
+            this.timestamp = timestamp;
+        }
+
+        public void print() {
+            System.out.println(message);
+        }
+    }
+
     static class Location {
         int x = 0;
         int y = 0;
+
+        public Location(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
+
+        public Location() {
+        }
     }
 
-    Location player = new Location();
+    private final int screenWidth = 80;
+    private final int screenHeight = 50;
 
-    int keyPressed = -1;
+    Location player = new Location(screenWidth / 2, screenHeight / 2);
+
+    KeyEvent keyEvent = null;
 
     private final AsciiPanel panel;
+
+    private final static java.util.List<LogEntry> log = new ArrayList<>();
+
+    public static void log(String message) {
+        var entry = new LogEntry(message, System.currentTimeMillis());
+        log.add(entry);
+        entry.print();
+    }
 
     public Application() throws HeadlessException {
         addKeyListener(new KeyListener() {
@@ -28,7 +64,7 @@ public class Application extends JFrame {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                keyPressed = e.getKeyCode();
+                keyEvent = e;
             }
 
             @Override
@@ -36,47 +72,39 @@ public class Application extends JFrame {
 
             }
         });
-        panel = new AsciiPanel(80, 24, AsciiFont.CP437_16x16);
+        panel = new AsciiPanel(screenWidth, screenHeight, AsciiFont.CP437_16x16);
         add(panel);
         pack();
     }
 
-    @SuppressWarnings("InfiniteLoopStatement")
     public void execute() throws InterruptedException {
         while (true) {
-            switch (keyPressed) {
-                case 100 -> player.x--;
-                case 102 -> player.x++;
-                case 104 -> player.y--;
-                case 98 -> player.y++;
-                case 99 -> {
-                    player.x++;
-                    player.y++;
+            var option = EventHandler.keyDown(keyEvent);
+            if (option.isPresent()) {
+                var action = option.get();
+                if (action instanceof Action.EscapeAction) {
+                    log("Escape Action");
+                    break;
                 }
-                case 97 -> {
-                    player.x--;
-                    player.y++;
+
+                if (action instanceof Action.MovementAction) {
+                    log("Movement Action");
+                    player.x += ((Action.MovementAction) action).dx();
+                    player.y += ((Action.MovementAction) action).dy();
                 }
-                case 103 -> {
-                    player.x--;
-                    player.y--;
-                }
-                case 105 -> {
-                    player.x++;
-                    player.y--;
-                }
-                default -> System.out.println(keyPressed);
             }
 
             panel.clear();
             panel.write("@", player.x, player.y);
             panel.repaint();
 
-            keyPressed = -1;
-            while (keyPressed < 0) {
+            keyEvent = null;
+            while (keyEvent == null) {
                 Thread.sleep(5);
             }
         }
+        log("Exiting Game");
+        System.exit(0);
     }
 
     public static void main(String[] args) throws InterruptedException {
@@ -84,7 +112,6 @@ public class Application extends JFrame {
         app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         app.setVisible(true);
         app.execute();
-
     }
 
 }
