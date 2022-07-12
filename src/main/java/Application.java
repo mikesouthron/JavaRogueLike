@@ -5,55 +5,22 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
 
 @SuppressWarnings("BusyWait")
 public class Application extends JFrame {
 
-    static class LogEntry {
-        final String message;
-        final Long timestamp;
-
-        public LogEntry(String message, Long timestamp) {
-            this.message = message;
-            this.timestamp = timestamp;
-        }
-
-        public void print() {
-            System.out.println(message);
-        }
-    }
-
-    static class Location {
-        int x = 0;
-        int y = 0;
-
-        public Location(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-
-
-        public Location() {
-        }
-    }
-
     private final int screenWidth = 80;
     private final int screenHeight = 50;
 
-    Location player = new Location(screenWidth / 2, screenHeight / 2);
+    private final int mapWidth = 80;
+
+    private final int mapHeight = 45;
 
     KeyEvent keyEvent = null;
 
     private final AsciiPanel panel;
 
-    private final static java.util.List<LogEntry> log = new ArrayList<>();
-
-    public static void log(String message) {
-        var entry = new LogEntry(message, System.currentTimeMillis());
-        log.add(entry);
-        entry.print();
-    }
+    private final Logger logger = new Logger();
 
     public Application() throws HeadlessException {
         addKeyListener(new KeyListener() {
@@ -77,34 +44,25 @@ public class Application extends JFrame {
         pack();
     }
 
+    @SuppressWarnings("InfiniteLoopStatement")
     public void execute() throws InterruptedException {
+        var player = new Entity(screenWidth / 2, screenHeight / 2, '@', Color.WHITE);
+        var npc = new Entity((screenWidth / 2) - 5, screenHeight / 2, '@', Color.YELLOW);
+
+        var entities = java.util.List.of(npc, player);
+
+        var gameMap = new GameMap(mapWidth, mapHeight);
+
+        var engine = new Engine(entities, player, gameMap, logger);
+
         while (true) {
-            var option = EventHandler.keyDown(keyEvent);
-            if (option.isPresent()) {
-                var action = option.get();
-                if (action instanceof Action.EscapeAction) {
-                    log("Escape Action");
-                    break;
-                }
-
-                if (action instanceof Action.MovementAction) {
-                    log("Movement Action");
-                    player.x += ((Action.MovementAction) action).dx();
-                    player.y += ((Action.MovementAction) action).dy();
-                }
-            }
-
-            panel.clear();
-            panel.write("@", player.x, player.y);
-            panel.repaint();
-
+            engine.handleEvent(keyEvent);
+            engine.render(panel);
             keyEvent = null;
             while (keyEvent == null) {
                 Thread.sleep(5);
             }
         }
-        log("Exiting Game");
-        System.exit(0);
     }
 
     public static void main(String[] args) throws InterruptedException {

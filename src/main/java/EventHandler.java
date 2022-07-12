@@ -3,11 +3,11 @@ import java.util.Optional;
 
 public class EventHandler {
 
-    public static Optional<Action> keyDown(KeyEvent event) {
+    public static Optional<Action> keyDown(KeyEvent event, Logger logger) {
         if (event == null) {
             return Optional.empty();
         }
-        Application.log("Key Pressed: " + event.getKeyCode());
+        logger.log("Key Pressed: " + event.getKeyCode());
         return Optional.ofNullable(
                 switch (event.getKeyCode()) {
                     case 100 -> new Action.MovementAction(-1, 0);
