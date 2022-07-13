@@ -1,3 +1,5 @@
+package org.southy.rl;
+
 import asciiPanel.AsciiPanel;
 
 import java.awt.event.KeyEvent;

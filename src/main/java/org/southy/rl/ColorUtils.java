@@ -1,3 +1,5 @@
+package org.southy.rl;
+
 import java.awt.*;
 
 public class ColorUtils {

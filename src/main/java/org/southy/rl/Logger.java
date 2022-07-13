@@ -1,3 +1,5 @@
+package org.southy.rl;
+
 import java.util.ArrayList;
 
 public class Logger {
