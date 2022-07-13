@@ -4,35 +4,27 @@ import org.southy.rl.asciipanel.AsciiPanel;
 import org.southy.rl.entity.Entity;
 import org.southy.rl.map.GameMap;
 
-import java.awt.event.KeyEvent;
-
 public class Engine {
-    Entity player;
+    public Entity player;
 
     Logger logger;
 
-    GameMap gameMap;
+    public GameMap gameMap;
 
-    public Engine(Entity player, GameMap gameMap, Logger logger) {
+    public EventHandler eventHandler;
+
+    public Engine(Entity player, Logger logger) {
         this.player = player;
         this.logger = logger;
-        this.gameMap = gameMap;
-        updateFov();
+        eventHandler = new EventHandler(this, logger);
     }
 
-    private void handleEnemyTurns() {
+    public void handleEnemyTurns() {
         for (Entity entity : gameMap.entities) {
             if (entity != player) {
                 logger.log("The " + entity.name + " wonders when it will get to take a real turn");
             }
         }
-    }
-
-    public void handleEvent(KeyEvent event) {
-        var option = EventHandler.keyDown(event, logger);
-        option.ifPresent(action -> action.perform(this, player));
-        handleEnemyTurns();
-        updateFov();
     }
 
     public void updateFov() {

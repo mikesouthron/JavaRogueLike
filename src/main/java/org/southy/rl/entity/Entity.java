@@ -7,6 +7,8 @@ import java.awt.*;
 
 public class Entity {
 
+    public GameMap gameMap;
+
     public int x;
     public int y;
     public char str;
@@ -17,19 +19,19 @@ public class Entity {
 
     public boolean blocksMovement;
 
-    public Entity(int x, int y, char str, Color fg, String name, boolean blocksMovement) {
-        this(x, y, str, fg, ColorUtils.FLOOR_COLOR_LIGHT, name, blocksMovement);
+    public Entity(GameMap gameMap, int x, int y, char str, Color fg, String name, boolean blocksMovement) {
+        this(gameMap, x, y, str, fg, ColorUtils.FLOOR_COLOR_LIGHT, name, blocksMovement);
     }
 
-    public Entity(char str, Color fg, String name, boolean blocksMovement) {
-        this(str, fg, ColorUtils.FLOOR_COLOR_LIGHT, name, blocksMovement);
+    public Entity(GameMap gameMap, char str, Color fg, String name, boolean blocksMovement) {
+        this(gameMap, str, fg, ColorUtils.FLOOR_COLOR_LIGHT, name, blocksMovement);
     }
 
-    public Entity(char str, Color fg, Color bg, String name, boolean blocksMovement) {
-        this(0, 0, str, fg, bg, name, blocksMovement);
+    public Entity(GameMap gameMap, char str, Color fg, Color bg, String name, boolean blocksMovement) {
+        this(gameMap, 0, 0, str, fg, bg, name, blocksMovement);
     }
 
-    public Entity(int x, int y, char str, Color fg, Color bg, String name, boolean blocksMovement) {
+    public Entity(GameMap gameMap, int x, int y, char str, Color fg, Color bg, String name, boolean blocksMovement) {
         this.x = x;
         this.y = y;
         this.str = str;
@@ -37,6 +39,10 @@ public class Entity {
         this.bg = bg;
         this.name = name;
         this.blocksMovement = blocksMovement;
+        if (gameMap != null) {
+            this.gameMap = gameMap;
+            gameMap.entities.add(this);
+        }
     }
 
     public void move(int dx, int dy) {
@@ -45,13 +51,23 @@ public class Entity {
     }
 
     public Entity spawn(GameMap map, int x, int y) {
-        var copy = new Entity(x, y, str, fg, bg, name, blocksMovement);
-        map.entities.add(copy);
-        return copy;
+        return new Entity(map, x, y, str, fg, bg, name, blocksMovement);
     }
 
     public Entity copy() {
-        return new Entity(x, y, str, fg, bg, name, blocksMovement);
+        return new Entity(null, x, y, str, fg, bg, name, blocksMovement);
+    }
+
+    public void place(int x, int y, GameMap map) {
+        this.x = x;
+        this.y = y;
+        if (map != null) {
+            if (this.gameMap != null) {
+                this.gameMap.entities.remove(this);
+            }
+            this.gameMap = map;
+            map.entities.add(this);
+        }
     }
 
 }
