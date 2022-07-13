@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.util.Random;
 
 @SuppressWarnings("BusyWait")
 public class Application extends JFrame {
@@ -17,6 +19,10 @@ public class Application extends JFrame {
     private final int mapWidth = 80;
 
     private final int mapHeight = 45;
+
+    private final int roomMaxSize = 10;
+    private final int roomMinSize = 6;
+    private final int maxRooms = 30;
 
     KeyEvent keyEvent = null;
 
@@ -46,26 +52,52 @@ public class Application extends JFrame {
         pack();
     }
 
-    public GameMap generateDungeon(int mapWidth, int mapHeight) {
+    public GameMap generateDungeon(int maxRooms, int roomMinSize, int roomMaxSize, int mapWidth, int mapHeight, Entity player) {
         var dungeon = new GameMap(mapWidth, mapHeight);
 
-        var roomOne = new RectangularRoom(20, 15, 10, 15);
-        var roomTwo = new RectangularRoom(35, 15, 10, 15);
+        var rooms = new ArrayList<RectangularRoom>();
 
-        var roomOneInner = roomOne.inner(mapWidth);
-        var roomTwoInner = roomTwo.inner(mapWidth);
+        for (int i = 0; i < maxRooms; i++) {
+            var roomWidth = RandomUtils.randomInt(roomMinSize, roomMaxSize);
+            var roomHeight = RandomUtils.randomInt(roomMinSize, roomMaxSize);
 
-        for (Integer integer : roomOneInner) {
-            dungeon.tiles[integer] = Tile.floorTile();
+            var x = RandomUtils.randomInt(0, dungeon.width - roomWidth - 1);
+            var y = RandomUtils.randomInt(0, dungeon.height - roomHeight - 1);
+
+            var newRoom = new RectangularRoom(x, y, roomWidth, roomHeight);
+
+            boolean intersect = false;
+
+            for (RectangularRoom room : rooms) {
+                if (newRoom.intersects(room)) {
+                    intersect = true;
+                    break;
+                }
+            }
+
+            if (intersect) {
+                continue;
+            }
+
+            dungeon.dig(newRoom);
+
+            if (rooms.size() == 0) {
+                int centre = newRoom.centre(mapWidth);
+                player.x = centre % mapWidth;
+                player.y = centre / mapWidth;
+            } else {
+                dungeon.digTunnel(newRoom, rooms.get(rooms.size() - 1));
+            }
+
+            rooms.add(newRoom);
         }
 
-        for (Integer integer : roomTwoInner) {
-            dungeon.tiles[integer] = Tile.floorTile();
-        }
-
-        for (Integer integer : Procgen.tunnel(roomOne.centre(mapWidth), roomTwo.centre(mapWidth), mapWidth)) {
-            dungeon.tiles[integer] = Tile.floorTile();
-        }
+//        var roomOne = new RectangularRoom(20, 15, 10, 15);
+//        var roomTwo = new RectangularRoom(35, 5, 10, 10);
+//
+//        dungeon.dig(roomOne);
+//        dungeon.dig(roomTwo);
+//        dungeon.digTunnel(roomOne, roomTwo);
 
         return dungeon;
     }
@@ -77,7 +109,7 @@ public class Application extends JFrame {
 
         var entities = java.util.List.of(npc, player);
 
-        var gameMap = generateDungeon(mapWidth, mapHeight);
+        var gameMap = generateDungeon(maxRooms, roomMinSize, roomMaxSize, mapWidth, mapHeight, player);
 
         var engine = new Engine(entities, player, gameMap, logger);
 

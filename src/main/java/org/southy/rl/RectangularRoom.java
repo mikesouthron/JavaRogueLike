@@ -1,5 +1,7 @@
 package org.southy.rl;
 
+import org.southy.rl.gen.Procgen;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,5 +33,12 @@ public class RectangularRoom {
             }
         }
         return inner;
+    }
+
+    public boolean intersects(RectangularRoom other) {
+        return x1 <= other.x2 &&
+                x2 >= other.x1 &&
+                y1 <= other.y2 &&
+                y2 >= other.y1;
     }
 }
