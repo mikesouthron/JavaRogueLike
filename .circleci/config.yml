@@ -20,6 +20,7 @@ jobs:
           path: linux.zip
 
   build-windows:
+    resource_class: 'windows.medium'
     docker:
       - image: winamd64/eclipse-temurin
     steps:
