@@ -7,7 +7,7 @@ public class RandomUtils {
     private final static Random random = new Random();
 
     public static int randomInt(int lower, int upper) {
-        return random.nextInt(upper - lower) + lower;
+        return random.nextInt((upper + 1) - lower) + lower;
     }
 
 }

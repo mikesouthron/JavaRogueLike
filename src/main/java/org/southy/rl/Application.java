@@ -2,14 +2,14 @@ package org.southy.rl;
 
 import org.southy.rl.asciipanel.AsciiFont;
 import org.southy.rl.asciipanel.AsciiPanel;
+import org.southy.rl.entity.Entity;
+import org.southy.rl.entity.EntityFactory;
 import org.southy.rl.gen.Procgen;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
-import java.util.Random;
 
 @SuppressWarnings("BusyWait")
 public class Application extends JFrame {
@@ -24,6 +24,8 @@ public class Application extends JFrame {
     private final int roomMaxSize = 10;
     private final int roomMinSize = 6;
     private final int maxRooms = 30;
+
+    private final int maxMonstersPerRoom = 2;
 
     KeyEvent keyEvent = null;
 
@@ -55,14 +57,10 @@ public class Application extends JFrame {
 
     @SuppressWarnings("InfiniteLoopStatement")
     public void execute() throws InterruptedException {
-        var player = new Entity(screenWidth / 2, screenHeight / 2, '@', Color.WHITE);
-        var npc = new Entity((screenWidth / 2) - 5, screenHeight / 2, '@', Color.YELLOW);
+        var player = EntityFactory.player.copy();
 
-        var entities = java.util.List.of(npc, player);
-
-        var gameMap = Procgen.generateDungeon(maxRooms, roomMinSize, roomMaxSize, mapWidth, mapHeight, player);
-
-        var engine = new Engine(entities, player, gameMap, logger);
+        var gameMap = Procgen.generateDungeon(maxRooms, roomMinSize, roomMaxSize, mapWidth, mapHeight, maxMonstersPerRoom, player);
+        var engine = new Engine(player, gameMap, logger);
 
         while (true) {
             engine.handleEvent(keyEvent);
