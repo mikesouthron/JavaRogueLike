@@ -46,6 +46,30 @@ public class Application extends JFrame {
         pack();
     }
 
+    public GameMap generateDungeon(int mapWidth, int mapHeight) {
+        var dungeon = new GameMap(mapWidth, mapHeight);
+
+        var roomOne = new RectangularRoom(20, 15, 10, 15);
+        var roomTwo = new RectangularRoom(35, 15, 10, 15);
+
+        var roomOneInner = roomOne.inner(mapWidth);
+        var roomTwoInner = roomTwo.inner(mapWidth);
+
+        for (Integer integer : roomOneInner) {
+            dungeon.tiles[integer] = Tile.floorTile();
+        }
+
+        for (Integer integer : roomTwoInner) {
+            dungeon.tiles[integer] = Tile.floorTile();
+        }
+
+        for (Integer integer : Procgen.tunnel(roomOne.centre(mapWidth), roomTwo.centre(mapWidth), mapWidth)) {
+            dungeon.tiles[integer] = Tile.floorTile();
+        }
+
+        return dungeon;
+    }
+
     @SuppressWarnings("InfiniteLoopStatement")
     public void execute() throws InterruptedException {
         var player = new Entity(screenWidth / 2, screenHeight / 2, '@', Color.WHITE);
@@ -53,7 +77,7 @@ public class Application extends JFrame {
 
         var entities = java.util.List.of(npc, player);
 
-        var gameMap = new GameMap(mapWidth, mapHeight);
+        var gameMap = generateDungeon(mapWidth, mapHeight);
 
         var engine = new Engine(entities, player, gameMap, logger);
 

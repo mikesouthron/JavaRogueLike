@@ -14,14 +14,8 @@ public class GameMap {
         this.height = height;
         tiles = new Tile[width * height];
         for (int i = 0; i < tiles.length; i++) {
-            tiles[i] = Tile.floorTile();
+            tiles[i] = Tile.wallTile();
         }
-
-
-        setTileAt(30, 22, Tile.wallTile());
-        setTileAt(31, 22, Tile.wallTile());
-        setTileAt(32, 22, Tile.wallTile());
-        setTileAt(33, 22, Tile.wallTile());
     }
 
     private void setTileAt(int x, int y, Tile tile) {
