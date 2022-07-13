@@ -17,10 +17,21 @@ jobs:
       - run:
           name: "Build"
           command: "mvn compile && jlink --launcher javarl=JavaRogueLike/org.southy.rl.Application --module-path target/classes --add-modules JavaRogueLike,java.desktop --output osx"
+  check:
+    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
+    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+    docker:
+      - image: cimg/openjdk:14.0
+    # Add steps to the job
+    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+    steps:
+      - checkout
+      - run: which java
+      - run: echo $JAVA_HOME
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
   build-workflow:
     jobs:
-      - build
+      - check
