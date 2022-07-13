@@ -1,12 +1,18 @@
 package org.southy.rl.map;
 
+import org.southy.rl.entity.Entity;
 import org.southy.rl.asciipanel.AsciiPanel;
 import org.southy.rl.gen.Procgen;
+
+import java.util.List;
+import java.util.Optional;
 
 public class GameMap {
 
     public int width;
     public int height;
+
+    public List<Entity> entities;
 
     public Tile[] tiles;
 
@@ -14,9 +20,10 @@ public class GameMap {
 
     public Tile[] explored;
 
-    public GameMap(int width, int height) {
+    public GameMap(int width, int height, List<Entity> entities) {
         this.width = width;
         this.height = height;
+        this.entities = entities;
         tiles = new Tile[width * height];
         for (int i = 0; i < tiles.length; i++) {
             tiles[i] = Tile.wallTile();
@@ -53,6 +60,15 @@ public class GameMap {
         FoV.computeFov(this, x, y, 8, true, FoV.FoVAlgorithm.FOV_RESTRICTIVE);
     }
 
+    public Optional<Entity> getBlockingEntityAtLocation(int x, int y) {
+        for (Entity entity : entities) {
+            if (entity.blocksMovement && entity.x == x && entity.y == y) {
+                return Optional.of(entity);
+            }
+        }
+        return Optional.empty();
+    }
+
     public void render(AsciiPanel panel) {
         for (int i = 0; i < tiles.length; i++) {
             var tile = tiles[i];
@@ -67,5 +83,7 @@ public class GameMap {
                 panel.write(Tile.SHROUD.ch, x, y, Tile.SHROUD.fg, Tile.SHROUD.bg);
             }
         }
+
+        entities.stream().filter(e -> visible[Procgen.toIdx(e.x, e.y, width)] != null).forEach(e -> panel.write(e.str, e.x, e.y, e.fg, e.bg));
     }
 }

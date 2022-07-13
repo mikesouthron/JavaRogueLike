@@ -1,6 +1,7 @@
 package org.southy.rl.gen;
 
-import org.southy.rl.Entity;
+import org.southy.rl.entity.Entity;
+import org.southy.rl.entity.EntityFactory;
 import org.southy.rl.map.GameMap;
 import org.southy.rl.RandomUtils;
 import org.southy.rl.map.RectangularRoom;
@@ -10,8 +11,11 @@ import java.util.List;
 
 public class Procgen {
 
-    public static GameMap generateDungeon(int maxRooms, int roomMinSize, int roomMaxSize, int mapWidth, int mapHeight, Entity player) {
-        var dungeon = new GameMap(mapWidth, mapHeight);
+    public static GameMap generateDungeon(int maxRooms, int roomMinSize, int roomMaxSize, int mapWidth, int mapHeight, int maxMonstersPerRoom,
+            Entity player) {
+        var entities = new ArrayList<Entity>();
+        entities.add(player);
+        var dungeon = new GameMap(mapWidth, mapHeight, entities);
 
         var rooms = new ArrayList<RectangularRoom>();
 
@@ -47,6 +51,8 @@ public class Procgen {
                 dungeon.digTunnel(newRoom, rooms.get(rooms.size() - 1));
             }
 
+            placeEntities(newRoom, dungeon, maxMonstersPerRoom);
+
             rooms.add(newRoom);
         }
 
@@ -58,6 +64,29 @@ public class Procgen {
         //        dungeon.digTunnel(roomOne, roomTwo);
 
         return dungeon;
+    }
+
+    private static void placeEntities(RectangularRoom room, GameMap map, int maxMonstersPerRoom) {
+        var numberOfMonsters = RandomUtils.randomInt(0, maxMonstersPerRoom);
+        for (int i = 0; i < numberOfMonsters; i++) {
+            var x = RandomUtils.randomInt(room.x1 + 1, room.x2 - 1);
+            var y = RandomUtils.randomInt(room.y1 + 1, room.y2 - 1);
+
+            boolean existingEntity = false;
+            for (Entity entity : map.entities) {
+                if (entity.x == x && entity.y == y) {
+                    existingEntity = true;
+                    break;
+                }
+            }
+            if (!existingEntity) {
+                if (RandomUtils.randomInt(0, 10) < 8) {
+                    EntityFactory.orc.spawn(map, x, y);
+                } else {
+                    EntityFactory.troll.spawn(map, x, y);
+                }
+            }
+        }
     }
 
     public static List<Integer> tunnel(int start, int end, int mapWidth) {
@@ -90,37 +119,30 @@ public class Procgen {
         return line;
     }
 
-    public static List<Integer> plotPixel(int x1, int y1, int x2, int y2, int dx, int dy, int decide, int mapWidth)
-    {
+    public static List<Integer> plotPixel(int x1, int y1, int x2, int y2, int dx, int dy, int decide, int mapWidth) {
         List<Integer> plot = new ArrayList<>();
         //pk is initial decision making parameter
         //Note:x1&y1,x2&y2, dx&dy values are interchanged
         //and passed in plotPixel function so
         //it can handle both cases when m>1 & m<1
         int pk = 2 * dy - dx;
-        for (int i = 0; i <= dx; i++)
-        {
+        for (int i = 0; i <= dx; i++) {
             plot.add(toIdx(x1, y1, mapWidth));
             //checking either to decrement or increment the value
             //if we have to plot from (0,100) to (100,0)
-            if(x1 < x2)
+            if (x1 < x2)
                 x1++;
             else
                 x1--;
-            if (pk < 0)
-            {
+            if (pk < 0) {
                 //decision value will decide to plot
                 //either  x1 or y1 in x's position
-                if (decide == 0)
-                {
+                if (decide == 0) {
                     pk = pk + 2 * dy;
-                }
-                else
+                } else
                     pk = pk + 2 * dy;
-            }
-            else
-            {
-                if(y1 < y2)
+            } else {
+                if (y1 < y2)
                     y1++;
                 else
                     y1--;
@@ -135,14 +157,12 @@ public class Procgen {
         int dx = Math.abs(x2 - x1);
         int dy = Math.abs(y2 - y1);
         //If slope is less than one
-        if (dx > dy)
-        {
+        if (dx > dy) {
             //passing argument as 0 to plot(x,y)
             return plotPixel(x1, y1, x2, y2, dx, dy, 0, mapWidth);
         }
         //if slope is greater than or equal to 1
-        else
-        {
+        else {
             //passing argument as 1 to plot (y,x)
             return plotPixel(y1, x1, y2, x2, dy, dx, 1, mapWidth);
         }
