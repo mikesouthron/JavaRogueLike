@@ -2,6 +2,9 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
+orbs:
+  win: circleci/windows@4.1
+
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
@@ -20,15 +23,11 @@ jobs:
           path: linux.zip
 
   build-windows:
-    resource_class: 'windows.medium'
-    docker:
-      - image: winamd64/eclipse-temurin
+    executor: win/server-2019
     steps:
       - checkout
-      - run: mvn compile && %JAVA_HOME%/bin/jlink --launcher javarl=JavaRogueLike/org.southy.rl.Application --module-path target/classes --add-modules JavaRogueLike,java.desktop --output windows
-      - run: zip windows.zip windows
-      - store_artifacts:
-          path: windows.zip
+      - run: mvn -version
+      - run: java -version
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
