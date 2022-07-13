@@ -1,9 +1,64 @@
 package org.southy.rl.gen;
 
+import org.southy.rl.Entity;
+import org.southy.rl.GameMap;
+import org.southy.rl.RandomUtils;
+import org.southy.rl.RectangularRoom;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Procgen {
+
+    public static GameMap generateDungeon(int maxRooms, int roomMinSize, int roomMaxSize, int mapWidth, int mapHeight, Entity player) {
+        var dungeon = new GameMap(mapWidth, mapHeight);
+
+        var rooms = new ArrayList<RectangularRoom>();
+
+        for (int i = 0; i < maxRooms; i++) {
+            var roomWidth = RandomUtils.randomInt(roomMinSize, roomMaxSize);
+            var roomHeight = RandomUtils.randomInt(roomMinSize, roomMaxSize);
+
+            var x = RandomUtils.randomInt(0, dungeon.width - roomWidth - 1);
+            var y = RandomUtils.randomInt(0, dungeon.height - roomHeight - 1);
+
+            var newRoom = new RectangularRoom(x, y, roomWidth, roomHeight);
+
+            boolean intersect = false;
+
+            for (RectangularRoom room : rooms) {
+                if (newRoom.intersects(room)) {
+                    intersect = true;
+                    break;
+                }
+            }
+
+            if (intersect) {
+                continue;
+            }
+
+            dungeon.dig(newRoom);
+
+            if (rooms.size() == 0) {
+                int centre = newRoom.centre(mapWidth);
+                player.x = centre % mapWidth;
+                player.y = centre / mapWidth;
+            } else {
+                dungeon.digTunnel(newRoom, rooms.get(rooms.size() - 1));
+            }
+
+            rooms.add(newRoom);
+        }
+
+        //        var roomOne = new RectangularRoom(20, 15, 10, 15);
+        //        var roomTwo = new RectangularRoom(35, 5, 10, 10);
+        //
+        //        dungeon.dig(roomOne);
+        //        dungeon.dig(roomTwo);
+        //        dungeon.digTunnel(roomOne, roomTwo);
+
+        return dungeon;
+    }
 
     public static List<Integer> tunnel(int start, int end, int mapWidth) {
         int x1 = start % mapWidth;

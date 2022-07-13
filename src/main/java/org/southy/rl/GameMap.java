@@ -5,8 +5,8 @@ import org.southy.rl.gen.Procgen;
 
 public class GameMap {
 
-    int width;
-    int height;
+    public int width;
+    public int height;
 
     Tile[] tiles;
 

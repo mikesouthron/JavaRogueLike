@@ -4,8 +4,8 @@ import java.awt.*;
 
 public class Entity {
 
-    int x;
-    int y;
+    public int x;
+    public int y;
     final char str;
     final Color fg;
     final Color bg;
