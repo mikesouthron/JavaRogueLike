@@ -1,0 +1,33 @@
+version: 2.1
+
+orbs:
+  win: circleci/windows@4.1
+
+jobs:
+  build-linux:
+    docker:
+      - image: cimg/openjdk:14.0
+    steps:
+      - checkout
+      - run: mvn compile && $JAVA_HOME/bin/jlink --launcher javarl=JavaRogueLike/org.southy.rl.Application --module-path target/classes --add-modules JavaRogueLike,java.desktop --output linux
+      - run: zip -r linux.zip linux
+      - store_artifacts:
+          path: linux.zip
+
+  build-windows:
+    executor: win/server-2019
+    steps:
+      - checkout
+      - run: Invoke-WebRequest -Uri "https://dlcdn.apache.org/maven/maven-3/3.8.6/binaries/apache-maven-3.8.6-bin.zip" -OutFile "maven.zip"
+      - run: Expand-Archive maven.zip -DestinationPath maven
+      - run: .\maven\apache-maven-3.8.6\bin\mvn.cmd compile
+      - run: jlink --launcher javarl=JavaRogueLike/org.southy.rl.Application --module-path target/classes --add-modules JavaRogueLike,java.desktop --output windows
+      - run: Compress-Archive -Path windows\* -DestinationPath windows.zip
+      - store_artifacts:
+         path: windows.zip
+
+workflows:
+  build-workflow:
+    jobs:
+      - build-linux
+      - build-windows

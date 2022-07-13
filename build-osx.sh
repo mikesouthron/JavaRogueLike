@@ -1,1 +1,0 @@
-rm -rf osx/ && mvn clean && mvn compile && jlink --launcher javarl=JavaRogueLike/org.southy.rl.Application --module-path target/classes --add-modules JavaRogueLike,java.desktop --output osx
