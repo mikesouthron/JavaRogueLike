@@ -70,14 +70,10 @@ public class Procgen {
         int cornerX = x2;
         int cornerY = y1;
 
-        /*
-        if (new Random().nextDouble() < 0.5) {
-            cornerX = x2;
-            cornerY = y1;
-        } else {
+        if (RandomUtils.randomInt(0, 10) > 5) {
             cornerX = x1;
             cornerY = y2;
-        }*/
+        }
 
         var line = new ArrayList<Integer>();
 
