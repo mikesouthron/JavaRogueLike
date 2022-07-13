@@ -1,7 +1,7 @@
 package org.southy.rl;
 
-import asciiPanel.AsciiFont;
-import asciiPanel.AsciiPanel;
+import org.southy.rl.asciipanel.AsciiFont;
+import org.southy.rl.asciipanel.AsciiPanel;
 
 import javax.swing.*;
 import java.awt.*;
