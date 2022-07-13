@@ -1,5 +1,6 @@
 package org.southy.rl.gen;
 
+import org.southy.rl.Engine;
 import org.southy.rl.entity.Entity;
 import org.southy.rl.entity.EntityFactory;
 import org.southy.rl.map.GameMap;
@@ -11,11 +12,11 @@ import java.util.List;
 
 public class Procgen {
 
-    public static GameMap generateDungeon(int maxRooms, int roomMinSize, int roomMaxSize, int mapWidth, int mapHeight, int maxMonstersPerRoom,
-            Entity player) {
+    public static GameMap generateDungeon(Engine engine, int maxRooms, int roomMinSize, int roomMaxSize, int mapWidth, int mapHeight, int maxMonstersPerRoom) {
+        var player = engine.player;
         var entities = new ArrayList<Entity>();
         entities.add(player);
-        var dungeon = new GameMap(mapWidth, mapHeight, entities);
+        var dungeon = new GameMap(engine, mapWidth, mapHeight, entities);
 
         var rooms = new ArrayList<RectangularRoom>();
 
@@ -45,8 +46,7 @@ public class Procgen {
 
             if (rooms.size() == 0) {
                 int centre = newRoom.centre(mapWidth);
-                player.x = centre % mapWidth;
-                player.y = centre / mapWidth;
+                player.place(centre % mapWidth, centre / mapWidth, dungeon);
             } else {
                 dungeon.digTunnel(newRoom, rooms.get(rooms.size() - 1));
             }

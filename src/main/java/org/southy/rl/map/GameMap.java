@@ -1,5 +1,6 @@
 package org.southy.rl.map;
 
+import org.southy.rl.Engine;
 import org.southy.rl.entity.Entity;
 import org.southy.rl.asciipanel.AsciiPanel;
 import org.southy.rl.gen.Procgen;
@@ -8,6 +9,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class GameMap {
+
+    public Engine engine;
 
     public int width;
     public int height;
@@ -20,7 +23,8 @@ public class GameMap {
 
     public Tile[] explored;
 
-    public GameMap(int width, int height, List<Entity> entities) {
+    public GameMap(Engine engine, int width, int height, List<Entity> entities) {
+        this.engine = engine;
         this.width = width;
         this.height = height;
         this.entities = entities;

@@ -2,41 +2,58 @@ package org.southy.rl;
 
 import org.southy.rl.entity.Entity;
 
-public interface Action {
-    void perform(Engine engine, Entity entity);
+public abstract class Action {
 
-    class EscapeAction implements Action {
+    Entity entity;
+
+    public Action(Entity entity) {
+        this.entity = entity;
+    }
+
+    abstract void perform();
+
+    Engine engine() {
+        return entity.gameMap.engine;
+    }
+
+    static class EscapeAction extends Action {
+
+        public EscapeAction(Entity entity) {
+            super(entity);
+        }
+
         @Override
-        public void perform(Engine engine, Entity entity) {
+        public void perform() {
             System.exit(0);
         }
     }
 
-    class ActionWithDirection implements Action {
+    static class ActionWithDirection extends Action {
         int dx;
         int dy;
 
-        public ActionWithDirection(int dx, int dy) {
+        public ActionWithDirection(Entity entity, int dx, int dy) {
+            super(entity);
             this.dx = dx;
             this.dy = dy;
         }
 
         @Override
-        public void perform(Engine engine, Entity entity) {
+        public void perform() {
             //TODO:
         }
     }
 
-    class MeleeAction extends ActionWithDirection {
-        public MeleeAction(int dx, int dy) {
-            super(dx, dy);
+    static class MeleeAction extends ActionWithDirection {
+        public MeleeAction(Entity entity, int dx, int dy) {
+            super(entity, dx, dy);
         }
 
         @Override
-        public void perform(Engine engine, Entity entity) {
+        public void perform() {
             var dest_x = entity.x + dx;
             var dest_y = entity.y + dy;
-            var target = engine.gameMap.getBlockingEntityAtLocation(dest_x, dest_y);
+            var target = entity.gameMap.getBlockingEntityAtLocation(dest_x, dest_y);
             if (target.isEmpty()) {
                 return;
             }
@@ -44,24 +61,24 @@ public interface Action {
         }
     }
 
-    class MovementAction extends ActionWithDirection {
+    static class MovementAction extends ActionWithDirection {
 
-        public MovementAction(int dx, int dy) {
-            super(dx, dy);
+        public MovementAction(Entity entity, int dx, int dy) {
+            super(entity, dx, dy);
         }
 
         @Override
-        public void perform(Engine engine, Entity entity) {
+        public void perform() {
             var dest_x = entity.x + dx;
             var dest_y = entity.y + dy;
 
-            if (!engine.gameMap.inBounds(dest_x, dest_y)) {
+            if (!entity.gameMap.inBounds(dest_x, dest_y)) {
                 return;
             }
-            if (!engine.gameMap.getTileAt(entity.x + dx, entity.y +dy).walkable) {
+            if (!entity.gameMap.getTileAt(entity.x + dx, entity.y +dy).walkable) {
                 return;
             }
-            if (engine.gameMap.getBlockingEntityAtLocation(dest_x, dest_y).isPresent()) {
+            if (entity.gameMap.getBlockingEntityAtLocation(dest_x, dest_y).isPresent()) {
                 return;
             }
 
@@ -69,21 +86,21 @@ public interface Action {
         }
     }
 
-    class BumpAction extends ActionWithDirection {
+    static class BumpAction extends ActionWithDirection {
 
-        public BumpAction(int dx, int dy) {
-            super(dx, dy);
+        public BumpAction(Entity entity, int dx, int dy) {
+            super(entity, dx, dy);
         }
 
         @Override
-        public void perform(Engine engine, Entity entity) {
+        public void perform() {
             var dest_x = entity.x + dx;
             var dest_y = entity.y + dy;
 
-            if (engine.gameMap.getBlockingEntityAtLocation(dest_x, dest_y).isPresent()) {
-                new MeleeAction(dx, dy).perform(engine, entity);
+            if (entity.gameMap.getBlockingEntityAtLocation(dest_x, dest_y).isPresent()) {
+                new MeleeAction(entity, dx, dy).perform();
             } else {
-                new MovementAction(dx, dy).perform(engine, entity);
+                new MovementAction(entity, dx, dy).perform();
             }
         }
     }

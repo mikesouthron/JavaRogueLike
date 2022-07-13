@@ -2,7 +2,6 @@ package org.southy.rl;
 
 import org.southy.rl.asciipanel.AsciiFont;
 import org.southy.rl.asciipanel.AsciiPanel;
-import org.southy.rl.entity.Entity;
 import org.southy.rl.entity.EntityFactory;
 import org.southy.rl.gen.Procgen;
 
@@ -58,12 +57,12 @@ public class Application extends JFrame {
     @SuppressWarnings("InfiniteLoopStatement")
     public void execute() throws InterruptedException {
         var player = EntityFactory.player.copy();
-
-        var gameMap = Procgen.generateDungeon(maxRooms, roomMinSize, roomMaxSize, mapWidth, mapHeight, maxMonstersPerRoom, player);
-        var engine = new Engine(player, gameMap, logger);
+        var engine = new Engine(player, logger);
+        engine.gameMap = Procgen.generateDungeon(engine, maxRooms, roomMinSize, roomMaxSize, mapWidth, mapHeight, maxMonstersPerRoom);
+        engine.updateFov();
 
         while (true) {
-            engine.handleEvent(keyEvent);
+            engine.eventHandler.handleEvents(keyEvent);
             engine.render(panel);
             keyEvent = null;
             while (keyEvent == null) {
