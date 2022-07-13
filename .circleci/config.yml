@@ -28,13 +28,11 @@ jobs:
       - checkout
       - run: Invoke-WebRequest -Uri "https://dlcdn.apache.org/maven/maven-3/3.8.6/binaries/apache-maven-3.8.6-bin.zip" -OutFile "maven.zip"
       - run: Expand-Archive maven.zip -DestinationPath maven
-      - run: ls maven
-      - run: ls maven\build
-
-#  - run: mvn compile && %JAVA_HOME%/bin/jlink --launcher javarl=JavaRogueLike/org.southy.rl.Application --module-path target/classes --add-modules JavaRogueLike,java.desktop --output windows
-#           - run: zip windows.zip windows
-#           - store_artifacts:
-#               path: windows.zip
+      - run: .\maven\apache-maven-3.8.6\bin\mvn.cmd compile
+      - run: jlink --launcher javarl=JavaRogueLike/org.southy.rl.Application --module-path target/classes --add-modules JavaRogueLike,java.desktop --output windows
+      - run: zip windows.zip windows
+      - store_artifacts:
+         path: windows.zip
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
