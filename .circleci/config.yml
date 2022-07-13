@@ -26,7 +26,6 @@ jobs:
     executor: win/server-2019
     steps:
       - checkout
-      - run: mvn -version
       - run: java -version
 
 # Invoke jobs via workflows
