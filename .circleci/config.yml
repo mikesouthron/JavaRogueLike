@@ -15,6 +15,9 @@ jobs:
     steps:
       - checkout
       - run: mvn compile && $JAVA_HOME/bin/jlink --launcher javarl=JavaRogueLike/org.southy.rl.Application --module-path target/classes --add-modules JavaRogueLike,java.desktop --output linux
+      - run: zip -r linux.zip linux
+      - store_artifacts:
+          path: linux.zip
 
   check:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
