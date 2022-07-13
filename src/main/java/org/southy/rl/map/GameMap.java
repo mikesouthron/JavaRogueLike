@@ -1,4 +1,4 @@
-package org.southy.rl;
+package org.southy.rl.map;
 
 import org.southy.rl.asciipanel.AsciiPanel;
 import org.southy.rl.gen.Procgen;
@@ -8,7 +8,11 @@ public class GameMap {
     public int width;
     public int height;
 
-    Tile[] tiles;
+    public Tile[] tiles;
+
+    public Tile[] visible;
+
+    public Tile[] explored;
 
     public GameMap(int width, int height) {
         this.width = width;
@@ -17,6 +21,8 @@ public class GameMap {
         for (int i = 0; i < tiles.length; i++) {
             tiles[i] = Tile.wallTile();
         }
+        visible = new Tile[width * height];
+        explored = new Tile[width * height];
     }
 
     private void setTileAt(int x, int y, Tile tile) {
@@ -43,12 +49,23 @@ public class GameMap {
         }
     }
 
+    public void computeFov(int x, int y) {
+        FoV.computeFov(this, x, y, 8, true, FoV.FoVAlgorithm.FOV_RESTRICTIVE);
+    }
+
     public void render(AsciiPanel panel) {
         for (int i = 0; i < tiles.length; i++) {
             var tile = tiles[i];
             int x = i % width;
             int y = i / width;
-            panel.write(tile.dark.ch, x, y, tile.dark.fg, tile.dark.bg);
+
+            if (visible[i] != null) {
+                panel.write(tile.light.ch, x, y, tile.light.fg, tile.light.bg);
+            } else if (explored[i] != null) {
+                panel.write(tile.dark.ch, x, y, tile.dark.fg, tile.dark.bg);
+            } else {
+                panel.write(Tile.SHROUD.ch, x, y, Tile.SHROUD.fg, Tile.SHROUD.bg);
+            }
         }
     }
 }

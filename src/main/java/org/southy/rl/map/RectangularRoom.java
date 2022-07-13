@@ -1,4 +1,4 @@
-package org.southy.rl;
+package org.southy.rl.map;
 
 import org.southy.rl.gen.Procgen;
 

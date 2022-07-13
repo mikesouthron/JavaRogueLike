@@ -1,9 +1,9 @@
 package org.southy.rl.gen;
 
 import org.southy.rl.Entity;
-import org.southy.rl.GameMap;
+import org.southy.rl.map.GameMap;
 import org.southy.rl.RandomUtils;
-import org.southy.rl.RectangularRoom;
+import org.southy.rl.map.RectangularRoom;
 
 import java.util.ArrayList;
 import java.util.List;

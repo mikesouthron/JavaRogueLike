@@ -11,7 +11,7 @@ public class Entity {
     final Color bg;
 
     public Entity(int x, int y, char str, Color fg) {
-        this(x, y, str, fg, ColorUtils.FLOOR_COLOR);
+        this(x, y, str, fg, ColorUtils.FLOOR_COLOR_LIGHT);
     }
 
     public Entity(int x, int y, char str, Color fg, Color bg) {
