@@ -85,11 +85,34 @@ public abstract class Action {
                 engine().fastMove = null;
                 return;
             }
+
             if (!entity.gameMap.getTileAt(entity.x + dx, entity.y + dy).walkable) {
-                //Special case for fast move, if not null and right angle is available, take right angle
-                engine().fastMove = null;
-                return;
+                if (engine().fastMove != null && engine().fastMove.currentAvailableMoves > 0 && entity.gameMap.countAvailableMoves(entity.x, entity.y) == 2) {
+                    if (dy == 0) {
+                        dx = 0;
+                        if (entity.gameMap.getTileAt(entity.x, entity.y + 1).walkable) {
+                            dy = 1;
+                        } else {
+                            dy = -1;
+                        }
+                    } else if (dx == 0) {
+                        dy = 0;
+                        if (entity.gameMap.getTileAt(entity.x + 1, entity.y).walkable) {
+                            dx = 1;
+                        } else {
+                            dx = -1;
+                        }
+                    }
+                } else {
+                    //Special case for fast move, if not null and right angle is available, take right angle
+                    engine().fastMove = null;
+                    return;
+                }
             }
+
+            dest_x = entity.x + dx;
+            dest_y = entity.y + dy;
+
             if (entity.gameMap.getBlockingEntityAtLocation(dest_x, dest_y).isPresent()) {
                 engine().fastMove = null;
                 return;
