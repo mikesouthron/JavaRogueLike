@@ -82,6 +82,14 @@ public abstract class Action {
             var dest_x = entity.x + dx;
             var dest_y = entity.y + dy;
 
+            if (engine().fastMove != null) {
+                for (Entity e : entity.gameMap.entities) {
+                    if (e != entity && e.blocksMovement && e.gameMap.getTileAt(e.x, e.y).fov) {
+                        engine().fastMove = null;
+                    }
+                }
+            }
+
             if (!entity.gameMap.inBounds(dest_x, dest_y)) {
                 engine().fastMove = null;
                 return;
