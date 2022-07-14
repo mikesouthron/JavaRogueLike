@@ -67,7 +67,7 @@ public class Application extends JFrame {
             engine.eventHandler.handleEvents(keyEvent);
             engine.render(panel);
             if (engine.fastMove != null) {
-                Thread.sleep(1);
+                Thread.sleep(5);
             } else {
                 keyEvent = null;
             }

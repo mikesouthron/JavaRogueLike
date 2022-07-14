@@ -90,4 +90,21 @@ public class GameMap {
 
         entities.stream().filter(e -> visible[Procgen.toIdx(e.x, e.y, width)] != null).forEach(e -> panel.write(e.str, e.x, e.y, e.fg, e.bg));
     }
+
+    public Integer countAvailableMoves(int x, int y) {
+        int count = 0;
+        if (inBounds(x - 1, y) && getTileAt(x - 1, y).walkable) {
+            count++;
+        }
+        if (inBounds(x + 1, y) && getTileAt(x + 1, y).walkable) {
+            count++;
+        }
+        if (inBounds(x, y - 1) &&  getTileAt(x, y - 1).walkable) {
+            count++;
+        }
+        if (inBounds(x, y + 1) && getTileAt(x, y + 1).walkable) {
+            count++;
+        }
+        return count;
+    }
 }

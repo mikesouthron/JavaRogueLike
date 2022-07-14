@@ -81,25 +81,34 @@ public abstract class Action {
             var dest_x = entity.x + dx;
             var dest_y = entity.y + dy;
 
-            if (engine().fastMove != null) {
-                for (Entity e : entity.gameMap.entities) {
-                    if (e != entity && e.blocksMovement && e.gameMap.getTileAt(e.x, e.y).fov) {
-                        engine().fastMove = null;
-                    }
-                }
-            }
-
             if (!entity.gameMap.inBounds(dest_x, dest_y)) {
                 engine().fastMove = null;
                 return;
             }
-            if (!entity.gameMap.getTileAt(entity.x + dx, entity.y +dy).walkable) {
+            if (!entity.gameMap.getTileAt(entity.x + dx, entity.y + dy).walkable) {
+                //Special case for fast move, if not null and right angle is available, take right angle
                 engine().fastMove = null;
                 return;
             }
             if (entity.gameMap.getBlockingEntityAtLocation(dest_x, dest_y).isPresent()) {
                 engine().fastMove = null;
                 return;
+            }
+
+            if (engine().fastMove != null) {
+                int count = entity.gameMap.countAvailableMoves(dest_x, dest_y);
+                var fastMove = engine().fastMove;
+                if (fastMove.currentAvailableMoves > 0 && count != fastMove.currentAvailableMoves) {
+                    engine().fastMove = null;
+                } else {
+                    fastMove.currentAvailableMoves = count;
+                }
+                //Enemy in fov
+                for (Entity e : entity.gameMap.entities) {
+                    if (e != entity && e.blocksMovement && e.gameMap.getTileAt(e.x, e.y).fov) {
+                        engine().fastMove = null;
+                    }
+                }
             }
 
             entity.move(dx, dy);
