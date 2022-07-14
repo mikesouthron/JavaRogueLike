@@ -67,7 +67,6 @@ public class Application extends JFrame {
             engine.eventHandler.handleEvents(keyEvent);
             engine.render(panel);
             if (engine.fastMove != null) {
-                System.out.println("Fast Move");
                 Thread.sleep(1);
             } else {
                 keyEvent = null;

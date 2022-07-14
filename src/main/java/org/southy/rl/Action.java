@@ -75,7 +75,6 @@ public abstract class Action {
         @Override
         public void perform() {
             if (shiftHeld && engine().fastMove == null) {
-                System.out.println("Fast Move Start");
                 engine().fastMove = new FastMoveState();
             }
 
