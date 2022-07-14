@@ -78,6 +78,13 @@ public abstract class Action {
                 engine().fastMove = new FastMoveState();
             }
 
+            if (engine().fastMove != null && engine().fastMove.dx != null) {
+                dx = engine().fastMove.dx;
+            }
+            if (engine().fastMove != null && engine().fastMove.dy != null) {
+                dy = engine().fastMove.dy;
+            }
+
             var dest_x = entity.x + dx;
             var dest_y = entity.y + dy;
 
@@ -86,7 +93,7 @@ public abstract class Action {
                 return;
             }
 
-            if (!entity.gameMap.getTileAt(entity.x + dx, entity.y + dy).walkable) {
+            if (!entity.gameMap.getTileAt(dest_x, dest_y).walkable) {
                 if (engine().fastMove != null && engine().fastMove.currentAvailableMoves > 0 && entity.gameMap.countAvailableMoves(entity.x, entity.y) == 2) {
                     if (dy == 0) {
                         dx = 0;
@@ -103,6 +110,8 @@ public abstract class Action {
                             dx = -1;
                         }
                     }
+                    engine().fastMove.dx = dx;
+                    engine().fastMove.dy = dy;
                 } else {
                     //Special case for fast move, if not null and right angle is available, take right angle
                     engine().fastMove = null;

@@ -1,5 +1,7 @@
 package org.southy.rl;
 
+import org.southy.rl.gen.Procgen;
+
 import java.awt.event.KeyEvent;
 import java.util.Optional;
 
@@ -46,6 +48,11 @@ public class EventHandler {
 //                return Optional.of(new Action.BumpAction(player, 1, -1, event.isShiftDown()));
             case 27:
                 return Optional.of(new Action.EscapeAction(player));
+            case 82:
+                if (event.isControlDown()) {
+                    player.gameMap = engine.gameMap = Procgen.generateDungeon(engine, Application.maxRooms, Application.roomMinSize, Application.roomMaxSize, Application.mapWidth, Application.mapHeight, Application.maxMonstersPerRoom);
+                }
+                return Optional.empty();
             default: {
                 logger.log("Key Pressed: " + event.getKeyCode());
                 return Optional.empty();

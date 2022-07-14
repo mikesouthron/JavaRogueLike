@@ -13,18 +13,18 @@ import java.awt.event.KeyListener;
 @SuppressWarnings("BusyWait")
 public class Application extends JFrame {
 
-    private final int screenWidth = 80;
-    private final int screenHeight = 50;
+    public static final int screenWidth = 80;
+    public static final int screenHeight = 50;
 
-    private final int mapWidth = 80;
+    public static final int mapWidth = 80;
 
-    private final int mapHeight = 45;
+    public static final int mapHeight = 45;
 
-    private final int roomMaxSize = 10;
-    private final int roomMinSize = 6;
-    private final int maxRooms = 30;
+    public static final int roomMaxSize = 10;
+    public static final int roomMinSize = 6;
+    public static final int maxRooms = 30;
 
-    private final int maxMonstersPerRoom = 2;
+    public static final int maxMonstersPerRoom = 2;
 
     KeyEvent keyEvent = null;
 
@@ -41,7 +41,7 @@ public class Application extends JFrame {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() != 16) {
+                if (e.getKeyCode() != 16 && e.getKeyCode() != 17) {
                     keyEvent = e;
                 }
             }
@@ -67,7 +67,7 @@ public class Application extends JFrame {
             engine.eventHandler.handleEvents(keyEvent);
             engine.render(panel);
             if (engine.fastMove != null) {
-                Thread.sleep(5);
+                Thread.sleep(15);
             } else {
                 keyEvent = null;
             }
