@@ -2,6 +2,7 @@ package org.southy.rl;
 
 import org.southy.rl.asciipanel.AsciiPanel;
 import org.southy.rl.entity.Entity;
+import org.southy.rl.map.FastMoveState;
 import org.southy.rl.map.GameMap;
 
 public class Engine {
@@ -13,6 +14,8 @@ public class Engine {
 
     public EventHandler eventHandler;
 
+    FastMoveState fastMove = null;
+
     public Engine(Entity player, Logger logger) {
         this.player = player;
         this.logger = logger;
@@ -22,7 +25,7 @@ public class Engine {
     public void handleEnemyTurns() {
         for (Entity entity : gameMap.entities) {
             if (entity != player) {
-                logger.log("The " + entity.name + " wonders when it will get to take a real turn");
+                //logger.log("The " + entity.name + " wonders when it will get to take a real turn");
             }
         }
     }

@@ -1,10 +1,13 @@
 package org.southy.rl;
 
 import org.southy.rl.entity.Entity;
+import org.southy.rl.map.FastMoveState;
 
 public abstract class Action {
 
     Entity entity;
+
+    public boolean shiftHeld = false;
 
     public Action(Entity entity) {
         this.entity = entity;
@@ -32,10 +35,11 @@ public abstract class Action {
         int dx;
         int dy;
 
-        public ActionWithDirection(Entity entity, int dx, int dy) {
+        public ActionWithDirection(Entity entity, int dx, int dy, boolean shiftHeld) {
             super(entity);
             this.dx = dx;
             this.dy = dy;
+            this.shiftHeld = shiftHeld;
         }
 
         @Override
@@ -45,12 +49,13 @@ public abstract class Action {
     }
 
     static class MeleeAction extends ActionWithDirection {
-        public MeleeAction(Entity entity, int dx, int dy) {
-            super(entity, dx, dy);
+        public MeleeAction(Entity entity, int dx, int dy, boolean shiftHeld) {
+            super(entity, dx, dy, shiftHeld);
         }
 
         @Override
         public void perform() {
+            engine().fastMove = null;
             var dest_x = entity.x + dx;
             var dest_y = entity.y + dy;
             var target = entity.gameMap.getBlockingEntityAtLocation(dest_x, dest_y);
@@ -63,22 +68,30 @@ public abstract class Action {
 
     static class MovementAction extends ActionWithDirection {
 
-        public MovementAction(Entity entity, int dx, int dy) {
-            super(entity, dx, dy);
+        public MovementAction(Entity entity, int dx, int dy, boolean shiftHeld) {
+            super(entity, dx, dy, shiftHeld);
         }
 
         @Override
         public void perform() {
+            if (shiftHeld && engine().fastMove == null) {
+                System.out.println("Fast Move Start");
+                engine().fastMove = new FastMoveState();
+            }
+
             var dest_x = entity.x + dx;
             var dest_y = entity.y + dy;
 
             if (!entity.gameMap.inBounds(dest_x, dest_y)) {
+                engine().fastMove = null;
                 return;
             }
             if (!entity.gameMap.getTileAt(entity.x + dx, entity.y +dy).walkable) {
+                engine().fastMove = null;
                 return;
             }
             if (entity.gameMap.getBlockingEntityAtLocation(dest_x, dest_y).isPresent()) {
+                engine().fastMove = null;
                 return;
             }
 
@@ -88,8 +101,8 @@ public abstract class Action {
 
     static class BumpAction extends ActionWithDirection {
 
-        public BumpAction(Entity entity, int dx, int dy) {
-            super(entity, dx, dy);
+        public BumpAction(Entity entity, int dx, int dy, boolean shiftHeld) {
+            super(entity, dx, dy, shiftHeld);
         }
 
         @Override
@@ -98,9 +111,9 @@ public abstract class Action {
             var dest_y = entity.y + dy;
 
             if (entity.gameMap.getBlockingEntityAtLocation(dest_x, dest_y).isPresent()) {
-                new MeleeAction(entity, dx, dy).perform();
+                new MeleeAction(entity, dx, dy, shiftHeld).perform();
             } else {
-                new MovementAction(entity, dx, dy).perform();
+                new MovementAction(entity, dx, dy, shiftHeld).perform();
             }
         }
     }

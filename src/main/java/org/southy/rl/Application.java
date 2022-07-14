@@ -41,7 +41,9 @@ public class Application extends JFrame {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                keyEvent = e;
+                if (e.getKeyCode() != 16) {
+                    keyEvent = e;
+                }
             }
 
             @Override
@@ -64,7 +66,12 @@ public class Application extends JFrame {
         while (true) {
             engine.eventHandler.handleEvents(keyEvent);
             engine.render(panel);
-            keyEvent = null;
+            if (engine.fastMove != null) {
+                System.out.println("Fast Move");
+                Thread.sleep(1);
+            } else {
+                keyEvent = null;
+            }
             while (keyEvent == null) {
                 Thread.sleep(5);
             }

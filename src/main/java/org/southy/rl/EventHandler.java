@@ -28,22 +28,22 @@ public class EventHandler {
         var player = engine.player;
 
         switch (event.getKeyCode()) {
-            case 100:
-                return Optional.of(new Action.BumpAction(player, -1, 0));
-            case 102:
-                return Optional.of(new Action.BumpAction(player, 1, 0));
-            case 104:
-                return Optional.of(new Action.BumpAction(player, 0, -1));
-            case 98:
-                return Optional.of(new Action.BumpAction(player, 0, 1));
-            case 99:
-                return Optional.of(new Action.BumpAction(player, 1, 1));
-            case 97:
-                return Optional.of(new Action.BumpAction(player, -1, 1));
-            case 103:
-                return Optional.of(new Action.BumpAction(player, -1, -1));
-            case 105:
-                return Optional.of(new Action.BumpAction(player, 1, -1));
+            case 37:
+                return Optional.of(new Action.BumpAction(player, -1, 0, event.isShiftDown()));
+            case 39:
+                return Optional.of(new Action.BumpAction(player, 1, 0, event.isShiftDown()));
+            case 38:
+                return Optional.of(new Action.BumpAction(player, 0, -1, event.isShiftDown()));
+            case 40:
+                return Optional.of(new Action.BumpAction(player, 0, 1, event.isShiftDown()));
+//            case 99:
+//                return Optional.of(new Action.BumpAction(player, 1, 1, event.isShiftDown()));
+//            case 97:
+//                return Optional.of(new Action.BumpAction(player, -1, 1, event.isShiftDown()));
+//            case 103:
+//                return Optional.of(new Action.BumpAction(player, -1, -1, event.isShiftDown()));
+//            case 105:
+//                return Optional.of(new Action.BumpAction(player, 1, -1, event.isShiftDown()));
             case 27:
                 return Optional.of(new Action.EscapeAction(player));
             default: {
