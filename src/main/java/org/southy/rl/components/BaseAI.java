@@ -20,6 +20,7 @@ public class BaseAI extends BaseComponent implements Action {
     }
 
     public List<Integer> getPathTo(int destX, int destY) {
+        //TODO: Move cost and graph calculations out to once per turn
         Integer[] cost = new Integer[entity.gameMap.tiles.length];
 
         boolean[][] block = new boolean[entity.gameMap.width][entity.gameMap.height];
@@ -52,6 +53,9 @@ public class BaseAI extends BaseComponent implements Action {
         Node start = graph[entity.x + entity.y * entity.gameMap.width];
 
         Algorithm.calculateShortestPathFromSource(start);
+
+
+        //TODO: Just return the next element?
 
         List<Integer> path = new ArrayList<>();
 
