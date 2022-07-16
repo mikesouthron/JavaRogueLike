@@ -38,6 +38,7 @@ public class EventHandler {
                 return Optional.of(new BaseAction.BumpAction(player, 0, -1, event.isShiftDown()));
             case 40:
                 return Optional.of(new BaseAction.BumpAction(player, 0, 1, event.isShiftDown()));
+                //TODO: 8-WAY
 //            case 99:
 //                return Optional.of(new Action.BumpAction(player, 1, 1, event.isShiftDown()));
 //            case 97:

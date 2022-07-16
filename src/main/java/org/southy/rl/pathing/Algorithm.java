@@ -31,6 +31,8 @@ public class Algorithm {
                 handleAdjacentNode(x, y - 1, width, node, cost, nodes, v);
                 //Down
                 handleAdjacentNode(x, y + 1, width, node, cost, nodes, v);
+                
+                //TODO: 8-WAY Handle diagonals
             }
         }
 

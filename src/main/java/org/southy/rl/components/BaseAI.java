@@ -55,7 +55,7 @@ public class BaseAI extends BaseComponent implements Action {
         Algorithm.calculateShortestPathFromSource(start);
 
 
-        //TODO: Just return the next element?
+        //TODO: Just return the index of the next location?
 
         List<Integer> path = new ArrayList<>();
 
