@@ -10,13 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BaseAI extends BaseComponent implements Action {
+
+    public BaseAI(Entity entity) {
+        this.entity = entity;
+    }
+
     @Override
     public void perform() {
         //Pass
-    }
-
-    public void setEntity(Entity entity) {
-        this.entity = entity;
     }
 
     public List<Integer> getPathTo(int destX, int destY) {
@@ -60,7 +61,12 @@ public class BaseAI extends BaseComponent implements Action {
         List<Integer> path = new ArrayList<>();
 
         Node dest = graph[destX + destY * entity.gameMap.width];
+        boolean skip = true;
         for (Node node : dest.getShortestPath()) {
+            if (skip) {
+                skip = false;
+                continue;
+            }
             path.add(node.getX() + node.getY() * entity.gameMap.width);
         }
         return path;

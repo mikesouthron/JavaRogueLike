@@ -10,4 +10,8 @@ public abstract class BaseComponent {
         return entity.gameMap.engine;
     }
 
+    public void setEntity(Entity entity) {
+        this.entity = entity;
+    }
+
 }

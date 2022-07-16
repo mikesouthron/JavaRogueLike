@@ -28,6 +28,18 @@ public abstract class BaseAction implements Action {
         }
     }
 
+    public static class WaitAction extends BaseAction {
+
+        public WaitAction(Entity entity) {
+            super(entity);
+        }
+
+        @Override
+        public void perform() {
+            //Pass
+        }
+    }
+
     static class ActionWithDirection extends BaseAction {
         int dx;
         int dy;
@@ -45,7 +57,7 @@ public abstract class BaseAction implements Action {
         }
     }
 
-    static class MeleeAction extends ActionWithDirection {
+    public static class MeleeAction extends ActionWithDirection {
         public MeleeAction(Entity entity, int dx, int dy, boolean shiftHeld) {
             super(entity, dx, dy, shiftHeld);
         }
@@ -63,7 +75,7 @@ public abstract class BaseAction implements Action {
         }
     }
 
-    static class MovementAction extends ActionWithDirection {
+    public static class MovementAction extends ActionWithDirection {
 
         public MovementAction(Entity entity, int dx, int dy, boolean shiftHeld) {
             super(entity, dx, dy, shiftHeld);
