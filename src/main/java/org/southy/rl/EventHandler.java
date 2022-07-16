@@ -17,12 +17,12 @@ public class EventHandler {
 
     public void handleEvents(KeyEvent event) {
         var option = keyDown(event);
-        option.ifPresent(Action::perform);
+        option.ifPresent(BaseAction::perform);
         engine.handleEnemyTurns();
         engine.updateFov();
     }
 
-    public Optional<Action> keyDown(KeyEvent event) {
+    public Optional<BaseAction> keyDown(KeyEvent event) {
         if (event == null) {
             return Optional.empty();
         }
@@ -31,13 +31,13 @@ public class EventHandler {
 
         switch (event.getKeyCode()) {
             case 37:
-                return Optional.of(new Action.BumpAction(player, -1, 0, event.isShiftDown()));
+                return Optional.of(new BaseAction.BumpAction(player, -1, 0, event.isShiftDown()));
             case 39:
-                return Optional.of(new Action.BumpAction(player, 1, 0, event.isShiftDown()));
+                return Optional.of(new BaseAction.BumpAction(player, 1, 0, event.isShiftDown()));
             case 38:
-                return Optional.of(new Action.BumpAction(player, 0, -1, event.isShiftDown()));
+                return Optional.of(new BaseAction.BumpAction(player, 0, -1, event.isShiftDown()));
             case 40:
-                return Optional.of(new Action.BumpAction(player, 0, 1, event.isShiftDown()));
+                return Optional.of(new BaseAction.BumpAction(player, 0, 1, event.isShiftDown()));
 //            case 99:
 //                return Optional.of(new Action.BumpAction(player, 1, 1, event.isShiftDown()));
 //            case 97:
@@ -47,7 +47,7 @@ public class EventHandler {
 //            case 105:
 //                return Optional.of(new Action.BumpAction(player, 1, -1, event.isShiftDown()));
             case 27:
-                return Optional.of(new Action.EscapeAction(player));
+                return Optional.of(new BaseAction.EscapeAction(player));
             case 82:
                 if (event.isControlDown()) {
                     player.gameMap = engine.gameMap = Procgen.generateDungeon(engine, Application.maxRooms, Application.roomMinSize, Application.roomMaxSize, Application.mapWidth, Application.mapHeight, Application.maxMonstersPerRoom);
