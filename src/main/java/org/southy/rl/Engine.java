@@ -24,11 +24,9 @@ public class Engine {
     }
 
     public void handleEnemyTurns() {
-        for (Entity entity : gameMap.entities) {
-            if (entity != player) {
-                if (entity instanceof Actor) {
-                    ((Actor) entity).getAi().perform();
-                }
+        for (Actor actor : gameMap.getActors()) {
+            if (actor != player) {
+                actor.getAi().perform();
             }
         }
     }

@@ -1,12 +1,14 @@
 package org.southy.rl.map;
 
 import org.southy.rl.Engine;
-import org.southy.rl.entity.Entity;
 import org.southy.rl.asciipanel.AsciiPanel;
+import org.southy.rl.entity.Actor;
+import org.southy.rl.entity.Entity;
 import org.southy.rl.gen.Procgen;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class GameMap {
 
@@ -106,5 +108,21 @@ public class GameMap {
             count++;
         }
         return count;
+    }
+
+    public List<Actor> getActors() {
+        return entities
+                .stream()
+                .filter(e -> e instanceof Actor)
+                .map(e -> (Actor)e)
+                .filter(Actor::isAlive).collect(Collectors.toList());
+    }
+
+    public Actor getActorAtLocation(int x, int y) {
+        return getActors()
+                .stream()
+                .filter(a -> a.x == x && a.y == y)
+                .findFirst()
+                .orElse(null);
     }
 }

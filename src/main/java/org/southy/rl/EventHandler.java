@@ -17,9 +17,11 @@ public class EventHandler {
 
     public void handleEvents(KeyEvent event) {
         var option = keyDown(event);
-        option.ifPresent(BaseAction::perform);
-        engine.handleEnemyTurns();
-        engine.updateFov();
+        if (option.isPresent()) {
+            option.get().perform();
+            engine.handleEnemyTurns();
+            engine.updateFov();
+        }
     }
 
     public Optional<BaseAction> keyDown(KeyEvent event) {
@@ -30,23 +32,22 @@ public class EventHandler {
         var player = engine.player;
 
         switch (event.getKeyCode()) {
-            case 37:
+            case 100:
                 return Optional.of(new BaseAction.BumpAction(player, -1, 0, event.isShiftDown()));
-            case 39:
+            case 102:
                 return Optional.of(new BaseAction.BumpAction(player, 1, 0, event.isShiftDown()));
-            case 38:
+            case 104:
                 return Optional.of(new BaseAction.BumpAction(player, 0, -1, event.isShiftDown()));
-            case 40:
+            case 98:
                 return Optional.of(new BaseAction.BumpAction(player, 0, 1, event.isShiftDown()));
-                //TODO: 8-WAY
-//            case 99:
-//                return Optional.of(new Action.BumpAction(player, 1, 1, event.isShiftDown()));
-//            case 97:
-//                return Optional.of(new Action.BumpAction(player, -1, 1, event.isShiftDown()));
-//            case 103:
-//                return Optional.of(new Action.BumpAction(player, -1, -1, event.isShiftDown()));
-//            case 105:
-//                return Optional.of(new Action.BumpAction(player, 1, -1, event.isShiftDown()));
+            case 99:
+                return Optional.of(new BaseAction.BumpAction(player, 1, 1, event.isShiftDown()));
+            case 97:
+                return Optional.of(new BaseAction.BumpAction(player, -1, 1, event.isShiftDown()));
+            case 103:
+                return Optional.of(new BaseAction.BumpAction(player, -1, -1, event.isShiftDown()));
+            case 105:
+                return Optional.of(new BaseAction.BumpAction(player, 1, -1, event.isShiftDown()));
             case 27:
                 return Optional.of(new BaseAction.EscapeAction(player));
             case 82:

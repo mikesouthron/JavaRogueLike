@@ -32,7 +32,7 @@ public class Actor extends Entity {
         return ai;
     }
 
-    boolean isAlive() {
+    public boolean isAlive() {
         return ai != null;
     }
 

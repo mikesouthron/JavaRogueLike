@@ -23,16 +23,15 @@ public class Algorithm {
                     node = nodes[i];
                 }
 
-                //Left
-                handleAdjacentNode(x - 1, y, width, node, cost, nodes, v);
-                //Right
-                handleAdjacentNode(x + 1, y, width, node, cost, nodes, v);
-                //Up
-                handleAdjacentNode(x, y - 1, width, node, cost, nodes, v);
-                //Down
-                handleAdjacentNode(x, y + 1, width, node, cost, nodes, v);
-                
-                //TODO: 8-WAY Handle diagonals
+
+                handleAdjacentNode(x - 1, y, width, node, cost, nodes, v); //4
+                handleAdjacentNode(x + 1, y, width, node, cost, nodes, v); //6
+                handleAdjacentNode(x, y - 1, width, node, cost, nodes, v); //8
+                handleAdjacentNode(x, y + 1, width, node, cost, nodes, v); //2
+                handleAdjacentNode(x + 1, y + 1, width, node, cost, nodes, v); //3
+                handleAdjacentNode(x - 1, y + 1, width, node, cost, nodes, v); //1
+                handleAdjacentNode(x - 1, y - 1, width, node, cost, nodes, v); //7
+                handleAdjacentNode(x + 1, y - 1, width, node, cost, nodes, v); //9
             }
         }
 
