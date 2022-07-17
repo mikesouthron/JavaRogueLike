@@ -9,8 +9,8 @@ import java.lang.reflect.InvocationTargetException;
 
 public class Actor extends Entity {
 
-    BaseAI ai;
-    Fighter fighter;
+    public BaseAI ai;
+    public Fighter fighter;
 
     public Actor(GameMap gameMap, char str, Color fg, String name, Fighter fighter, Class<? extends BaseAI> aiClass) {
         this(gameMap, 0, 0, str, fg, name, fighter, aiClass);
@@ -18,9 +18,9 @@ public class Actor extends Entity {
 
 
     public Actor(GameMap gameMap, int x, int y, char str, Color fg, String name, Fighter fighter, Class<? extends BaseAI> aiClass) {
-        super(gameMap, x, y, str, fg, name, true);
+        super(gameMap, x, y, str, fg, name, true, RenderOrder.ACTOR);
         try {
-            ai = aiClass.getDeclaredConstructor(Entity.class).newInstance(this);
+            ai = aiClass.getDeclaredConstructor(Actor.class).newInstance(this);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
         }
@@ -34,14 +34,6 @@ public class Actor extends Entity {
 
     public boolean isAlive() {
         return ai != null;
-    }
-
-    public Entity spawn(GameMap map, int x, int y) {
-        return new Actor(map, x, y, str, fg, name, fighter, ai.getClass());
-    }
-
-    public Entity copy() {
-        return new Actor(null, x, y, str, fg, name, fighter, ai.getClass());
     }
 
 }

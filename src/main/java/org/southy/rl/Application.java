@@ -58,8 +58,9 @@ public class Application extends JFrame {
 
     @SuppressWarnings("InfiniteLoopStatement")
     public void execute() throws InterruptedException {
-        var player = EntityFactory.player.copy();
+        var player = EntityFactory.player();
         var engine = new Engine(player, logger);
+//        engine.gameMap = Procgen.generateDungeon(engine, 1, roomMinSize, roomMaxSize, mapWidth, mapHeight, 1);
         engine.gameMap = Procgen.generateDungeon(engine, maxRooms, roomMinSize, roomMaxSize, mapWidth, mapHeight, maxMonstersPerRoom);
         engine.updateFov();
 

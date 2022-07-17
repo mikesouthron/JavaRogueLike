@@ -1,11 +1,14 @@
 package org.southy.rl.components;
 
-public class Fighter extends BaseComponent {
+import org.southy.rl.ColorUtils;
+import org.southy.rl.entity.RenderOrder;
+import org.southy.rl.eventhandler.GameOverEventHandler;
 
-    int maxHp;
+public class Fighter extends BaseComponent {
+    public int maxHp;
     int hp;
-    int defence;
-    int power;
+    public int defence;
+    public int power;
 
     public Fighter(int maxHp, int defence, int power) {
         this.maxHp = maxHp;
@@ -20,6 +23,29 @@ public class Fighter extends BaseComponent {
 
     public void setHp(int hp) {
         this.hp = Math.max(0, Math.min(hp, maxHp));
+        if (this.hp == 0 && entity.isAlive()) {
+            die();
+        }
+    }
+
+    private void die() {
+        String deathMessage;
+
+        if (engine().player == this.entity) {
+            deathMessage = "You died!";
+            engine().eventHandler = new GameOverEventHandler();
+        } else {
+            deathMessage = entity.name + " is dead";
+        }
+
+        entity.str = '%';
+        entity.fg = ColorUtils.color(191, 0, 0);
+        entity.blocksMovement = false;
+        entity.ai = null;
+        entity.name = "remains of " + entity.name;
+        entity.renderOrder = RenderOrder.CORPSE;
+
+        System.out.println(deathMessage);
     }
 
 }

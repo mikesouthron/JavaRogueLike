@@ -1,6 +1,7 @@
 package org.southy.rl.components;
 
 import org.southy.rl.Action;
+import org.southy.rl.entity.Actor;
 import org.southy.rl.entity.Entity;
 import org.southy.rl.map.Tile;
 import org.southy.rl.pathing.Algorithm;
@@ -11,13 +12,13 @@ import java.util.List;
 
 public class BaseAI extends BaseComponent implements Action {
 
-    public BaseAI(Entity entity) {
+    public BaseAI(Actor entity) {
         this.entity = entity;
     }
 
     @Override
-    public void perform() {
-        //Pass
+    public boolean perform() {
+        return false;
     }
 
     public List<Integer> getPathTo(int destX, int destY) {

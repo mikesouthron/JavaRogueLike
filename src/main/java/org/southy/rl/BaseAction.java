@@ -1,14 +1,18 @@
 package org.southy.rl;
 
+import org.southy.rl.entity.Actor;
 import org.southy.rl.entity.Entity;
+import org.southy.rl.eventhandler.MainGameEventHandler;
 import org.southy.rl.map.FastMoveState;
 
+import java.util.Optional;
+
 public abstract class BaseAction implements Action {
-    Entity entity;
+    Actor entity;
 
     public boolean shiftHeld = false;
 
-    public BaseAction(Entity entity) {
+    public BaseAction(Actor entity) {
         this.entity = entity;
     }
 
@@ -16,27 +20,28 @@ public abstract class BaseAction implements Action {
         return entity.gameMap.engine;
     }
 
-    static class EscapeAction extends BaseAction {
+    public static class EscapeAction extends BaseAction {
 
-        public EscapeAction(Entity entity) {
+        public EscapeAction(Actor entity) {
             super(entity);
         }
 
         @Override
-        public void perform() {
+        public boolean perform() {
             System.exit(0);
+            return false;
         }
     }
 
     public static class WaitAction extends BaseAction {
 
-        public WaitAction(Entity entity) {
+        public WaitAction(Actor entity) {
             super(entity);
         }
 
         @Override
-        public void perform() {
-            //Pass
+        public boolean perform() {
+            return true;
         }
     }
 
@@ -44,45 +49,64 @@ public abstract class BaseAction implements Action {
         int dx;
         int dy;
 
-        public ActionWithDirection(Entity entity, int dx, int dy, boolean shiftHeld) {
+        public ActionWithDirection(Actor entity, int dx, int dy, boolean shiftHeld) {
             super(entity);
             this.dx = dx;
             this.dy = dy;
             this.shiftHeld = shiftHeld;
         }
 
+        private MainGameEventHandler.Direction dest() {
+            return new MainGameEventHandler.Direction(entity.x + dx, entity.y + dy);
+        }
+
+        public Optional<Actor> targetActor() {
+            var d = dest();
+            return Optional.ofNullable(engine().gameMap.getActorAtLocation(d.x, d.y));
+        }
+
         @Override
-        public void perform() {
-            //TODO:
+        public boolean perform() {
+            return false;
         }
     }
 
     public static class MeleeAction extends ActionWithDirection {
-        public MeleeAction(Entity entity, int dx, int dy, boolean shiftHeld) {
+        public MeleeAction(Actor entity, int dx, int dy, boolean shiftHeld) {
             super(entity, dx, dy, shiftHeld);
         }
 
         @Override
-        public void perform() {
+        public boolean perform() {
             engine().fastMove = null;
-            var dest_x = entity.x + dx;
-            var dest_y = entity.y + dy;
-            var target = entity.gameMap.getBlockingEntityAtLocation(dest_x, dest_y);
+            var target = targetActor();
             if (target.isEmpty()) {
-                return;
+                return false;
             }
-            System.out.println("You kick " + target.get().name + ", much to its annoyance!");
+
+            var damage = entity.fighter.power - target.get().fighter.defence;
+
+            var attackDesc = entity.name.toUpperCase() + " attacks " + target.get().name;
+
+            if (damage > 0) {
+                target.get().fighter.setHp(target.get().fighter.getHp() - damage);
+                System.out.println(attackDesc + " for " + damage + " hit points");
+            } else {
+                System.out.println(attackDesc + " but does no damage");
+            }
+
+            return true;
         }
     }
 
     public static class MovementAction extends ActionWithDirection {
 
-        public MovementAction(Entity entity, int dx, int dy, boolean shiftHeld) {
+        public MovementAction(Actor entity, int dx, int dy, boolean shiftHeld) {
             super(entity, dx, dy, shiftHeld);
         }
 
         @Override
-        public void perform() {
+        public boolean perform() {
             if (shiftHeld && engine().fastMove == null) {
                 engine().fastMove = new FastMoveState();
             }
@@ -99,7 +123,7 @@ public abstract class BaseAction implements Action {
 
             if (!entity.gameMap.inBounds(dest_x, dest_y)) {
                 engine().fastMove = null;
-                return;
+                return false;
             }
 
             if (!entity.gameMap.getTileAt(dest_x, dest_y).walkable) {
@@ -124,7 +148,7 @@ public abstract class BaseAction implements Action {
                 } else {
                     //Special case for fast move, if not null and right angle is available, take right angle
                     engine().fastMove = null;
-                    return;
+                    return false;
                 }
             }
 
@@ -133,7 +157,7 @@ public abstract class BaseAction implements Action {
 
             if (entity.gameMap.getBlockingEntityAtLocation(dest_x, dest_y).isPresent()) {
                 engine().fastMove = null;
-                return;
+                return false;
             }
 
             if (engine().fastMove != null) {
@@ -153,24 +177,25 @@ public abstract class BaseAction implements Action {
             }
 
             entity.move(dx, dy);
+            return true;
         }
     }
 
-    static class BumpAction extends ActionWithDirection {
+    public static class BumpAction extends ActionWithDirection {
 
-        public BumpAction(Entity entity, int dx, int dy, boolean shiftHeld) {
+        public BumpAction(Actor entity, int dx, int dy, boolean shiftHeld) {
             super(entity, dx, dy, shiftHeld);
         }
 
         @Override
-        public void perform() {
+        public boolean perform() {
             var dest_x = entity.x + dx;
             var dest_y = entity.y + dy;
 
             if (entity.gameMap.getBlockingEntityAtLocation(dest_x, dest_y).isPresent()) {
-                new MeleeAction(entity, dx, dy, shiftHeld).perform();
+                return new MeleeAction(entity, dx, dy, shiftHeld).perform();
             } else {
-                new MovementAction(entity, dx, dy, shiftHeld).perform();
+                return new MovementAction(entity, dx, dy, shiftHeld).perform();
             }
         }
     }

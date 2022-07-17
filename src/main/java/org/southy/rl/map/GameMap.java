@@ -6,9 +6,10 @@ import org.southy.rl.entity.Actor;
 import org.southy.rl.entity.Entity;
 import org.southy.rl.gen.Procgen;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class GameMap {
 
@@ -90,7 +91,11 @@ public class GameMap {
             }
         }
 
-        entities.stream().filter(e -> visible[Procgen.toIdx(e.x, e.y, width)] != null).forEach(e -> panel.write(e.str, e.x, e.y, e.fg, e.bg));
+        entities
+                .stream()
+                .filter(e -> visible[Procgen.toIdx(e.x, e.y, width)] != null)
+                .sorted(Comparator.comparing(a -> a.renderOrder.ordinal()))
+                .forEach(e -> panel.write(e.str, e.x, e.y, e.fg, e.bg));
     }
 
     public Integer countAvailableMoves(int x, int y) {
@@ -101,7 +106,7 @@ public class GameMap {
         if (inBounds(x + 1, y) && getTileAt(x + 1, y).walkable) {
             count++;
         }
-        if (inBounds(x, y - 1) &&  getTileAt(x, y - 1).walkable) {
+        if (inBounds(x, y - 1) && getTileAt(x, y - 1).walkable) {
             count++;
         }
         if (inBounds(x, y + 1) && getTileAt(x, y + 1).walkable) {
@@ -111,11 +116,15 @@ public class GameMap {
     }
 
     public List<Actor> getActors() {
-        return entities
-                .stream()
-                .filter(e -> e instanceof Actor)
-                .map(e -> (Actor)e)
-                .filter(Actor::isAlive).collect(Collectors.toList());
+        List<Actor> actors = new ArrayList<>();
+        for (Entity entity : entities) {
+            if (entity instanceof Actor) {
+                if (((Actor) entity).isAlive()) {
+                    actors.add((Actor) entity);
+                }
+            }
+        }
+        return actors;
     }
 
     public Actor getActorAtLocation(int x, int y) {

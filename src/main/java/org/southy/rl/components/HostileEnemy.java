@@ -1,6 +1,7 @@
 package org.southy.rl.components;
 
 import org.southy.rl.BaseAction;
+import org.southy.rl.entity.Actor;
 import org.southy.rl.entity.Entity;
 
 import java.util.ArrayList;
@@ -10,12 +11,12 @@ public class HostileEnemy extends BaseAI {
 
     List<Integer> path = new ArrayList<>();
 
-    public HostileEnemy(Entity entity) {
+    public HostileEnemy(Actor entity) {
         super(entity);
     }
 
     @Override
-    public void perform() {
+    public boolean perform() {
         Entity target = engine().player;
 
         int dx = target.x - entity.x;
@@ -25,8 +26,7 @@ public class HostileEnemy extends BaseAI {
 
         if (engine().gameMap.visible[entity.x + entity.y * engine().gameMap.width] != null) {
             if (distance <= 1) {
-                new BaseAction.MeleeAction(entity, dx, dy, false).perform();
-                return;
+                return new BaseAction.MeleeAction(entity, dx, dy, false).perform();
             }
 
             path = getPathTo(target.x, target.y);
@@ -36,10 +36,9 @@ public class HostileEnemy extends BaseAI {
             int dest_idx = path.remove(0);
             int x = dest_idx % engine().gameMap.width;
             int y = dest_idx / engine().gameMap.width;
-            new BaseAction.MovementAction(entity, x - entity.x, y - entity.y, false).perform();
-            return;
+            return new BaseAction.MovementAction(entity, x - entity.x, y - entity.y, false).perform();
         }
 
-        new BaseAction.WaitAction(entity).perform();
+        return new BaseAction.WaitAction(entity).perform();
     }
 }

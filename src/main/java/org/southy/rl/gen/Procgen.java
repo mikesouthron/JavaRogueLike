@@ -15,7 +15,6 @@ public class Procgen {
     public static GameMap generateDungeon(Engine engine, int maxRooms, int roomMinSize, int roomMaxSize, int mapWidth, int mapHeight, int maxMonstersPerRoom) {
         var player = engine.player;
         var entities = new ArrayList<Entity>();
-        entities.add(player);
         var dungeon = new GameMap(engine, mapWidth, mapHeight, entities);
 
         var rooms = new ArrayList<RectangularRoom>();
@@ -81,9 +80,9 @@ public class Procgen {
             }
             if (!existingEntity) {
                 if (RandomUtils.randomInt(0, 10) < 8) {
-                    EntityFactory.orc.spawn(map, x, y);
+                    EntityFactory.orc(map, x, y);
                 } else {
-                    EntityFactory.troll.spawn(map, x, y);
+                    EntityFactory.troll(map, x, y);
                 }
             }
         }
