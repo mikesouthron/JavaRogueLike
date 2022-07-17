@@ -13,18 +13,18 @@ import java.awt.event.KeyListener;
 @SuppressWarnings("BusyWait")
 public class Application extends JFrame {
 
-    private final int screenWidth = 80;
-    private final int screenHeight = 50;
+    public static final int screenWidth = 80;
+    public static final int screenHeight = 50;
 
-    private final int mapWidth = 80;
+    public static final int mapWidth = 80;
 
-    private final int mapHeight = 45;
+    public static final int mapHeight = 45;
 
-    private final int roomMaxSize = 10;
-    private final int roomMinSize = 6;
-    private final int maxRooms = 30;
+    public static final int roomMaxSize = 10;
+    public static final int roomMinSize = 6;
+    public static final int maxRooms = 30;
 
-    private final int maxMonstersPerRoom = 2;
+    public static final int maxMonstersPerRoom = 2;
 
     KeyEvent keyEvent = null;
 
@@ -41,7 +41,9 @@ public class Application extends JFrame {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                keyEvent = e;
+                if (e.getKeyCode() != 16 && e.getKeyCode() != 17) {
+                    keyEvent = e;
+                }
             }
 
             @Override
@@ -56,15 +58,20 @@ public class Application extends JFrame {
 
     @SuppressWarnings("InfiniteLoopStatement")
     public void execute() throws InterruptedException {
-        var player = EntityFactory.player.copy();
+        var player = EntityFactory.player();
         var engine = new Engine(player, logger);
+//        engine.gameMap = Procgen.generateDungeon(engine, 1, roomMinSize, roomMaxSize, mapWidth, mapHeight, 1);
         engine.gameMap = Procgen.generateDungeon(engine, maxRooms, roomMinSize, roomMaxSize, mapWidth, mapHeight, maxMonstersPerRoom);
         engine.updateFov();
 
         while (true) {
             engine.eventHandler.handleEvents(keyEvent);
             engine.render(panel);
-            keyEvent = null;
+            if (engine.fastMove != null) {
+                Thread.sleep(15);
+            } else {
+                keyEvent = null;
+            }
             while (keyEvent == null) {
                 Thread.sleep(5);
             }
@@ -74,6 +81,8 @@ public class Application extends JFrame {
     public static void main(String[] args) throws InterruptedException {
         var app = new Application();
         app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        app.setLocationRelativeTo(null);
+//        app.setExtendedState(JFrame.MAXIMIZED_BOTH);
         app.setVisible(true);
         app.execute();
     }

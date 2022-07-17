@@ -19,19 +19,15 @@ public class Entity {
 
     public boolean blocksMovement;
 
-    public Entity(GameMap gameMap, int x, int y, char str, Color fg, String name, boolean blocksMovement) {
-        this(gameMap, x, y, str, fg, ColorUtils.FLOOR_COLOR_LIGHT, name, blocksMovement);
+    public RenderOrder renderOrder;
+
+    public Entity(GameMap gameMap, int x, int y, char str, Color fg, String name, boolean blocksMovement,
+                  RenderOrder renderOrder) {
+        this(gameMap, x, y, str, fg, ColorUtils.FLOOR_COLOR_LIGHT, name, blocksMovement, renderOrder);
     }
 
-    public Entity(GameMap gameMap, char str, Color fg, String name, boolean blocksMovement) {
-        this(gameMap, str, fg, ColorUtils.FLOOR_COLOR_LIGHT, name, blocksMovement);
-    }
-
-    public Entity(GameMap gameMap, char str, Color fg, Color bg, String name, boolean blocksMovement) {
-        this(gameMap, 0, 0, str, fg, bg, name, blocksMovement);
-    }
-
-    public Entity(GameMap gameMap, int x, int y, char str, Color fg, Color bg, String name, boolean blocksMovement) {
+    public Entity(GameMap gameMap, int x, int y, char str, Color fg, Color bg, String name, boolean blocksMovement,
+                  RenderOrder renderOrder) {
         this.x = x;
         this.y = y;
         this.str = str;
@@ -39,6 +35,7 @@ public class Entity {
         this.bg = bg;
         this.name = name;
         this.blocksMovement = blocksMovement;
+        this.renderOrder = renderOrder;
         if (gameMap != null) {
             this.gameMap = gameMap;
             gameMap.entities.add(this);
@@ -48,14 +45,6 @@ public class Entity {
     public void move(int dx, int dy) {
         this.x += dx;
         this.y += dy;
-    }
-
-    public Entity spawn(GameMap map, int x, int y) {
-        return new Entity(map, x, y, str, fg, bg, name, blocksMovement);
-    }
-
-    public Entity copy() {
-        return new Entity(null, x, y, str, fg, bg, name, blocksMovement);
     }
 
     public void place(int x, int y, GameMap map) {
