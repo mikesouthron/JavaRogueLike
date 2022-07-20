@@ -4,7 +4,6 @@ import org.southy.rl.Engine;
 import org.southy.rl.Logger;
 import org.southy.rl.asciipanel.AsciiPanel;
 import org.southy.rl.entity.Entity;
-import org.southy.rl.gen.Procgen;
 import org.southy.rl.ui.Render;
 
 import java.awt.*;
@@ -48,8 +47,8 @@ public class LookModeEventHandler implements EventHandler {
     public void handleEvents(KeyEvent event) {
         if (MOVE_KEYS.containsKey(event.getKeyCode())) {
             var dir = MOVE_KEYS.get(event.getKeyCode());
-            cursorX = Math.max(0, Math.min(cursorX + dir.x, engine.gameMap.width));
-            cursorY = Math.max(0, Math.min(cursorY + dir.y, engine.gameMap.height));
+            cursorX = Math.max(0, Math.min(cursorX + (event.isShiftDown() ? dir.x * 5 : dir.x), engine.gameMap.width));
+            cursorY = Math.max(0, Math.min(cursorY + (event.isShiftDown() ? dir.y * 5 : dir.y), engine.gameMap.height));
             return;
         }
         engine.eventHandler = new MainGameEventHandler(engine);
