@@ -30,6 +30,10 @@ public class LookModeEventHandler implements EventHandler {
         MOVE_KEYS.put(KeyEvent.VK_RIGHT, new MainGameEventHandler.Direction(1, 0));
         MOVE_KEYS.put(KeyEvent.VK_UP, new MainGameEventHandler.Direction(0, -1));
         MOVE_KEYS.put(KeyEvent.VK_DOWN, new MainGameEventHandler.Direction(0, 1));
+        MOVE_KEYS.put(KeyEvent.VK_PAGE_DOWN, new MainGameEventHandler.Direction(1, 1));
+        MOVE_KEYS.put(KeyEvent.VK_END, new MainGameEventHandler.Direction(-1, 1));
+        MOVE_KEYS.put(KeyEvent.VK_HOME, new MainGameEventHandler.Direction(-1, -1));
+        MOVE_KEYS.put(KeyEvent.VK_PAGE_UP, new MainGameEventHandler.Direction(1, -1));
     }
 
     Engine engine;
@@ -52,7 +56,6 @@ public class LookModeEventHandler implements EventHandler {
             return;
         }
         engine.eventHandler = new MainGameEventHandler(engine);
-
     }
 
     @Override

@@ -1,7 +1,8 @@
 package org.southy.rl.eventhandler;
 
-import org.southy.rl.*;
-import org.southy.rl.asciipanel.AsciiPanel;
+import org.southy.rl.Application;
+import org.southy.rl.BaseAction;
+import org.southy.rl.Engine;
 import org.southy.rl.gen.Procgen;
 
 import java.awt.event.KeyEvent;
@@ -36,6 +37,10 @@ public class MainGameEventHandler implements EventHandler {
         MOVE_KEYS.put(KeyEvent.VK_RIGHT, new Direction(1, 0));
         MOVE_KEYS.put(KeyEvent.VK_UP, new Direction(0, -1));
         MOVE_KEYS.put(KeyEvent.VK_DOWN, new Direction(0, 1));
+        MOVE_KEYS.put(KeyEvent.VK_PAGE_DOWN, new Direction(1, 1));
+        MOVE_KEYS.put(KeyEvent.VK_END, new Direction(-1, 1));
+        MOVE_KEYS.put(KeyEvent.VK_HOME, new Direction(-1, -1));
+        MOVE_KEYS.put(KeyEvent.VK_PAGE_UP, new Direction(1, -1));
     }
     private static final Set<Integer> WAIT_KEYS = Set.of(KeyEvent.VK_NUMPAD5, KeyEvent.VK_PERIOD, KeyEvent.VK_CLEAR);
 
