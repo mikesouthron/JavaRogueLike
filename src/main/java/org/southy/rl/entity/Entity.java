@@ -7,7 +7,7 @@ import java.awt.*;
 
 public class Entity {
 
-    public GameMap gameMap;
+    public GameMap parent;
 
     public int x;
     public int y;
@@ -21,12 +21,12 @@ public class Entity {
 
     public RenderOrder renderOrder;
 
-    public Entity(GameMap gameMap, int x, int y, char str, Color fg, String name, boolean blocksMovement,
+    public Entity(GameMap parent, int x, int y, char str, Color fg, String name, boolean blocksMovement,
                   RenderOrder renderOrder) {
-        this(gameMap, x, y, str, fg, ColorUtils.FLOOR_COLOR_LIGHT, name, blocksMovement, renderOrder);
+        this(parent, x, y, str, fg, ColorUtils.FLOOR_COLOR_LIGHT, name, blocksMovement, renderOrder);
     }
 
-    public Entity(GameMap gameMap, int x, int y, char str, Color fg, Color bg, String name, boolean blocksMovement,
+    public Entity(GameMap parent, int x, int y, char str, Color fg, Color bg, String name, boolean blocksMovement,
                   RenderOrder renderOrder) {
         this.x = x;
         this.y = y;
@@ -36,9 +36,9 @@ public class Entity {
         this.name = name;
         this.blocksMovement = blocksMovement;
         this.renderOrder = renderOrder;
-        if (gameMap != null) {
-            this.gameMap = gameMap;
-            gameMap.entities.add(this);
+        if (parent != null) {
+            this.parent = parent;
+            parent.entities.add(this);
         }
     }
 
@@ -51,12 +51,16 @@ public class Entity {
         this.x = x;
         this.y = y;
         if (map != null) {
-            if (this.gameMap != null) {
-                this.gameMap.entities.remove(this);
+            if (this.parent != null) {
+                this.parent.entities.remove(this);
             }
-            this.gameMap = map;
+            this.parent = map;
             map.entities.add(this);
         }
+    }
+
+    public GameMap gamemap() {
+        return parent.gamemap();
     }
 
 }

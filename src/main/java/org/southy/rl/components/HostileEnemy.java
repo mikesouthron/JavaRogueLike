@@ -2,7 +2,6 @@ package org.southy.rl.components;
 
 import org.southy.rl.BaseAction;
 import org.southy.rl.entity.Actor;
-import org.southy.rl.entity.Entity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,22 +10,23 @@ public class HostileEnemy extends BaseAI {
 
     List<Integer> path = new ArrayList<>();
 
-    public HostileEnemy(Actor entity) {
-        super(entity);
+    public HostileEnemy(Actor parent) {
+        super(parent);
     }
 
     @Override
     public boolean perform() {
-        Entity target = engine().player;
+        var engine = parent.gamemap().engine;
+        var target = engine.player;
 
-        int dx = target.x - entity.x;
-        int dy = target.y - entity.y;
+        int dx = target.x - parent.x;
+        int dy = target.y - parent.y;
 
         int distance = Math.max(Math.abs(dx), Math.abs(dy));
 
-        if (engine().gameMap.visible[entity.x + entity.y * engine().gameMap.width] != null) {
+        if (engine.gameMap.visible[parent.x + parent.y * engine.gameMap.width] != null) {
             if (distance <= 1) {
-                return new BaseAction.MeleeAction(entity, dx, dy, false).perform();
+                return new BaseAction.MeleeAction(parent, dx, dy, false).perform();
             }
 
             path = getPathTo(target.x, target.y);
@@ -34,11 +34,11 @@ public class HostileEnemy extends BaseAI {
 
         if (path != null && path.size() > 0) {
             int dest_idx = path.remove(0);
-            int x = dest_idx % engine().gameMap.width;
-            int y = dest_idx / engine().gameMap.width;
-            return new BaseAction.MovementAction(entity, x - entity.x, y - entity.y, false).perform();
+            int x = dest_idx % engine.gameMap.width;
+            int y = dest_idx / engine.gameMap.width;
+            return new BaseAction.MovementAction(parent, x - parent.x, y - parent.y, false).perform();
         }
 
-        return new BaseAction.WaitAction(entity).perform();
+        return new BaseAction.WaitAction(parent).perform();
     }
 }

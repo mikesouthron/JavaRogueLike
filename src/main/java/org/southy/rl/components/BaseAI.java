@@ -10,10 +10,12 @@ import org.southy.rl.pathing.Node;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BaseAI extends BaseComponent implements Action {
+public class BaseAI implements Action {
 
-    public BaseAI(Actor entity) {
-        this.entity = entity;
+    Actor parent;
+
+    public BaseAI(Actor parent) {
+        this.parent = parent;
     }
 
     @Override
@@ -22,22 +24,24 @@ public class BaseAI extends BaseComponent implements Action {
     }
 
     public List<Integer> getPathTo(int destX, int destY) {
+        var gameMap = parent.gamemap();
+        
         //TODO: Move cost and graph calculations out to once per turn
-        Integer[] cost = new Integer[entity.gameMap.tiles.length];
+        Integer[] cost = new Integer[gameMap.tiles.length];
 
-        boolean[][] block = new boolean[entity.gameMap.width][entity.gameMap.height];
+        boolean[][] block = new boolean[gameMap.width][gameMap.height];
 
-        for (Entity e : entity.gameMap.entities) {
+        for (Entity e : gameMap.entities) {
             if (e.blocksMovement) {
                 block[e.x][e.y] = true;
             }
         }
 
-        for (int i = 0; i < entity.gameMap.tiles.length; i++) {
-            Tile t = entity.gameMap.tiles[i];
+        for (int i = 0; i < gameMap.tiles.length; i++) {
+            Tile t = gameMap.tiles[i];
 
-            int x = i % entity.gameMap.width;
-            int y = i / entity.gameMap.width;
+            int x = i % gameMap.width;
+            int y = i / gameMap.width;
 
             if (t.walkable) {
                 if (block[x][y]) {
@@ -50,9 +54,9 @@ public class BaseAI extends BaseComponent implements Action {
             }
         }
 
-        Node[] graph = Algorithm.buildGraph(entity.gameMap.width, entity.gameMap.height, cost);
+        Node[] graph = Algorithm.buildGraph(gameMap.width, gameMap.height, cost);
 
-        Node start = graph[entity.x + entity.y * entity.gameMap.width];
+        Node start = graph[parent.x + parent.y * gameMap.width];
 
         Algorithm.calculateShortestPathFromSource(start);
 
@@ -61,14 +65,14 @@ public class BaseAI extends BaseComponent implements Action {
 
         List<Integer> path = new ArrayList<>();
 
-        Node dest = graph[destX + destY * entity.gameMap.width];
+        Node dest = graph[destX + destY * gameMap.width];
         boolean skip = true;
         for (Node node : dest.getShortestPath()) {
             if (skip) {
                 skip = false;
                 continue;
             }
-            path.add(node.getX() + node.getY() * entity.gameMap.width);
+            path.add(node.getX() + node.getY() * gameMap.width);
         }
         return path;
     }

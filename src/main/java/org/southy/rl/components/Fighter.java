@@ -25,7 +25,7 @@ public class Fighter extends BaseComponent {
 
     public void setHp(int hp) {
         this.hp = Math.max(0, Math.min(hp, maxHp));
-        if (this.hp == 0 && entity.isAlive()) {
+        if (this.hp == 0 && parent.isAlive()) {
             die();
         }
     }
@@ -33,21 +33,21 @@ public class Fighter extends BaseComponent {
     private void die() {
         String deathMessage;
         Color deathMessageColor;
-        if (engine().player == this.entity) {
+        if (engine().player == this.parent) {
             deathMessage = "You died!";
             deathMessageColor = ColorUtils.PLAYER_DIE;
             engine().eventHandler = new GameOverEventHandler(engine());
         } else {
-            deathMessage = entity.name + " is dead";
+            deathMessage = parent.name + " is dead";
             deathMessageColor = ColorUtils.ENEMY_DIE;
         }
 
-        entity.str = '%';
-        entity.fg = ColorUtils.color(191, 0, 0);
-        entity.blocksMovement = false;
-        entity.ai = null;
-        entity.name = "remains of " + entity.name;
-        entity.renderOrder = RenderOrder.CORPSE;
+        parent.str = '%';
+        parent.fg = ColorUtils.color(191, 0, 0);
+        parent.blocksMovement = false;
+        parent.ai = null;
+        parent.name = "remains of " + parent.name;
+        parent.renderOrder = RenderOrder.CORPSE;
 
         engine().logger.addMessage(deathMessage, deathMessageColor);
     }

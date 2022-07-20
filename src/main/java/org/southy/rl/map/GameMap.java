@@ -134,4 +134,8 @@ public class GameMap {
                 .findFirst()
                 .orElse(null);
     }
+
+    public GameMap gamemap() {
+        return this;
+    }
 }

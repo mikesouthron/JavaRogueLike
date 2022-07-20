@@ -5,7 +5,6 @@ import org.southy.rl.entity.Entity;
 import org.southy.rl.eventhandler.MainGameEventHandler;
 import org.southy.rl.map.FastMoveState;
 
-import java.awt.*;
 import java.util.Optional;
 
 public abstract class BaseAction implements Action {
@@ -18,7 +17,7 @@ public abstract class BaseAction implements Action {
     }
 
     Engine engine() {
-        return entity.gameMap.engine;
+        return entity.gamemap().engine;
     }
 
     public static class EscapeAction extends BaseAction {
@@ -110,6 +109,8 @@ public abstract class BaseAction implements Action {
 
         @Override
         public boolean perform() {
+            var gameMap = entity.gamemap();
+            
             if (shiftHeld && engine().fastMove == null) {
                 engine().fastMove = new FastMoveState();
             }
@@ -124,23 +125,23 @@ public abstract class BaseAction implements Action {
             var dest_x = entity.x + dx;
             var dest_y = entity.y + dy;
 
-            if (!entity.gameMap.inBounds(dest_x, dest_y)) {
+            if (!gameMap.inBounds(dest_x, dest_y)) {
                 engine().fastMove = null;
                 return false;
             }
 
-            if (!entity.gameMap.getTileAt(dest_x, dest_y).walkable) {
-                if (engine().fastMove != null && engine().fastMove.currentAvailableMoves > 0 && entity.gameMap.countAvailableMoves(entity.x, entity.y) == 2) {
+            if (!gameMap.getTileAt(dest_x, dest_y).walkable) {
+                if (engine().fastMove != null && engine().fastMove.currentAvailableMoves > 0 && entity.gamemap().countAvailableMoves(entity.x, entity.y) == 2) {
                     if (dy == 0) {
                         dx = 0;
-                        if (entity.gameMap.getTileAt(entity.x, entity.y + 1).walkable) {
+                        if (gameMap.getTileAt(entity.x, entity.y + 1).walkable) {
                             dy = 1;
                         } else {
                             dy = -1;
                         }
                     } else if (dx == 0) {
                         dy = 0;
-                        if (entity.gameMap.getTileAt(entity.x + 1, entity.y).walkable) {
+                        if (gameMap.getTileAt(entity.x + 1, entity.y).walkable) {
                             dx = 1;
                         } else {
                             dx = -1;
@@ -158,13 +159,13 @@ public abstract class BaseAction implements Action {
             dest_x = entity.x + dx;
             dest_y = entity.y + dy;
 
-            if (entity.gameMap.getBlockingEntityAtLocation(dest_x, dest_y).isPresent()) {
+            if (gameMap.getBlockingEntityAtLocation(dest_x, dest_y).isPresent()) {
                 engine().fastMove = null;
                 return false;
             }
 
             if (engine().fastMove != null) {
-                int count = entity.gameMap.countAvailableMoves(dest_x, dest_y);
+                int count = gameMap.countAvailableMoves(dest_x, dest_y);
                 var fastMove = engine().fastMove;
                 if (fastMove.currentAvailableMoves > 0 && count != fastMove.currentAvailableMoves) {
                     engine().fastMove = null;
@@ -172,8 +173,8 @@ public abstract class BaseAction implements Action {
                     fastMove.currentAvailableMoves = count;
                 }
                 //Enemy in fov
-                for (Entity e : entity.gameMap.entities) {
-                    if (e != entity && e.blocksMovement && e.gameMap.getTileAt(e.x, e.y).fov) {
+                for (Entity e : gameMap.entities) {
+                    if (e != entity && e.blocksMovement && e.gamemap().getTileAt(e.x, e.y).fov) {
                         engine().fastMove = null;
                     }
                 }
@@ -195,7 +196,7 @@ public abstract class BaseAction implements Action {
             var dest_x = entity.x + dx;
             var dest_y = entity.y + dy;
 
-            if (entity.gameMap.getBlockingEntityAtLocation(dest_x, dest_y).isPresent()) {
+            if (entity.gamemap().getBlockingEntityAtLocation(dest_x, dest_y).isPresent()) {
                 return new MeleeAction(entity, dx, dy, shiftHeld).perform();
             } else {
                 return new MovementAction(entity, dx, dy, shiftHeld).perform();

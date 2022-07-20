@@ -12,13 +12,13 @@ public class Actor extends Entity {
     public BaseAI ai;
     public Fighter fighter;
 
-    public Actor(GameMap gameMap, char str, Color fg, String name, Fighter fighter, Class<? extends BaseAI> aiClass) {
-        this(gameMap, 0, 0, str, fg, name, fighter, aiClass);
+    public Actor(GameMap parent, char str, Color fg, String name, Fighter fighter, Class<? extends BaseAI> aiClass) {
+        this(parent, 0, 0, str, fg, name, fighter, aiClass);
     }
 
 
-    public Actor(GameMap gameMap, int x, int y, char str, Color fg, String name, Fighter fighter, Class<? extends BaseAI> aiClass) {
-        super(gameMap, x, y, str, fg, name, true, RenderOrder.ACTOR);
+    public Actor(GameMap parent, int x, int y, char str, Color fg, String name, Fighter fighter, Class<? extends BaseAI> aiClass) {
+        super(parent, x, y, str, fg, name, true, RenderOrder.ACTOR);
         try {
             ai = aiClass.getDeclaredConstructor(Actor.class).newInstance(this);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
