@@ -16,6 +16,7 @@
 * Numpad keys to move, 8-way movement.
 * Shift + Direction = auto move. 
 * v opens message log.
+* l enters look mode, where you can navigate a cursor and see things in your FoV.
 * Escape to quit.
 
 ## Dev Details
