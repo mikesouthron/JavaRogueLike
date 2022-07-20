@@ -1,3 +1,5 @@
 /target/
 /.idea/
 .DS_Store
+/launcher/DotNetLauncher/obj/
+/launcher/DotNetLauncher/bin/Debug/net6.0/
