@@ -4,6 +4,8 @@ import org.southy.rl.ColorUtils;
 import org.southy.rl.entity.RenderOrder;
 import org.southy.rl.eventhandler.GameOverEventHandler;
 
+import java.awt.*;
+
 public class Fighter extends BaseComponent {
     public int maxHp;
     int hp;
@@ -30,12 +32,14 @@ public class Fighter extends BaseComponent {
 
     private void die() {
         String deathMessage;
-
+        Color deathMessageColor;
         if (engine().player == this.entity) {
             deathMessage = "You died!";
-            engine().eventHandler = new GameOverEventHandler();
+            deathMessageColor = ColorUtils.PLAYER_DIE;
+            engine().eventHandler = new GameOverEventHandler(engine());
         } else {
             deathMessage = entity.name + " is dead";
+            deathMessageColor = ColorUtils.ENEMY_DIE;
         }
 
         entity.str = '%';
@@ -45,7 +49,7 @@ public class Fighter extends BaseComponent {
         entity.name = "remains of " + entity.name;
         entity.renderOrder = RenderOrder.CORPSE;
 
-        System.out.println(deathMessage);
+        engine().logger.addMessage(deathMessage, deathMessageColor);
     }
 
 }

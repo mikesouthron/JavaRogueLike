@@ -6,11 +6,12 @@ import org.southy.rl.eventhandler.EventHandler;
 import org.southy.rl.eventhandler.MainGameEventHandler;
 import org.southy.rl.map.FastMoveState;
 import org.southy.rl.map.GameMap;
+import org.southy.rl.ui.Render;
 
 public class Engine {
     public Actor player;
 
-    Logger logger;
+    public Logger logger;
 
     public GameMap gameMap;
 
@@ -18,10 +19,10 @@ public class Engine {
 
     FastMoveState fastMove = null;
 
-    public Engine(Actor player, Logger logger) {
+    public Engine(Actor player) {
         this.player = player;
-        this.logger = logger;
-        eventHandler = new MainGameEventHandler(this, logger);
+        this.logger = new Logger();
+        eventHandler = new MainGameEventHandler(this);
     }
 
     public void handleEnemyTurns() {
@@ -44,7 +45,8 @@ public class Engine {
     public void render(AsciiPanel panel) {
         panel.clear();
         gameMap.render(panel);
-        panel.write("HP: " + player.fighter.getHp() + "/" + player.fighter.maxHp, 1, 47);
+        logger.render(panel, 21, 45, 40, 5);
+        Render.renderBar(panel, player.fighter.getHp(), player.fighter.maxHp, 20);
         panel.repaint();
     }
 }

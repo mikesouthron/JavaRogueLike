@@ -14,6 +14,8 @@
 ## Controls
 
 * Numpad keys to move, 8-way movement.
+* Shift + Direction = auto move. 
+* v opens message log.
 * Escape to quit.
 
 ## Dev Details

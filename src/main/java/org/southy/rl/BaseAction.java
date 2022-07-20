@@ -5,6 +5,7 @@ import org.southy.rl.entity.Entity;
 import org.southy.rl.eventhandler.MainGameEventHandler;
 import org.southy.rl.map.FastMoveState;
 
+import java.awt.*;
 import java.util.Optional;
 
 public abstract class BaseAction implements Action {
@@ -88,11 +89,13 @@ public abstract class BaseAction implements Action {
 
             var attackDesc = entity.name.toUpperCase() + " attacks " + target.get().name;
 
+            var attackColor = entity == engine().player ? ColorUtils.PLAYER_ATK : ColorUtils.ENEMY_ATK;
+
             if (damage > 0) {
+                engine().logger.addMessage(attackDesc + " for " + damage + " hit points", attackColor);
                 target.get().fighter.setHp(target.get().fighter.getHp() - damage);
-                System.out.println(attackDesc + " for " + damage + " hit points");
             } else {
-                System.out.println(attackDesc + " but does no damage");
+                engine().logger.addMessage(attackDesc + " but does no damage", attackColor);
             }
 
             return true;

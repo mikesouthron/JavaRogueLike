@@ -18,7 +18,7 @@ public class Application extends JFrame {
 
     public static final int mapWidth = 80;
 
-    public static final int mapHeight = 45;
+    public static final int mapHeight = 43;
 
     public static final int roomMaxSize = 10;
     public static final int roomMinSize = 6;
@@ -29,8 +29,6 @@ public class Application extends JFrame {
     KeyEvent keyEvent = null;
 
     private final AsciiPanel panel;
-
-    private final Logger logger = new Logger();
 
     public Application() throws HeadlessException {
         addKeyListener(new KeyListener() {
@@ -59,14 +57,17 @@ public class Application extends JFrame {
     @SuppressWarnings("InfiniteLoopStatement")
     public void execute() throws InterruptedException {
         var player = EntityFactory.player();
-        var engine = new Engine(player, logger);
+        var engine = new Engine(player);
 //        engine.gameMap = Procgen.generateDungeon(engine, 1, roomMinSize, roomMaxSize, mapWidth, mapHeight, 1);
         engine.gameMap = Procgen.generateDungeon(engine, maxRooms, roomMinSize, roomMaxSize, mapWidth, mapHeight, maxMonstersPerRoom);
+
+        engine.logger.addMessage("Hello and welcome, adventurer, to yet another dungeon!", ColorUtils.WELCOME_TEXT);
+
         engine.updateFov();
 
         while (true) {
             engine.eventHandler.handleEvents(keyEvent);
-            engine.render(panel);
+            engine.eventHandler.onRender(panel);
             if (engine.fastMove != null) {
                 Thread.sleep(15);
             } else {
