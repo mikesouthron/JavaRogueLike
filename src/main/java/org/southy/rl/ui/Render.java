@@ -25,12 +25,12 @@ public class Render {
         }
     }
 
-    public static java.util.List<String> getNamesAtLocation(int x, int y, GameMap gameMap) {
-        var list = new ArrayList<String>();
+    public static java.util.List<Entity> getNamesAtLocation(int x, int y, GameMap gameMap) {
+        var list = new ArrayList<Entity>();
 
         for (Entity entity : gameMap.entities) {
             if (entity.x == x && entity.y == y) {
-                list.add(entity.name);
+                list.add(entity);
             }
         }
 

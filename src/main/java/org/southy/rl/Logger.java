@@ -45,7 +45,7 @@ public class Logger {
         renderMessages(panel, x, y, width, height, this.log);
     }
 
-    private static java.util.List<String> wrap(String str, int width) {
+    public static java.util.List<String> wrap(String str, int width) {
         if (str.length() < width) {
             return java.util.List.of(str);
         }

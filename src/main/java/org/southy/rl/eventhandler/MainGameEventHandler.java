@@ -85,6 +85,10 @@ public class MainGameEventHandler implements EventHandler {
             engine.eventHandler = new HistoryViewerEventHandler(engine);
         }
 
+        if (event.getKeyCode() == KeyEvent.VK_L) {
+            engine.eventHandler = new LookModeEventHandler(engine);
+        }
+
         if (event.getKeyCode() == KeyEvent.VK_ESCAPE) {
             return Optional.of(new BaseAction.EscapeAction(player));
         }

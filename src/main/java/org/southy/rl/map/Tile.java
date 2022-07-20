@@ -6,7 +6,7 @@ import java.awt.*;
 
 public class Tile {
 
-    static class Graphic {
+    public static class Graphic {
         public char ch;
         public Color fg;
         public Color bg;
@@ -25,12 +25,15 @@ public class Tile {
 
     public boolean fov = false;
 
-    public static Tile newTile(boolean walkable, boolean transparent, Graphic dark, Graphic light) {
+    public String name;
+
+    public static Tile newTile(boolean walkable, boolean transparent, Graphic dark, Graphic light, String name) {
         var t = new Tile();
         t.walkable = walkable;
         t.transparent = transparent;
         t.dark = dark;
         t.light = light;
+        t.name = name;
         return t;
     }
 
@@ -39,13 +42,13 @@ public class Tile {
     public static Tile floorTile() {
         return newTile(true, true,
                 new Graphic(' ', ColorUtils.color(255, 255, 255), ColorUtils.FLOOR_COLOR_DARK),
-                new Graphic(' ', ColorUtils.color(255, 255, 255), ColorUtils.FLOOR_COLOR_LIGHT));
+                new Graphic(' ', ColorUtils.color(255, 255, 255), ColorUtils.FLOOR_COLOR_LIGHT), "Floor");
     }
 
     public static Tile wallTile() {
         return newTile(false, false,
                 new Graphic(' ', ColorUtils.color(255, 255, 255), ColorUtils.color(0, 0,100)),
-                new Graphic(' ', ColorUtils.color(255, 255, 255), ColorUtils.color(130, 110,50)));
+                new Graphic(' ', ColorUtils.color(255, 255, 255), ColorUtils.color(130, 110,50)), "Wall");
     }
 
 }
