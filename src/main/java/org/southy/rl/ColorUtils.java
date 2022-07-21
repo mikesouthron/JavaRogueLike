@@ -4,8 +4,8 @@ import java.awt.*;
 
 public class ColorUtils {
 
-    public final static Color FLOOR_COLOR_DARK = color(50, 50,150);
-    public final static Color FLOOR_COLOR_LIGHT = color(200, 180,50);
+    public final static Color FLOOR_COLOR_DARK = color(100, 100,100);
+    public final static Color FLOOR_COLOR_LIGHT = color(200, 200,200);
     public final static Color PLAYER_ATK = color(0xE0, 0xE0, 0xE0);
     public final static Color ENEMY_ATK = color(0xFF, 0xC0, 0xC0);
     public final static Color PLAYER_DIE = color(0xFF, 0x30, 0x30);

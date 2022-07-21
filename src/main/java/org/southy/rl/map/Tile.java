@@ -41,14 +41,14 @@ public class Tile {
 
     public static Tile floorTile() {
         return newTile(true, true,
-                new Graphic(' ', ColorUtils.color(255, 255, 255), ColorUtils.FLOOR_COLOR_DARK),
-                new Graphic(' ', ColorUtils.color(255, 255, 255), ColorUtils.FLOOR_COLOR_LIGHT), "Floor");
+                new Graphic('.', ColorUtils.color(100, 100, 100), Color.BLACK),
+                new Graphic('.', ColorUtils.color(200, 200, 200), Color.BLACK), "Floor");
     }
 
     public static Tile wallTile() {
         return newTile(false, false,
-                new Graphic(' ', ColorUtils.color(255, 255, 255), ColorUtils.color(0, 0,100)),
-                new Graphic(' ', ColorUtils.color(255, 255, 255), ColorUtils.color(130, 110,50)), "Wall");
+                new Graphic(' ', Color.BLACK, ColorUtils.color(100, 100, 100)),
+                new Graphic(' ', Color.BLACK, ColorUtils.color(200, 200, 200)), "Wall");
     }
 
 }

@@ -3,6 +3,7 @@ package org.southy.rl.eventhandler;
 import org.southy.rl.Engine;
 import org.southy.rl.Logger;
 import org.southy.rl.asciipanel.AsciiPanel;
+import org.southy.rl.map.GameMap;
 
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
@@ -39,7 +40,7 @@ public class HistoryViewerEventHandler implements EventHandler {
     public void onRender(AsciiPanel panel) {
         EventHandler.super.onRender(panel);
         var messages = engine.logger.log;
-        Logger.renderMessages(panel, 1, 1, engine.gameMap.width - 5, engine.gameMap.height / 2, messages.subList(0, cursor + 1));
+        Logger.renderMessages(panel, GameMap.MAP_OFFSET_X, GameMap.MAP_OFFSET_Y, engine.gameMap.width, engine.gameMap.height / 2, messages.subList(0, cursor + 1));
     }
 
     @Override

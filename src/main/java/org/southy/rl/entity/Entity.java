@@ -23,7 +23,7 @@ public class Entity {
 
     public Entity(GameMap parent, int x, int y, char str, Color fg, String name, boolean blocksMovement,
                   RenderOrder renderOrder) {
-        this(parent, x, y, str, fg, ColorUtils.FLOOR_COLOR_LIGHT, name, blocksMovement, renderOrder);
+        this(parent, x, y, str, fg, Color.BLACK, name, blocksMovement, renderOrder);
     }
 
     public Entity(GameMap parent, int x, int y, char str, Color fg, Color bg, String name, boolean blocksMovement,

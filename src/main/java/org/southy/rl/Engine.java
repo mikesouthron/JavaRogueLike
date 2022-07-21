@@ -44,10 +44,10 @@ public class Engine {
 
     public void render(AsciiPanel panel) {
         panel.clear();
-        gameMap.render(panel);
         Render.renderUIBorders(panel, gameMap);
-        logger.render(panel, 20, 45, 40, 10);
-        Render.renderBar(panel, player.fighter.getHp(), player.fighter.maxHp, 18);
+        gameMap.render(panel);
+        logger.render(panel, 20, 46, 40, 12);
+        Render.renderBar(panel, player.fighter.getHp(), player.fighter.maxHp, 16);
         panel.repaint();
     }
 }

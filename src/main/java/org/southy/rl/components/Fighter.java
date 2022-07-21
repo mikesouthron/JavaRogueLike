@@ -46,7 +46,7 @@ public class Fighter extends BaseComponent {
         parent.fg = ColorUtils.color(191, 0, 0);
         parent.blocksMovement = false;
         parent.ai = null;
-        parent.name = "remains of " + parent.name;
+        parent.name = "Remains of " + parent.name;
         parent.renderOrder = RenderOrder.CORPSE;
 
         engine().logger.addMessage(deathMessage, deathMessageColor);

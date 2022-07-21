@@ -9,6 +9,7 @@ import org.southy.rl.ui.Render;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -67,19 +68,23 @@ public class LookModeEventHandler implements EventHandler {
     @Override
     public void onRender(AsciiPanel panel) {
         EventHandler.super.onRender(panel);
+
+        panel.write("Look", 88, 1, Color.WHITE);
+
         var tile = engine.gameMap.tiles[cursorX + cursorY * engine.gameMap.width];
         if (tile.fov) {
             List<Entity> entities = Render.getNamesAtLocation(cursorX, cursorY, engine.gameMap);
 
             if (entities.size() > 0) {
-                var yOffset = entities.size() - 1;
-                for (int i = entities.size() - 1; i >= 0; i--) {
-                    var entity = entities.get(i);
-                    var lines = Logger.wrap(entity.name, 40);
-                    for (int j = lines.size() - 1; j >= 0; j--) {
-                        panel.write(lines.get(j), 81, yOffset + 1, Color.WHITE);
-                        yOffset--;
-                    }
+                var lines = new ArrayList<String>();
+                for (Entity entity : entities) {
+                    var text = Logger.wrap(entity.name, 16);
+                    lines.addAll(text);
+                }
+                var yOffset = lines.size() - 1;
+                for (int i = lines.size() - 1; i >= 0; i--) {
+                    panel.write(lines.get(i), 82, yOffset + 2, Color.WHITE);
+                    yOffset--;
                 }
 
                 var entity = entities
@@ -89,12 +94,12 @@ public class LookModeEventHandler implements EventHandler {
 
                 panel.write(entity.str, entity.x + GameMap.MAP_OFFSET_X, entity.y + GameMap.MAP_OFFSET_Y, entity.fg, Color.CYAN);
             } else {
-                panel.write(tile.name, 81, 1, Color.WHITE);
+                panel.write(tile.name, 82, 2, Color.WHITE);
                 panel.write(tile.light.ch, cursorX + GameMap.MAP_OFFSET_X, cursorY + GameMap.MAP_OFFSET_Y, tile.light.fg, Color.CYAN);
             }
         } else {
             panel.write(tile.dark.ch, cursorX + GameMap.MAP_OFFSET_X, cursorY + GameMap.MAP_OFFSET_Y, tile.dark.fg, Color.CYAN);
-            panel.write("Not Visible", 81, 1, Color.WHITE);
+            panel.write("Not Visible", 82, 2, Color.WHITE);
         }
     }
 }
