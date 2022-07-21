@@ -45,9 +45,9 @@ public class Engine {
     public void render(AsciiPanel panel) {
         panel.clear();
         gameMap.render(panel);
-        Render.renderUI(panel, gameMap);
-        logger.render(panel, 21, 45, 40, 5);
-        Render.renderBar(panel, player.fighter.getHp(), player.fighter.maxHp, 20);
+        Render.renderUIBorders(panel, gameMap);
+        logger.render(panel, 20, 45, 40, 10);
+        Render.renderBar(panel, player.fighter.getHp(), player.fighter.maxHp, 18);
         panel.repaint();
     }
 }

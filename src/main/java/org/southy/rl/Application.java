@@ -13,8 +13,8 @@ import java.awt.event.KeyListener;
 @SuppressWarnings("BusyWait")
 public class Application extends JFrame {
 
-    public static final int screenWidth = 80;
-    public static final int screenHeight = 50;
+    public static final int screenWidth = 100;
+    public static final int screenHeight = 60;
 
     public static final int mapWidth = 60;
 

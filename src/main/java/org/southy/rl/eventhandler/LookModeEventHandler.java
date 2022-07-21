@@ -52,8 +52,8 @@ public class LookModeEventHandler implements EventHandler {
     public void handleEvents(KeyEvent event) {
         if (MOVE_KEYS.containsKey(event.getKeyCode())) {
             var dir = MOVE_KEYS.get(event.getKeyCode());
-            cursorX = Math.max(0, Math.min(cursorX + (event.isShiftDown() ? dir.x * 5 : dir.x), engine.gameMap.width));
-            cursorY = Math.max(0, Math.min(cursorY + (event.isShiftDown() ? dir.y * 5 : dir.y), engine.gameMap.height));
+            cursorX = Math.max(0, Math.min(cursorX + (event.isShiftDown() ? dir.x * 5 : dir.x), engine.gameMap.width - 1));
+            cursorY = Math.max(0, Math.min(cursorY + (event.isShiftDown() ? dir.y * 5 : dir.y), engine.gameMap.height - 1));
             return;
         }
         engine.eventHandler = new MainGameEventHandler(engine);
@@ -77,7 +77,7 @@ public class LookModeEventHandler implements EventHandler {
                     var entity = entities.get(i);
                     var lines = Logger.wrap(entity.name, 40);
                     for (int j = lines.size() - 1; j >= 0; j--) {
-                        panel.write(lines.get(j), GameMap.MAP_OFFSET, yOffset + GameMap.MAP_OFFSET, Color.WHITE);
+                        panel.write(lines.get(j), 81, yOffset + 1, Color.WHITE);
                         yOffset--;
                     }
                 }
@@ -87,14 +87,14 @@ public class LookModeEventHandler implements EventHandler {
                         .sorted(Comparator.comparing(a -> a.renderOrder.ordinal()))
                         .collect(Collectors.toList()).get(entities.size() - 1);
 
-                panel.write(entity.str, entity.x + GameMap.MAP_OFFSET, entity.y + GameMap.MAP_OFFSET, entity.fg, Color.CYAN);
+                panel.write(entity.str, entity.x + GameMap.MAP_OFFSET_X, entity.y + GameMap.MAP_OFFSET_Y, entity.fg, Color.CYAN);
             } else {
-                panel.write(tile.name, GameMap.MAP_OFFSET, GameMap.MAP_OFFSET, Color.WHITE);
-                panel.write(tile.light.ch, cursorX + GameMap.MAP_OFFSET, cursorY + GameMap.MAP_OFFSET, tile.light.fg, Color.CYAN);
+                panel.write(tile.name, 81, 1, Color.WHITE);
+                panel.write(tile.light.ch, cursorX + GameMap.MAP_OFFSET_X, cursorY + GameMap.MAP_OFFSET_Y, tile.light.fg, Color.CYAN);
             }
         } else {
-            panel.write(tile.dark.ch, cursorX + GameMap.MAP_OFFSET, cursorY + GameMap.MAP_OFFSET, tile.dark.fg, Color.CYAN);
-            panel.write("Not Visible", GameMap.MAP_OFFSET, GameMap.MAP_OFFSET, Color.WHITE);
+            panel.write(tile.dark.ch, cursorX + GameMap.MAP_OFFSET_X, cursorY + GameMap.MAP_OFFSET_Y, tile.dark.fg, Color.CYAN);
+            panel.write("Not Visible", 81, 1, Color.WHITE);
         }
     }
 }

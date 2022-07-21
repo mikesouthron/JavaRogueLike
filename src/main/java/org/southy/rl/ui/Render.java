@@ -11,18 +11,18 @@ import java.util.ArrayList;
 
 public class Render {
 
-    public static void renderUI(AsciiPanel panel, GameMap gameMap) {
-        panel.write("+", 0, 0, ColorUtils.UI_OUTLINE_COLOR);
-        panel.write("+", 0, gameMap.height + 1, ColorUtils.UI_OUTLINE_COLOR);
-        panel.write("+", gameMap.width + 1, 0, ColorUtils.UI_OUTLINE_COLOR);
-        panel.write("+", gameMap.width + 1, gameMap.height + 1, ColorUtils.UI_OUTLINE_COLOR);
+    public static void renderUIBorders(AsciiPanel panel, GameMap gameMap) {
+        panel.write("+", GameMap.MAP_OFFSET_X - 1, GameMap.MAP_OFFSET_Y - 1, ColorUtils.UI_OUTLINE_COLOR);
+        panel.write("+", GameMap.MAP_OFFSET_X - 1, gameMap.height + GameMap.MAP_OFFSET_Y, ColorUtils.UI_OUTLINE_COLOR);
+        panel.write("+", gameMap.width + GameMap.MAP_OFFSET_X, GameMap.MAP_OFFSET_Y - 1, ColorUtils.UI_OUTLINE_COLOR);
+        panel.write("+", gameMap.width + GameMap.MAP_OFFSET_X, gameMap.height + GameMap.MAP_OFFSET_Y, ColorUtils.UI_OUTLINE_COLOR);
         for (int i = 0; i < gameMap.width; i++) {
-            panel.write((char)196, i + 1, 0, ColorUtils.UI_OUTLINE_COLOR);
-            panel.write((char)196, i + 1, gameMap.height + 1, ColorUtils.UI_OUTLINE_COLOR);
+            panel.write((char)196, i + GameMap.MAP_OFFSET_X, GameMap.MAP_OFFSET_Y - 1, ColorUtils.UI_OUTLINE_COLOR);
+            panel.write((char)196, i + GameMap.MAP_OFFSET_X, gameMap.height + GameMap.MAP_OFFSET_Y, ColorUtils.UI_OUTLINE_COLOR);
         }
         for (int i = 0; i < gameMap.height; i++) {
-            panel.write((char)179, 0, i + 1, ColorUtils.UI_OUTLINE_COLOR);
-            panel.write((char)179, gameMap.width + 1, i + 1, ColorUtils.UI_OUTLINE_COLOR);
+            panel.write((char)179, GameMap.MAP_OFFSET_X - 1, i + GameMap.MAP_OFFSET_Y, ColorUtils.UI_OUTLINE_COLOR);
+            panel.write((char)179, gameMap.width + GameMap.MAP_OFFSET_X, i + GameMap.MAP_OFFSET_Y, ColorUtils.UI_OUTLINE_COLOR);
         }
     }
 
@@ -34,9 +34,9 @@ public class Render {
 
         for (int i = 0; i < totalWidth; i++) {
             if (i >= 1 && (i - 1) < str.length) {
-                panel.write(str[i -1], i, 45, ColorUtils.BAR_TEXT, i < barWidth ? ColorUtils.BAR_FILLED : ColorUtils.BAR_EMPTY);
+                panel.write(str[i -1], i + 1, 1, ColorUtils.BAR_TEXT, i < barWidth ? ColorUtils.BAR_FILLED : ColorUtils.BAR_EMPTY);
             } else {
-                panel.write(' ', i, 45, ColorUtils.BAR_TEXT, i < barWidth ? ColorUtils.BAR_FILLED : ColorUtils.BAR_EMPTY);
+                panel.write(' ', i + 1, 1, ColorUtils.BAR_TEXT, i < barWidth ? ColorUtils.BAR_FILLED : ColorUtils.BAR_EMPTY);
             }
         }
     }
