@@ -15,6 +15,8 @@ public class ColorUtils {
     public final static Color BAR_FILLED = color(0x0, 0x60, 0x0);
     public final static Color BAR_EMPTY = color(0x40, 0x10, 0x10);
 
+    public final static Color UI_OUTLINE_COLOR = color(128, 128, 128);
+
     public static Color color(int red, int green, int blue) {
         var hsb = Color.RGBtoHSB(red, green, blue, null);
         return Color.getHSBColor(hsb[0], hsb[1], hsb[2]);
