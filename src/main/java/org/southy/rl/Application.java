@@ -78,10 +78,21 @@ public class Application extends JFrame {
         engine.updateFov();
 
         while (true) {
+            if (engine.player.isAlive()) {
+                long start = System.currentTimeMillis();
+                try (var os = new ObjectOutputStream(new FileOutputStream("game.save"))) {
+                    os.writeObject(engine);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                System.out.println("Saved in " + (System.currentTimeMillis() - start) + "ms");
+            } else {
+                Files.deleteIfExists(Paths.get("game.save"));
+            }
             engine.eventHandler.handleEvents(keyEvent);
             engine.eventHandler.onRender(panel);
             if (engine.fastMove != null) {
-                Thread.sleep(15);
+                Thread.sleep(10);
             } else {
                 keyEvent = null;
             }

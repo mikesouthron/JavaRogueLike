@@ -98,14 +98,6 @@ public class MainGameEventHandler implements EventHandler {
             engine.eventHandler = new LookModeEventHandler(engine);
         }
 
-        if (event.getKeyCode() == KeyEvent.VK_S && event.isShiftDown()) {
-            try (var os = new ObjectOutputStream(new FileOutputStream("game.save"))) {
-                os.writeObject(engine);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
         if (event.getKeyCode() == KeyEvent.VK_ESCAPE) {
             return Optional.of(new BaseAction.EscapeAction(player));
         }
