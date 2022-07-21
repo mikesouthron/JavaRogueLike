@@ -46,7 +46,7 @@ public class Engine {
         panel.clear();
         Render.renderUIBorders(panel, gameMap);
         gameMap.render(panel);
-        logger.render(panel, 20, 46, 40, 12);
+        logger.render(panel, 20, 46, 60, 12);
         Render.renderBar(panel, player.fighter.getHp(), player.fighter.maxHp, 16);
         panel.repaint();
     }
