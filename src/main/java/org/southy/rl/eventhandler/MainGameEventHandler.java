@@ -78,6 +78,10 @@ public class MainGameEventHandler implements EventHandler {
             return Optional.of(new BaseAction.BumpAction(player, dir.x, dir.y, event.isShiftDown()));
         }
 
+        if (event.getKeyCode() == KeyEvent.VK_COMMA) {
+            return Optional.of(new BaseAction.PickupAction(player));
+        }
+
         if (WAIT_KEYS.contains(event.getKeyCode())) {
             return Optional.of(new BaseAction.WaitAction(player));
         }

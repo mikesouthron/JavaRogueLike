@@ -4,12 +4,14 @@ import org.southy.rl.components.Consumable;
 import org.southy.rl.map.GameMap;
 
 import java.awt.*;
+import java.io.Serializable;
 
-public class Item extends Entity {
+public class Item extends Entity implements Serializable {
 
     public Consumable consumable;
 
     public GameMap gameMap;
+    public Actor actor;
 
     public Item(GameMap parent, int x, int y, char str, Color color, String name, Consumable consumable) {
         super(parent, x, y, str, color, name, false, RenderOrder.ITEM);
@@ -64,5 +66,9 @@ public class Item extends Entity {
 
     public void setConsumable(Consumable consumable) {
         this.consumable = consumable;
+    }
+
+    public void setActor(Actor actor) {
+        this.actor = actor;
     }
 }

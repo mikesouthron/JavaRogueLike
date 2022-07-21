@@ -5,7 +5,9 @@ import org.southy.rl.ColorUtils;
 import org.southy.rl.entity.Item;
 import org.southy.rl.exceptions.Impossible;
 
-public class HealingConsumable extends Consumable {
+import java.io.Serializable;
+
+public class HealingConsumable extends Consumable implements Serializable {
     public int amount;
 
     public HealingConsumable(int amount) {

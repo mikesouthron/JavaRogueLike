@@ -2,6 +2,7 @@ package org.southy.rl.entity;
 
 import org.southy.rl.components.BaseAI;
 import org.southy.rl.components.Fighter;
+import org.southy.rl.components.Inventory;
 import org.southy.rl.map.GameMap;
 
 import java.awt.*;
@@ -13,12 +14,14 @@ public class Actor extends Entity implements Serializable {
     public BaseAI ai;
     public Fighter fighter;
 
-    public Actor(GameMap parent, char str, Color fg, String name, Fighter fighter, Class<? extends BaseAI> aiClass) {
-        this(parent, 0, 0, str, fg, name, fighter, aiClass);
+    public Inventory inventory;
+
+    public Actor(GameMap parent, char str, Color fg, String name, Fighter fighter, Class<? extends BaseAI> aiClass, Inventory inventory) {
+        this(parent, 0, 0, str, fg, name, fighter, aiClass, inventory);
     }
 
 
-    public Actor(GameMap parent, int x, int y, char str, Color fg, String name, Fighter fighter, Class<? extends BaseAI> aiClass) {
+    public Actor(GameMap parent, int x, int y, char str, Color fg, String name, Fighter fighter, Class<? extends BaseAI> aiClass, Inventory inventory) {
         super(parent, x, y, str, fg, name, true, RenderOrder.ACTOR);
         try {
             ai = aiClass.getDeclaredConstructor(Actor.class).newInstance(this);
@@ -27,6 +30,8 @@ public class Actor extends Entity implements Serializable {
         }
         this.fighter = fighter;
         this.fighter.setEntity(this);
+        this.inventory = inventory;
+        this.inventory.setParent(this);
     }
 
     public BaseAI getAi() {

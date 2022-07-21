@@ -7,6 +7,7 @@ import org.southy.rl.eventhandler.MainGameEventHandler;
 import org.southy.rl.exceptions.Impossible;
 import org.southy.rl.map.FastMoveState;
 
+import java.awt.*;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -252,6 +253,35 @@ public abstract class BaseAction implements Action {
         public boolean perform() throws Impossible {
             item.consumable.activate(this);
             return true;
+        }
+    }
+
+    public static class PickupAction extends BaseAction {
+
+        public PickupAction(Actor entity) {
+            super(entity);
+        }
+
+        @Override
+        public boolean perform() throws Impossible {
+            for (Item item : engine().gameMap.getItems()) {
+                if (entity.x == item.x && entity.y == item.y) {
+                    if (entity.inventory.items.size() >= entity.inventory.capacity) {
+                        throw new Impossible("Your inventory is full");
+                    }
+
+                    engine().gameMap.entities.remove(item);
+                    item.actor = entity;
+                    entity.inventory.items.add(item);
+
+                    engine().logger.addMessage("You picked up the " + item.name, Color.WHITE);
+
+                    return true;
+                }
+
+            }
+
+            throw new Impossible("There is nothing to pickup");
         }
     }
 }

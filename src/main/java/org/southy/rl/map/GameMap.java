@@ -4,6 +4,7 @@ import org.southy.rl.Engine;
 import org.southy.rl.asciipanel.AsciiPanel;
 import org.southy.rl.entity.Actor;
 import org.southy.rl.entity.Entity;
+import org.southy.rl.entity.Item;
 import org.southy.rl.gen.Procgen;
 
 import java.io.Serializable;
@@ -129,6 +130,16 @@ public class GameMap implements Serializable {
             }
         }
         return actors;
+    }
+
+    public List<Item> getItems() {
+        List<Item> items = new ArrayList<>();
+        for (Entity entity : entities) {
+            if (entity instanceof Item) {
+                items.add((Item) entity);
+            }
+        }
+        return items;
     }
 
     public Actor getActorAtLocation(int x, int y) {
