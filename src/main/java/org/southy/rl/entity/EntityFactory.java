@@ -12,7 +12,7 @@ import java.awt.*;
 public class EntityFactory {
 
     public static Actor player() {
-        return new Actor(null, '@', Color.WHITE, "Player", new Fighter(30, 2, 5), HostileEnemy.class, new Inventory(26));
+        return new Actor(null, '@', Color.WHITE, "Player", new Fighter(30, 2, 5), HostileEnemy.class, new Inventory(20));
     }
 
     public static void orc(GameMap gameMap, int x, int y) {
