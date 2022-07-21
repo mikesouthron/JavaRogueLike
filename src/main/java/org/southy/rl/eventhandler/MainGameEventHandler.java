@@ -6,6 +6,10 @@ import org.southy.rl.Engine;
 import org.southy.rl.gen.Procgen;
 
 import java.awt.event.KeyEvent;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -94,10 +98,22 @@ public class MainGameEventHandler implements EventHandler {
             engine.eventHandler = new LookModeEventHandler(engine);
         }
 
+        if (event.getKeyCode() == KeyEvent.VK_S && event.isShiftDown()) {
+            try (var os = new ObjectOutputStream(new FileOutputStream("game.save"))) {
+                os.writeObject(engine);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         if (event.getKeyCode() == KeyEvent.VK_ESCAPE) {
             return Optional.of(new BaseAction.EscapeAction(player));
         }
 
         return Optional.empty();
+    }
+
+    public void setEngine(Engine engine) {
+        this.engine = engine;
     }
 }

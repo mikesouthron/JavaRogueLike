@@ -9,6 +9,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 @SuppressWarnings("BusyWait")
 public class Application extends JFrame {
@@ -55,13 +63,17 @@ public class Application extends JFrame {
     }
 
     @SuppressWarnings("InfiniteLoopStatement")
-    public void execute() throws InterruptedException {
-        var player = EntityFactory.player();
-        var engine = new Engine(player);
-//        engine.gameMap = Procgen.generateDungeon(engine, 1, roomMinSize, roomMaxSize, mapWidth, mapHeight, 1);
-        engine.gameMap = Procgen.generateDungeon(engine, maxRooms, roomMinSize, roomMaxSize, mapWidth, mapHeight, maxMonstersPerRoom);
-
-        engine.logger.addMessage("Hello and welcome, adventurer, to yet another dungeon!", ColorUtils.WELCOME_TEXT);
+    public void execute() throws InterruptedException, IOException, ClassNotFoundException {
+        Engine engine;
+        if (Files.exists(Paths.get("game.save"))) {
+            try (var os = new ObjectInputStream(new FileInputStream("game.save"))) {
+                engine = (Engine) os.readObject();
+            }
+        } else {
+            engine = new Engine(EntityFactory.player());
+            engine.gameMap = Procgen.generateDungeon(engine, maxRooms, roomMinSize, roomMaxSize, mapWidth, mapHeight, maxMonstersPerRoom);
+            engine.logger.addMessage("Hello and welcome, adventurer, to yet another dungeon!", ColorUtils.WELCOME_TEXT);
+        }
 
         engine.updateFov();
 
@@ -79,7 +91,7 @@ public class Application extends JFrame {
         }
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, IOException, ClassNotFoundException {
         var app = new Application();
         app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         app.setLocationRelativeTo(null);

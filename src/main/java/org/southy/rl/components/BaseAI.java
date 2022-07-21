@@ -7,10 +7,11 @@ import org.southy.rl.map.Tile;
 import org.southy.rl.pathing.Algorithm;
 import org.southy.rl.pathing.Node;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BaseAI implements Action {
+public class BaseAI implements Action, Serializable {
 
     Actor parent;
 

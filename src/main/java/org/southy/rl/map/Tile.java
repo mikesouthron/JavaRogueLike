@@ -3,10 +3,11 @@ package org.southy.rl.map;
 import org.southy.rl.ColorUtils;
 
 import java.awt.*;
+import java.io.Serializable;
 
-public class Tile {
+public class Tile implements Serializable {
 
-    public static class Graphic {
+    public static class Graphic implements Serializable {
         public char ch;
         public Color fg;
         public Color bg;
@@ -14,6 +15,18 @@ public class Tile {
         public Graphic(char ch, Color fg, Color bg) {
             this.ch = ch;
             this.fg = fg;
+            this.bg = bg;
+        }
+
+        public void setCh(char ch) {
+            this.ch = ch;
+        }
+
+        public void setFg(Color fg) {
+            this.fg = fg;
+        }
+
+        public void setBg(Color bg) {
             this.bg = bg;
         }
     }
@@ -26,6 +39,34 @@ public class Tile {
     public boolean fov = false;
 
     public String name;
+
+    public void setWalkable(boolean walkable) {
+        this.walkable = walkable;
+    }
+
+    public void setTransparent(boolean transparent) {
+        this.transparent = transparent;
+    }
+
+    public void setDark(Graphic dark) {
+        this.dark = dark;
+    }
+
+    public void setLight(Graphic light) {
+        this.light = light;
+    }
+
+    public void setFov(boolean fov) {
+        this.fov = fov;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public static void setSHROUD(Graphic SHROUD) {
+        Tile.SHROUD = SHROUD;
+    }
 
     public static Tile newTile(boolean walkable, boolean transparent, Graphic dark, Graphic light, String name) {
         var t = new Tile();

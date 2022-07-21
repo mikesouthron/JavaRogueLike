@@ -1,7 +1,11 @@
 package org.southy.rl.entity;
 
-public enum RenderOrder {
+import java.io.Serializable;
 
-    CORPSE, ITEM, ACTOR
+public enum RenderOrder implements Serializable {
 
+    CORPSE, ITEM, ACTOR;
+
+    RenderOrder() {
+    }
 }

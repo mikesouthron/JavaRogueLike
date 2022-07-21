@@ -3,11 +3,13 @@ package org.southy.rl;
 import org.southy.rl.asciipanel.AsciiPanel;
 
 import java.awt.*;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
-public class Logger {
+public class Logger implements Serializable {
 
-    static class LogEntry {
+    static class LogEntry implements Serializable {
         final String message;
         final Color fg;
         int count = 1;
@@ -24,9 +26,13 @@ public class Logger {
                 return message;
             }
         }
+
+        public void setCount(int count) {
+            this.count = count;
+        }
     }
 
-    public final java.util.List<LogEntry> log = new ArrayList<>();
+    public java.util.List<LogEntry> log = new ArrayList<>();
 
     public void addMessage(String message, Color fg) {
         addMessage(message, fg, false);
@@ -80,5 +86,9 @@ public class Logger {
                 }
             }
         }
+    }
+
+    public void setLog(List<LogEntry> log) {
+        this.log = log;
     }
 }

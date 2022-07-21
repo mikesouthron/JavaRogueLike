@@ -8,7 +8,9 @@ import org.southy.rl.map.FastMoveState;
 import org.southy.rl.map.GameMap;
 import org.southy.rl.ui.Render;
 
-public class Engine {
+import java.io.Serializable;
+
+public class Engine implements Serializable {
     public Actor player;
 
     public Logger logger;
@@ -49,5 +51,25 @@ public class Engine {
         logger.render(panel, 20, 46, 60, 12);
         Render.renderBar(panel, player.fighter.getHp(), player.fighter.maxHp, 16);
         panel.repaint();
+    }
+
+    public void setPlayer(Actor player) {
+        this.player = player;
+    }
+
+    public void setLogger(Logger logger) {
+        this.logger = logger;
+    }
+
+    public void setGameMap(GameMap gameMap) {
+        this.gameMap = gameMap;
+    }
+
+    public void setEventHandler(EventHandler eventHandler) {
+        this.eventHandler = eventHandler;
+    }
+
+    public void setFastMove(FastMoveState fastMove) {
+        this.fastMove = fastMove;
     }
 }

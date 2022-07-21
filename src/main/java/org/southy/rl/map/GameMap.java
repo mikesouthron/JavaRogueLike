@@ -6,12 +6,13 @@ import org.southy.rl.entity.Actor;
 import org.southy.rl.entity.Entity;
 import org.southy.rl.gen.Procgen;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-public class GameMap {
+public class GameMap implements Serializable {
 
     public final static Integer MAP_OFFSET_X = 20;
     public final static Integer MAP_OFFSET_Y = 1;
@@ -140,5 +141,33 @@ public class GameMap {
 
     public GameMap gamemap() {
         return this;
+    }
+
+    public void setEngine(Engine engine) {
+        this.engine = engine;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public void setEntities(List<Entity> entities) {
+        this.entities = entities;
+    }
+
+    public void setTiles(Tile[] tiles) {
+        this.tiles = tiles;
+    }
+
+    public void setVisible(Tile[] visible) {
+        this.visible = visible;
+    }
+
+    public void setExplored(Tile[] explored) {
+        this.explored = explored;
     }
 }

@@ -5,9 +5,10 @@ import org.southy.rl.components.Fighter;
 import org.southy.rl.map.GameMap;
 
 import java.awt.*;
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 
-public class Actor extends Entity {
+public class Actor extends Entity implements Serializable {
 
     public BaseAI ai;
     public Fighter fighter;
@@ -36,4 +37,56 @@ public class Actor extends Entity {
         return ai != null;
     }
 
+    public void setAi(BaseAI ai) {
+        this.ai = ai;
+    }
+
+    public void setFighter(Fighter fighter) {
+        this.fighter = fighter;
+    }
+
+    @Override
+    public void setParent(GameMap parent) {
+        super.setParent(parent);
+    }
+
+    @Override
+    public void setX(int x) {
+        super.setX(x);
+    }
+
+    @Override
+    public void setY(int y) {
+        super.setY(y);
+    }
+
+    @Override
+    public void setStr(char str) {
+        super.setStr(str);
+    }
+
+    @Override
+    public void setFg(Color fg) {
+        super.setFg(fg);
+    }
+
+    @Override
+    public void setBg(Color bg) {
+        super.setBg(bg);
+    }
+
+    @Override
+    public void setName(String name) {
+        super.setName(name);
+    }
+
+    @Override
+    public void setBlocksMovement(boolean blocksMovement) {
+        super.setBlocksMovement(blocksMovement);
+    }
+
+    @Override
+    public void setRenderOrder(RenderOrder renderOrder) {
+        super.setRenderOrder(renderOrder);
+    }
 }

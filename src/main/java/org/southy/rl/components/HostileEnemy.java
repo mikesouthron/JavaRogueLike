@@ -1,13 +1,13 @@
 package org.southy.rl.components;
 
 import org.southy.rl.BaseAction;
+import org.southy.rl.Engine;
 import org.southy.rl.entity.Actor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class HostileEnemy extends BaseAI {
-
     List<Integer> path = new ArrayList<>();
 
     public HostileEnemy(Actor parent) {
@@ -40,5 +40,13 @@ public class HostileEnemy extends BaseAI {
         }
 
         return new BaseAction.WaitAction(parent).perform();
+    }
+
+    public void setPath(List<Integer> path) {
+        this.path = path;
+    }
+
+    public void setParent(Actor parent) {
+        this.parent = parent;
     }
 }
