@@ -3,6 +3,7 @@ package org.southy.rl;
 import org.southy.rl.entity.Actor;
 import org.southy.rl.entity.Entity;
 import org.southy.rl.eventhandler.MainGameEventHandler;
+import org.southy.rl.exceptions.Impossible;
 import org.southy.rl.map.FastMoveState;
 
 import java.io.FileOutputStream;
@@ -86,7 +87,7 @@ public abstract class BaseAction implements Action {
         }
 
         @Override
-        public boolean perform() {
+        public boolean perform() throws Impossible {
             return false;
         }
     }
@@ -97,11 +98,11 @@ public abstract class BaseAction implements Action {
         }
 
         @Override
-        public boolean perform() {
+        public boolean perform() throws Impossible {
             engine().fastMove = null;
             var target = targetActor();
             if (target.isEmpty()) {
-                return false;
+                throw new Impossible("Nothing to attack");
             }
 
             var damage = entity.fighter.power - target.get().fighter.defence;
@@ -128,7 +129,7 @@ public abstract class BaseAction implements Action {
         }
 
         @Override
-        public boolean perform() {
+        public boolean perform() throws Impossible {
             var gameMap = entity.gamemap();
             
             if (shiftHeld && engine().fastMove == null) {
@@ -147,7 +148,7 @@ public abstract class BaseAction implements Action {
 
             if (!gameMap.inBounds(dest_x, dest_y)) {
                 engine().fastMove = null;
-                return false;
+                throw new Impossible("The way is blocked");
             }
 
             if (!gameMap.getTileAt(dest_x, dest_y).walkable) {
@@ -172,7 +173,7 @@ public abstract class BaseAction implements Action {
                 } else {
                     //Special case for fast move, if not null and right angle is available, take right angle
                     engine().fastMove = null;
-                    return false;
+                    throw new Impossible("The way is blocked");
                 }
             }
 
@@ -181,7 +182,7 @@ public abstract class BaseAction implements Action {
 
             if (gameMap.getBlockingEntityAtLocation(dest_x, dest_y).isPresent()) {
                 engine().fastMove = null;
-                return false;
+                throw new Impossible("The way is blocked");
             }
 
             if (engine().fastMove != null) {
@@ -212,7 +213,7 @@ public abstract class BaseAction implements Action {
         }
 
         @Override
-        public boolean perform() {
+        public boolean perform() throws Impossible {
             var dest_x = entity.x + dx;
             var dest_y = entity.y + dy;
 

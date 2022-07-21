@@ -3,6 +3,7 @@ package org.southy.rl;
 import org.southy.rl.asciipanel.AsciiFont;
 import org.southy.rl.asciipanel.AsciiPanel;
 import org.southy.rl.entity.EntityFactory;
+import org.southy.rl.exceptions.Impossible;
 import org.southy.rl.gen.Procgen;
 
 import javax.swing.*;
@@ -10,11 +11,8 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -78,7 +76,11 @@ public class Application extends JFrame {
         engine.updateFov();
 
         while (true) {
-            engine.eventHandler.handleEvents(keyEvent);
+            try {
+                engine.eventHandler.handleEvents(keyEvent);
+            } catch (Impossible e) {
+                engine.logger.addMessage(e.getMessage(), ColorUtils.IMPOSSIBLE, true);
+            }
             engine.eventHandler.onRender(panel);
             if (engine.fastMove != null) {
                 Thread.sleep(10);

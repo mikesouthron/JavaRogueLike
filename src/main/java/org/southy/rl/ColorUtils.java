@@ -17,6 +17,11 @@ public class ColorUtils {
 
     public final static Color UI_OUTLINE_COLOR = color(128, 128, 128);
 
+    public final static Color INVALID = color(0xFF, 0xFF, 0x00);
+    public final static Color IMPOSSIBLE = color(0x80, 0x80, 0x80);
+    public final static Color ERROR = color(0xFF, 0x40, 0x40);
+    public final static Color HEALTH_RECOVERED = color(0x0, 0xFF, 0x0);
+
     public static Color color(int red, int green, int blue) {
         var hsb = Color.RGBtoHSB(red, green, blue, null);
         return Color.getHSBColor(hsb[0], hsb[1], hsb[2]);

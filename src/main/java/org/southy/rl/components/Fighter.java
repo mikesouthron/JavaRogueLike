@@ -67,6 +67,27 @@ public class Fighter implements Serializable {
         engine().logger.addMessage(deathMessage, deathMessageColor);
     }
 
+    public int heal(int amount) {
+        if (hp == maxHp) {
+            return 0;
+        }
+
+        var newHpValue = hp + amount;
+        if (newHpValue > maxHp) {
+            newHpValue = maxHp;
+        }
+
+        var amountRecovered = newHpValue - hp;
+
+        hp = newHpValue;
+
+        return amountRecovered;
+    }
+
+    public void takeDamage(int amount) {
+        setHp(hp - amount);
+    }
+
     public void setMaxHp(int maxHp) {
         this.maxHp = maxHp;
     }

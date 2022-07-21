@@ -3,13 +3,10 @@ package org.southy.rl.eventhandler;
 import org.southy.rl.Application;
 import org.southy.rl.BaseAction;
 import org.southy.rl.Engine;
+import org.southy.rl.exceptions.Impossible;
 import org.southy.rl.gen.Procgen;
 
 import java.awt.event.KeyEvent;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -54,7 +51,7 @@ public class MainGameEventHandler implements EventHandler {
         this.engine = engine;
     }
 
-    public void handleEvents(KeyEvent event) {
+    public void handleEvents(KeyEvent event) throws Impossible {
         var option = keyDown(event);
         if (option.isPresent()) {
             if (option.get().perform()) {

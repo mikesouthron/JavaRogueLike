@@ -3,6 +3,7 @@ package org.southy.rl.components;
 import org.southy.rl.Action;
 import org.southy.rl.entity.Actor;
 import org.southy.rl.entity.Entity;
+import org.southy.rl.exceptions.Impossible;
 import org.southy.rl.map.Tile;
 import org.southy.rl.pathing.Algorithm;
 import org.southy.rl.pathing.Node;
@@ -20,7 +21,7 @@ public class BaseAI implements Action, Serializable {
     }
 
     @Override
-    public boolean perform() {
+    public boolean perform() throws Impossible {
         return false;
     }
 

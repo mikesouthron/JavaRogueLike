@@ -1,8 +1,8 @@
 package org.southy.rl.components;
 
 import org.southy.rl.BaseAction;
-import org.southy.rl.Engine;
 import org.southy.rl.entity.Actor;
+import org.southy.rl.exceptions.Impossible;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ public class HostileEnemy extends BaseAI {
     }
 
     @Override
-    public boolean perform() {
+    public boolean perform() throws Impossible {
         var engine = parent.gamemap().engine;
         var target = engine.player;
 

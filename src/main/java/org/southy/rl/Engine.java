@@ -4,6 +4,7 @@ import org.southy.rl.asciipanel.AsciiPanel;
 import org.southy.rl.entity.Actor;
 import org.southy.rl.eventhandler.EventHandler;
 import org.southy.rl.eventhandler.MainGameEventHandler;
+import org.southy.rl.exceptions.Impossible;
 import org.southy.rl.map.FastMoveState;
 import org.southy.rl.map.GameMap;
 import org.southy.rl.ui.Render;
@@ -30,7 +31,10 @@ public class Engine implements Serializable {
     public void handleEnemyTurns() {
         for (Actor actor : gameMap.getActors()) {
             if (actor != player) {
-                actor.getAi().perform();
+                try {
+                    actor.getAi().perform();
+                } catch (Impossible ignored) {
+                }
             }
         }
     }
