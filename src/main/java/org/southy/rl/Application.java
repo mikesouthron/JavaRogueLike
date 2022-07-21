@@ -16,7 +16,7 @@ public class Application extends JFrame {
     public static final int screenWidth = 80;
     public static final int screenHeight = 50;
 
-    public static final int mapWidth = 80;
+    public static final int mapWidth = 60;
 
     public static final int mapHeight = 43;
 

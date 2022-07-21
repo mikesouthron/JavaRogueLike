@@ -4,6 +4,7 @@ import org.southy.rl.Engine;
 import org.southy.rl.Logger;
 import org.southy.rl.asciipanel.AsciiPanel;
 import org.southy.rl.entity.Entity;
+import org.southy.rl.map.GameMap;
 import org.southy.rl.ui.Render;
 
 import java.awt.*;
@@ -76,7 +77,7 @@ public class LookModeEventHandler implements EventHandler {
                     var entity = entities.get(i);
                     var lines = Logger.wrap(entity.name, 40);
                     for (int j = lines.size() - 1; j >= 0; j--) {
-                        panel.write(lines.get(j), 0, yOffset, Color.WHITE);
+                        panel.write(lines.get(j), GameMap.MAP_OFFSET, yOffset + GameMap.MAP_OFFSET, Color.WHITE);
                         yOffset--;
                     }
                 }
@@ -86,14 +87,14 @@ public class LookModeEventHandler implements EventHandler {
                         .sorted(Comparator.comparing(a -> a.renderOrder.ordinal()))
                         .collect(Collectors.toList()).get(entities.size() - 1);
 
-                panel.write(entity.str, entity.x, entity.y, entity.fg, Color.CYAN);
+                panel.write(entity.str, entity.x + GameMap.MAP_OFFSET, entity.y + GameMap.MAP_OFFSET, entity.fg, Color.CYAN);
             } else {
-                panel.write(tile.name, 0, 0, Color.WHITE);
-                panel.write(tile.light.ch, cursorX, cursorY, tile.light.fg, Color.CYAN);
+                panel.write(tile.name, GameMap.MAP_OFFSET, GameMap.MAP_OFFSET, Color.WHITE);
+                panel.write(tile.light.ch, cursorX + GameMap.MAP_OFFSET, cursorY + GameMap.MAP_OFFSET, tile.light.fg, Color.CYAN);
             }
         } else {
-            panel.write(tile.dark.ch, cursorX, cursorY, tile.dark.fg, Color.CYAN);
-            panel.write("Not Visible", 0, 0, Color.WHITE);
+            panel.write(tile.dark.ch, cursorX + GameMap.MAP_OFFSET, cursorY + GameMap.MAP_OFFSET, tile.dark.fg, Color.CYAN);
+            panel.write("Not Visible", GameMap.MAP_OFFSET, GameMap.MAP_OFFSET, Color.WHITE);
         }
     }
 }

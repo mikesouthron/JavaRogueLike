@@ -13,6 +13,8 @@ import java.util.Optional;
 
 public class GameMap {
 
+    public final static Integer MAP_OFFSET = 1;
+
     public Engine engine;
 
     public int width;
@@ -83,11 +85,11 @@ public class GameMap {
             int y = i / width;
 
             if (visible[i] != null) {
-                panel.write(tile.light.ch, x, y, tile.light.fg, tile.light.bg);
+                panel.write(tile.light.ch, x + MAP_OFFSET, y + MAP_OFFSET, tile.light.fg, tile.light.bg);
             } else if (explored[i] != null) {
-                panel.write(tile.dark.ch, x, y, tile.dark.fg, tile.dark.bg);
+                panel.write(tile.dark.ch, x + MAP_OFFSET, y + MAP_OFFSET, tile.dark.fg, tile.dark.bg);
             } else {
-                panel.write(Tile.SHROUD.ch, x, y, Tile.SHROUD.fg, Tile.SHROUD.bg);
+                panel.write(Tile.SHROUD.ch, x + MAP_OFFSET, y + MAP_OFFSET, Tile.SHROUD.fg, Tile.SHROUD.bg);
             }
         }
 
@@ -95,7 +97,7 @@ public class GameMap {
                 .stream()
                 .filter(e -> visible[Procgen.toIdx(e.x, e.y, width)] != null)
                 .sorted(Comparator.comparing(a -> a.renderOrder.ordinal()))
-                .forEach(e -> panel.write(e.str, e.x, e.y, e.fg, e.bg));
+                .forEach(e -> panel.write(e.str, e.x + MAP_OFFSET, e.y + MAP_OFFSET, e.fg, e.bg));
     }
 
     public Integer countAvailableMoves(int x, int y) {
