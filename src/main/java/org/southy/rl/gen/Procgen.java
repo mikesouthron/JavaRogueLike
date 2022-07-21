@@ -12,7 +12,7 @@ import java.util.List;
 
 public class Procgen {
 
-    public static GameMap generateDungeon(Engine engine, int maxRooms, int roomMinSize, int roomMaxSize, int mapWidth, int mapHeight, int maxMonstersPerRoom) {
+    public static GameMap generateDungeon(Engine engine, int maxRooms, int roomMinSize, int roomMaxSize, int mapWidth, int mapHeight, int maxMonstersPerRoom, int maxItemsPerRoom) {
         var player = engine.player;
         var entities = new ArrayList<Entity>();
         var dungeon = new GameMap(engine, mapWidth, mapHeight, entities);
@@ -50,7 +50,7 @@ public class Procgen {
                 dungeon.digTunnel(newRoom, rooms.get(rooms.size() - 1));
             }
 
-            placeEntities(newRoom, dungeon, maxMonstersPerRoom);
+            placeEntities(newRoom, dungeon, maxMonstersPerRoom, maxItemsPerRoom);
 
             rooms.add(newRoom);
         }
@@ -65,7 +65,7 @@ public class Procgen {
         return dungeon;
     }
 
-    private static void placeEntities(RectangularRoom room, GameMap map, int maxMonstersPerRoom) {
+    private static void placeEntities(RectangularRoom room, GameMap map, int maxMonstersPerRoom, int maxItemsPerRoom) {
         var numberOfMonsters = RandomUtils.randomInt(0, maxMonstersPerRoom);
         for (int i = 0; i < numberOfMonsters; i++) {
             var x = RandomUtils.randomInt(room.x1 + 1, room.x2 - 1);
@@ -84,6 +84,23 @@ public class Procgen {
                 } else {
                     EntityFactory.troll(map, x, y);
                 }
+            }
+        }
+
+        var numberOfItems = RandomUtils.randomInt(0, maxItemsPerRoom);
+        for (int i = 0; i < numberOfItems; i++) {
+            var x = RandomUtils.randomInt(room.x1 + 1, room.x2 - 1);
+            var y = RandomUtils.randomInt(room.y1 + 1, room.y2 - 1);
+
+            boolean existingEntity = false;
+            for (Entity entity : map.entities) {
+                if (entity.x == x && entity.y == y) {
+                    existingEntity = true;
+                    break;
+                }
+            }
+            if (!existingEntity) {
+                EntityFactory.potion(map, x, y);
             }
         }
     }

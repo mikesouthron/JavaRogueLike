@@ -83,7 +83,7 @@ public class MainGameEventHandler implements EventHandler {
         }
 
         if (event.isControlDown() && event.getKeyCode() ==KeyEvent.VK_R) {
-            engine.gameMap = Procgen.generateDungeon(engine, Application.maxRooms, Application.roomMinSize, Application.roomMaxSize, Application.mapWidth, Application.mapHeight, Application.maxMonstersPerRoom);
+            engine.gameMap = Procgen.generateDungeon(engine, Application.maxRooms, Application.roomMinSize, Application.roomMaxSize, Application.mapWidth, Application.mapHeight, Application.maxMonstersPerRoom, Application.maxItemsPerRoom);
             return Optional.of(new BaseAction.WaitAction(player));
         }
 

@@ -31,6 +31,7 @@ public class Application extends JFrame {
     public static final int maxRooms = 30;
 
     public static final int maxMonstersPerRoom = 2;
+    public static final int maxItemsPerRoom = 2;
 
     KeyEvent keyEvent = null;
 
@@ -69,7 +70,7 @@ public class Application extends JFrame {
             }
         } else {
             engine = new Engine(EntityFactory.player());
-            engine.gameMap = Procgen.generateDungeon(engine, maxRooms, roomMinSize, roomMaxSize, mapWidth, mapHeight, maxMonstersPerRoom);
+            engine.gameMap = Procgen.generateDungeon(engine, maxRooms, roomMinSize, roomMaxSize, mapWidth, mapHeight, maxMonstersPerRoom, maxItemsPerRoom);
             engine.logger.addMessage("Hello and welcome, adventurer, to yet another dungeon!", ColorUtils.WELCOME_TEXT);
         }
 

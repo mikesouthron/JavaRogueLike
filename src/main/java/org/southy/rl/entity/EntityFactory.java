@@ -2,6 +2,7 @@ package org.southy.rl.entity;
 
 import org.southy.rl.ColorUtils;
 import org.southy.rl.components.Fighter;
+import org.southy.rl.components.HealingConsumable;
 import org.southy.rl.components.HostileEnemy;
 import org.southy.rl.map.GameMap;
 
@@ -19,6 +20,10 @@ public class EntityFactory {
 
     public static void troll(GameMap gameMap, int x, int y) {
         new Actor(gameMap, x, y, 'T', ColorUtils.color(0, 127, 0), "Troll", new Fighter(16, 1, 4), HostileEnemy.class);
+    }
+
+    public static void potion(GameMap gameMap, int x, int y) {
+        new Item(gameMap, x, y, '!', ColorUtils.color(127, 0, 255), "Health Potion", new HealingConsumable(4));
     }
 
 }

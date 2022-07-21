@@ -2,6 +2,7 @@ package org.southy.rl;
 
 import org.southy.rl.entity.Actor;
 import org.southy.rl.entity.Entity;
+import org.southy.rl.entity.Item;
 import org.southy.rl.eventhandler.MainGameEventHandler;
 import org.southy.rl.exceptions.Impossible;
 import org.southy.rl.map.FastMoveState;
@@ -222,6 +223,35 @@ public abstract class BaseAction implements Action {
             } else {
                 return new MovementAction(entity, dx, dy, shiftHeld).perform();
             }
+        }
+    }
+
+    public static class ItemAction implements Action {
+
+        public Actor entity;
+        public Item item;
+        public int targetX;
+        public int targetY;
+
+        public ItemAction(Actor entity, Item item, int targetX, int targetY) {
+            this.entity = entity;
+            this.item = item;
+            this.targetX = targetX;
+            this.targetY = targetY;
+        }
+
+        public ItemAction(Actor entity, Item item) {
+            this(entity, item, entity.x, entity.y);
+        }
+
+        public Optional<Actor> getTargetActor() {
+            return Optional.ofNullable(entity.gamemap().getActorAtLocation(targetX, targetY));
+        }
+
+        @Override
+        public boolean perform() throws Impossible {
+            item.consumable.activate(this);
+            return true;
         }
     }
 }
