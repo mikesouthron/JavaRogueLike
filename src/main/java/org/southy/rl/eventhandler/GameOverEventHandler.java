@@ -3,6 +3,9 @@ package org.southy.rl.eventhandler;
 import org.southy.rl.Engine;
 
 import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class GameOverEventHandler implements EventHandler {
 
@@ -15,6 +18,11 @@ public class GameOverEventHandler implements EventHandler {
     @Override
     public void handleEvents(KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            try {
+                Files.deleteIfExists(Paths.get("game.save"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             System.exit(0);
         }
     }

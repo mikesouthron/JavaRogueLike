@@ -5,6 +5,11 @@ import org.southy.rl.entity.Entity;
 import org.southy.rl.eventhandler.MainGameEventHandler;
 import org.southy.rl.map.FastMoveState;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Optional;
 
 public abstract class BaseAction implements Action {
@@ -28,6 +33,21 @@ public abstract class BaseAction implements Action {
 
         @Override
         public boolean perform() {
+            try {
+                if (engine().player.isAlive()) {
+                    long start = System.currentTimeMillis();
+                    try (var os = new ObjectOutputStream(new FileOutputStream("game.save"))) {
+                        os.writeObject(engine());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    System.out.println("Saved in " + (System.currentTimeMillis() - start) + "ms");
+                } else {
+                    Files.deleteIfExists(Paths.get("game.save"));
+                }
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
             System.exit(0);
             return false;
         }
