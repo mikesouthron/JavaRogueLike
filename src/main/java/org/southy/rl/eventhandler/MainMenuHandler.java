@@ -1,6 +1,7 @@
 package org.southy.rl.eventhandler;
 
 import org.southy.rl.Application;
+import org.southy.rl.ColorUtils;
 import org.southy.rl.Engine;
 import org.southy.rl.asciipanel.AsciiPanel;
 import org.southy.rl.entity.EntityFactory;
@@ -98,6 +99,7 @@ public class MainMenuHandler implements EventHandler {
     public void onRender(AsciiPanel panel) {
         panel.clear();
         int yOffset = panel.getHeightInCharacters() / 2 - options.size();
+        panel.write("Dread Dungeon", panel.getWidthInCharacters() / 2 - "Dread Dungeon".length() / 2, yOffset - 10, panel.getDefaultForegroundColor(), ColorUtils.color(100, 0, 0));
         for (MenuOptions option : options) {
             int xOffset = panel.getWidthInCharacters() / 2 - option.display.length() / 2;
             boolean selected = option == options.get(selectedIdx);

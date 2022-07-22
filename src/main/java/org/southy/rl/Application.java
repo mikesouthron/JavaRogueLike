@@ -2,19 +2,13 @@ package org.southy.rl;
 
 import org.southy.rl.asciipanel.AsciiFont;
 import org.southy.rl.asciipanel.AsciiPanel;
-import org.southy.rl.entity.EntityFactory;
 import org.southy.rl.exceptions.Impossible;
-import org.southy.rl.gen.Procgen;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 @SuppressWarnings("BusyWait")
 public class Application extends JFrame {
@@ -66,19 +60,6 @@ public class Application extends JFrame {
 
     @SuppressWarnings("InfiniteLoopStatement")
     public void execute() throws InterruptedException, IOException, ClassNotFoundException, Impossible {
-//        Engine engine;
-//        if (Files.exists(Paths.get("game.save"))) {
-//            try (var os = new ObjectInputStream(new FileInputStream("game.save"))) {
-//                engine = (Engine) os.readObject();
-//            }
-//        } else {
-//            engine = new Engine(EntityFactory.player());
-//            engine.gameMap = Procgen.generateDungeon(engine, maxRooms, roomMinSize, roomMaxSize, mapWidth, mapHeight, maxMonstersPerRoom, maxItemsPerRoom);
-//            engine.logger.addMessage("Hello and welcome, adventurer, to yet another dungeon!", ColorUtils.WELCOME_TEXT);
-//        }
-//
-//        engine.updateFov();
-
         engine = new Engine();
 
         while (true) {
@@ -103,8 +84,8 @@ public class Application extends JFrame {
         var app = new Application();
         app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         app.setLocationRelativeTo(null);
-//        app.setExtendedState(JFrame.MAXIMIZED_BOTH);
         app.setVisible(true);
+        app.setTitle("Dread Dungeon");
         app.execute();
     }
 
