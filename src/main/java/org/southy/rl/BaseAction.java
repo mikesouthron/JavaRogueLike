@@ -4,6 +4,7 @@ import org.southy.rl.entity.Actor;
 import org.southy.rl.entity.Entity;
 import org.southy.rl.entity.Item;
 import org.southy.rl.eventhandler.MainGameEventHandler;
+import org.southy.rl.eventhandler.MainMenuHandler;
 import org.southy.rl.exceptions.Impossible;
 import org.southy.rl.map.FastMoveState;
 
@@ -51,7 +52,7 @@ public abstract class BaseAction implements Action {
             } catch (Throwable e) {
                 e.printStackTrace();
             }
-            System.exit(0);
+            engine().eventHandler = new MainMenuHandler(engine());
             return false;
         }
     }

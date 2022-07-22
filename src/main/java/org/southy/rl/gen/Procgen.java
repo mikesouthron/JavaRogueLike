@@ -13,7 +13,8 @@ import java.util.List;
 
 public class Procgen {
 
-    public static GameMap generateDungeon(Engine engine, int maxRooms, int roomMinSize, int roomMaxSize, int mapWidth, int mapHeight, int maxMonstersPerRoom, int maxItemsPerRoom)
+    public static GameMap generateDungeon(Engine engine, int maxRooms, int roomMinSize, int roomMaxSize, int mapWidth, int mapHeight,
+            int maxMonstersPerRoom, int maxItemsPerRoom)
             throws Impossible {
         var player = engine.player;
         var entities = new ArrayList<Entity>();
@@ -102,20 +103,16 @@ public class Procgen {
                 }
             }
             if (!existingEntity) {
-                EntityFactory.fireballScroll(map, x, y);
-
-                /*
                 int rand = RandomUtils.randomInt(0, 10);
                 if (rand < 7) {
                     EntityFactory.potion(map, x, y);
                 } else if (rand < 8) {
                     EntityFactory.fireballScroll(map, x, y);
-                } else if (rand < 9){
+                } else if (rand < 9) {
                     EntityFactory.confusionScroll(map, x, y);
                 } else {
                     EntityFactory.litScroll(map, x, y);
                 }
-                 */
             }
         }
     }

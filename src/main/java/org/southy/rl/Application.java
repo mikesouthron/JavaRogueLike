@@ -61,20 +61,24 @@ public class Application extends JFrame {
         pack();
     }
 
+    public static Engine engine;
+
     @SuppressWarnings("InfiniteLoopStatement")
     public void execute() throws InterruptedException, IOException, ClassNotFoundException, Impossible {
-        Engine engine;
-        if (Files.exists(Paths.get("game.save"))) {
-            try (var os = new ObjectInputStream(new FileInputStream("game.save"))) {
-                engine = (Engine) os.readObject();
-            }
-        } else {
-            engine = new Engine(EntityFactory.player());
-            engine.gameMap = Procgen.generateDungeon(engine, maxRooms, roomMinSize, roomMaxSize, mapWidth, mapHeight, maxMonstersPerRoom, maxItemsPerRoom);
-            engine.logger.addMessage("Hello and welcome, adventurer, to yet another dungeon!", ColorUtils.WELCOME_TEXT);
-        }
+//        Engine engine;
+//        if (Files.exists(Paths.get("game.save"))) {
+//            try (var os = new ObjectInputStream(new FileInputStream("game.save"))) {
+//                engine = (Engine) os.readObject();
+//            }
+//        } else {
+//            engine = new Engine(EntityFactory.player());
+//            engine.gameMap = Procgen.generateDungeon(engine, maxRooms, roomMinSize, roomMaxSize, mapWidth, mapHeight, maxMonstersPerRoom, maxItemsPerRoom);
+//            engine.logger.addMessage("Hello and welcome, adventurer, to yet another dungeon!", ColorUtils.WELCOME_TEXT);
+//        }
+//
+//        engine.updateFov();
 
-        engine.updateFov();
+        engine = new Engine();
 
         while (true) {
             try {

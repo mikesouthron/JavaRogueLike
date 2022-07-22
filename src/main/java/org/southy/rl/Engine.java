@@ -4,6 +4,7 @@ import org.southy.rl.asciipanel.AsciiPanel;
 import org.southy.rl.entity.Actor;
 import org.southy.rl.eventhandler.EventHandler;
 import org.southy.rl.eventhandler.MainGameEventHandler;
+import org.southy.rl.eventhandler.MainMenuHandler;
 import org.southy.rl.exceptions.Impossible;
 import org.southy.rl.map.FastMoveState;
 import org.southy.rl.map.GameMap;
@@ -22,10 +23,9 @@ public class Engine implements Serializable {
 
     FastMoveState fastMove = null;
 
-    public Engine(Actor player) {
-        this.player = player;
+    public Engine() {
         this.logger = new Logger();
-        eventHandler = new MainGameEventHandler(this);
+        eventHandler = new MainMenuHandler(this);
     }
 
     public void handleEnemyTurns() {
