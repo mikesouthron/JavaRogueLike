@@ -13,7 +13,7 @@ import java.awt.event.KeyEvent;
 public class InventoryEventHandler implements EventHandler {
 
     enum Mode {
-        VIEW, EXAMINE, USE
+        VIEW, EXAMINE, USE, DROP
     }
 
     private Engine engine;
@@ -37,6 +37,10 @@ public class InventoryEventHandler implements EventHandler {
                 mode = Mode.USE;
                 return;
             }
+            if (event.getKeyCode() == KeyEvent.VK_D) {
+                mode = Mode.DROP;
+                return;
+            }
             engine.eventHandler = new MainGameEventHandler(engine);
         } else if (mode == Mode.EXAMINE) {
             int idx = event.getKeyChar() - 97;
@@ -51,10 +55,20 @@ public class InventoryEventHandler implements EventHandler {
             if (idx >= 0 && idx < engine.player.inventory.items.size()) {
                 var item = engine.player.inventory.items.get(idx);
                 if (new BaseAction.ItemAction(engine.player, item).perform()) {
-                    engine.player.inventory.items.remove(item);
                     engine.handleEnemyTurns();
                     engine.updateFov();
                 }
+                mode = Mode.VIEW;
+            } else {
+                mode = Mode.VIEW;
+            }
+        } else if (mode == Mode.DROP) {
+            int idx = event.getKeyChar() - 97;
+            if (idx >= 0 && idx < engine.player.inventory.items.size()) {
+                var item = engine.player.inventory.items.get(idx);
+                engine.player.inventory.drop(item);
+                engine.handleEnemyTurns();
+                engine.updateFov();
                 mode = Mode.VIEW;
             } else {
                 mode = Mode.VIEW;
@@ -82,6 +96,7 @@ public class InventoryEventHandler implements EventHandler {
             case VIEW:
                 panel.write("x to examine", 82, 24);
                 panel.write("u to use", 82, 25);
+                panel.write("d to drop", 82, 26);
                 break;
             case EXAMINE:
                 if (idxToExamine == -1) {
@@ -97,6 +112,10 @@ public class InventoryEventHandler implements EventHandler {
                 break;
             case USE:
                 panel.write("use", 82, 24);
+                panel.write("which item?", 82, 25);
+                break;
+            case DROP:
+                panel.write("drop", 82, 24);
                 panel.write("which item?", 82, 25);
                 break;
         }
