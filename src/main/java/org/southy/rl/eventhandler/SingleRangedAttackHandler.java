@@ -45,8 +45,12 @@ public class SingleRangedAttackHandler extends SelectIndexEventHandler implement
                 yOffset--;
             }
         } else {
+            panel.write("No Target", 82, 2);
             panel.write(tile.dark.ch, cursorX + GameMap.MAP_OFFSET_X, cursorY + GameMap.MAP_OFFSET_Y, tile.dark.fg, Color.CYAN);
         }
+
+        panel.write("Select a target", 82, 24);
+        panel.write("Enter to use", 82, 25);
     }
 
     @Override

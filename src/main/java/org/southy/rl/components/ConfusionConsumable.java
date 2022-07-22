@@ -30,17 +30,17 @@ public class ConfusionConsumable extends Consumable implements Serializable {
         var consumer = action.entity;
         var target = action.getTargetActor();
 
-        if (target.isEmpty()) {
-            throw new Impossible("No target!");
-        }
         if (gamemap().visible[action.targetX + action.targetY * gamemap().width] == null) {
             throw new Impossible("Cannot target an area you cannot see");
+        }
+        if (target.isEmpty()) {
+            throw new Impossible("No target!");
         }
         if (target.get() == consumer) {
             throw new Impossible("You cannot confuse yourself"); //TODO Maybe we can?
         }
 
-        engine().logger.addMessage("The eye of " + target.get().name + " look vacany, as it starts to stumble around!", ColorUtils.STATUS_EFFECT_APPLIED);
+        engine().logger.addMessage("The eye of " + target.get().name + " look vacant, as it starts to stumble around!", ColorUtils.STATUS_EFFECT_APPLIED);
 
         target.get().ai = new ConfusedEnemy(target.get(), target.get().ai, numberOfTurns);
         consume();
