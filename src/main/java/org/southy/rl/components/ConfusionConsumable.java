@@ -40,7 +40,7 @@ public class ConfusionConsumable extends Consumable implements Serializable {
             throw new Impossible("You cannot confuse yourself"); //TODO Maybe we can?
         }
 
-        engine().logger.addMessage("The eye of " + target.get().name + " look vacant, as it starts to stumble around!", ColorUtils.STATUS_EFFECT_APPLIED);
+        engine().logger.addMessage("The eyes of " + target.get().name + " look vacant, as it starts to stumble around!", ColorUtils.STATUS_EFFECT_APPLIED);
 
         target.get().ai = new ConfusedEnemy(target.get(), target.get().ai, numberOfTurns);
         consume();

@@ -102,8 +102,6 @@ public class Procgen {
                 }
             }
             if (!existingEntity) {
-                EntityFactory.confusionScroll(map, x, y);
-                /*
                 int rand = RandomUtils.randomInt(0, 10);
                 if (rand < 7) {
                     EntityFactory.potion(map, x, y);
@@ -112,7 +110,6 @@ public class Procgen {
                 } else {
                     EntityFactory.litScroll(map, x, y);
                 }
-                 */
             }
         }
     }
