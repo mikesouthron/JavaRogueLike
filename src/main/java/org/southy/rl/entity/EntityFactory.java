@@ -5,6 +5,7 @@ import org.southy.rl.components.Fighter;
 import org.southy.rl.components.HealingConsumable;
 import org.southy.rl.components.HostileEnemy;
 import org.southy.rl.components.Inventory;
+import org.southy.rl.components.RandomTargetDamageConsumable;
 import org.southy.rl.map.GameMap;
 
 import java.awt.*;
@@ -25,6 +26,10 @@ public class EntityFactory {
 
     public static void potion(GameMap gameMap, int x, int y) {
         new Item(gameMap, x, y, '!', ColorUtils.color(127, 0, 255), "Health Potion", new HealingConsumable(4));
+    }
+
+    public static void litScroll(GameMap gameMap, int x, int y) {
+        new Item(gameMap, x, y, '~', ColorUtils.color(255, 255, 0), "Lit Scroll", new RandomTargetDamageConsumable(20, 5));
     }
 
 }

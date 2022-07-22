@@ -22,6 +22,9 @@ public class ColorUtils {
     public final static Color ERROR = color(0xFF, 0x40, 0x40);
     public final static Color HEALTH_RECOVERED = color(0x0, 0xFF, 0x0);
 
+    public final static Color NEEDS_TARGET = color(0x3F, 0xFF, 0xFF);
+    public final static Color STATUS_EFFECT_APPLIED = color(0x3F, 0xFF, 0x3F);
+
     public static Color color(int red, int green, int blue) {
         var hsb = Color.RGBtoHSB(red, green, blue, null);
         return Color.getHSBColor(hsb[0], hsb[1], hsb[2]);
