@@ -102,14 +102,20 @@ public class Procgen {
                 }
             }
             if (!existingEntity) {
+                EntityFactory.fireballScroll(map, x, y);
+
+                /*
                 int rand = RandomUtils.randomInt(0, 10);
                 if (rand < 7) {
                     EntityFactory.potion(map, x, y);
+                } else if (rand < 8) {
+                    EntityFactory.fireballScroll(map, x, y);
                 } else if (rand < 9){
                     EntityFactory.confusionScroll(map, x, y);
                 } else {
                     EntityFactory.litScroll(map, x, y);
                 }
+                 */
             }
         }
     }

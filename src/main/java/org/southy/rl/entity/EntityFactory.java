@@ -1,6 +1,7 @@
 package org.southy.rl.entity;
 
 import org.southy.rl.ColorUtils;
+import org.southy.rl.components.AreaDamageConsumable;
 import org.southy.rl.components.ConfusionConsumable;
 import org.southy.rl.components.Fighter;
 import org.southy.rl.components.HealingConsumable;
@@ -37,4 +38,8 @@ public class EntityFactory {
         new Item(gameMap, x, y, '~', ColorUtils.color(255, 255, 0), "Confusion Scroll", new ConfusionConsumable(10));
     }
 
+    public static void fireballScroll(GameMap gameMap, int x, int y) {
+        new Item(gameMap, x, y, '~', ColorUtils.color(255, 255, 0), "Fireball Scroll", new AreaDamageConsumable(12, 3));
+    }
 }
+
