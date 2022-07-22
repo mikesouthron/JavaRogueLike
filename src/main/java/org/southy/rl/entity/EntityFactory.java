@@ -1,6 +1,7 @@
 package org.southy.rl.entity;
 
 import org.southy.rl.ColorUtils;
+import org.southy.rl.components.ConfusionConsumable;
 import org.southy.rl.components.Fighter;
 import org.southy.rl.components.HealingConsumable;
 import org.southy.rl.components.HostileEnemy;
@@ -30,6 +31,10 @@ public class EntityFactory {
 
     public static void litScroll(GameMap gameMap, int x, int y) {
         new Item(gameMap, x, y, '~', ColorUtils.color(255, 255, 0), "Lit Scroll", new RandomTargetDamageConsumable(20, 5));
+    }
+
+    public static void confusionScroll(GameMap gameMap, int x, int y) {
+        new Item(gameMap, x, y, '~', ColorUtils.color(255, 255, 0), "Confusion Scroll", new ConfusionConsumable(10));
     }
 
 }

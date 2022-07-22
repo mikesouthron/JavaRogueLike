@@ -4,14 +4,24 @@ import org.southy.rl.Application;
 import org.southy.rl.BaseAction;
 import org.southy.rl.ColorUtils;
 import org.southy.rl.Engine;
+import org.southy.rl.Logger;
+import org.southy.rl.asciipanel.AsciiPanel;
+import org.southy.rl.entity.Entity;
 import org.southy.rl.exceptions.Impossible;
 import org.southy.rl.gen.Procgen;
+import org.southy.rl.map.GameMap;
+import org.southy.rl.ui.Render;
 
+import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class MainGameEventHandler implements EventHandler {
 
@@ -118,5 +128,28 @@ public class MainGameEventHandler implements EventHandler {
 
     public void setEngine(Engine engine) {
         this.engine = engine;
+    }
+
+    @Override
+    public void onRender(AsciiPanel panel) {
+        EventHandler.super.onRender(panel);
+
+        panel.write("Explore", 87, 1, Color.WHITE);
+        List<Entity> entities = Render.getNamesAtLocation(engine.player.x, engine.player.y, engine.gameMap);
+
+        if (entities.size() > 0) {
+            var lines = new ArrayList<String>();
+            for (Entity entity : entities) {
+                if (entity != engine.player) {
+                    var text = Logger.wrap(entity.name, 16);
+                    lines.addAll(text);
+                }
+            }
+            var yOffset = lines.size() - 1;
+            for (int i = lines.size() - 1; i >= 0; i--) {
+                panel.write(lines.get(i), 82, yOffset + 2, Color.WHITE);
+                yOffset--;
+            }
+        }
     }
 }

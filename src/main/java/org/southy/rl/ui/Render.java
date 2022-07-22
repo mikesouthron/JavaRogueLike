@@ -2,6 +2,7 @@ package org.southy.rl.ui;
 
 import org.southy.rl.ColorUtils;
 import org.southy.rl.asciipanel.AsciiPanel;
+import org.southy.rl.entity.Actor;
 import org.southy.rl.entity.Entity;
 import org.southy.rl.map.GameMap;
 

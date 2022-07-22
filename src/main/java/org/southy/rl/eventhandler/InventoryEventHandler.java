@@ -54,9 +54,12 @@ public class InventoryEventHandler implements EventHandler {
             int idx = event.getKeyChar() - 97;
             if (idx >= 0 && idx < engine.player.inventory.items.size()) {
                 var item = engine.player.inventory.items.get(idx);
-                if (new BaseAction.ItemAction(engine.player, item).perform()) {
-                    engine.handleEnemyTurns();
-                    engine.updateFov();
+                var action = item.consumable.getAction(engine.player);
+                if (action.isPresent()) {
+                    if (action.get().perform()) {
+                        engine.handleEnemyTurns();
+                        engine.updateFov();
+                    }
                 }
                 mode = Mode.VIEW;
             } else {
