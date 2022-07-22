@@ -1,5 +1,6 @@
 package org.southy.rl.components;
 
+import org.southy.rl.ColorUtils;
 import org.southy.rl.Engine;
 import org.southy.rl.entity.Actor;
 import org.southy.rl.entity.Item;

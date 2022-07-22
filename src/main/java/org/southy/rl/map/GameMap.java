@@ -1,5 +1,6 @@
 package org.southy.rl.map;
 
+import org.southy.rl.Application;
 import org.southy.rl.Engine;
 import org.southy.rl.asciipanel.AsciiPanel;
 import org.southy.rl.entity.Actor;
@@ -84,17 +85,34 @@ public class GameMap implements Serializable, EntityParent {
     }
 
     public void render(AsciiPanel panel) {
-        for (int i = 0; i < tiles.length; i++) {
-            var tile = tiles[i];
-            int x = i % width;
-            int y = i / width;
+        int startX = Application.camera.x - (Application.camera.width / 2);
+        int endX = Application.camera.x + (Application.camera.width / 2);
+        int startY = Application.camera.y - (Application.camera.height / 2);
+        int endY = Application.camera.y + (Application.camera.height / 2);
 
-            if (visible[i] != null) {
-                panel.write(tile.light.ch, x + MAP_OFFSET_X, y + MAP_OFFSET_Y, tile.light.fg, tile.light.bg);
-            } else if (explored[i] != null) {
-                panel.write(tile.dark.ch, x + MAP_OFFSET_X, y + MAP_OFFSET_Y, tile.dark.fg, tile.dark.bg);
-            } else {
-                panel.write(Tile.SHROUD.ch, x + MAP_OFFSET_X, y + MAP_OFFSET_Y, Tile.SHROUD.fg, Tile.SHROUD.bg);
+        for (int x = startX; x < endX; x++) {
+            for (int y = startY; y < endY; y++) {
+                var idx = x + y * width;
+
+                int renderX = x - startX + MAP_OFFSET_X;
+                int renderY = y - startY + MAP_OFFSET_Y;
+
+                if (renderX < 0 || renderX >= Application.camera.width || renderY < 0 || renderY >= Application.camera.height) {
+                    continue;
+                }
+
+                if (idx < 0 || idx >= tiles.length) {
+                    panel.write(Tile.SHROUD.ch, renderX, renderY, Tile.SHROUD.fg, Tile.SHROUD.bg);
+                } else {
+                    var tile = tiles[idx];
+                    if (visible[idx] != null) {
+                        panel.write(tile.light.ch, renderX, renderY, tile.light.fg, tile.light.bg);
+                    } else if (explored[idx] != null) {
+                        panel.write(tile.dark.ch, renderX, renderY, tile.dark.fg, tile.dark.bg);
+                    } else {
+                        panel.write(Tile.SHROUD.ch, renderX, renderY, Tile.SHROUD.fg, Tile.SHROUD.bg);
+                    }
+                }
             }
         }
 
@@ -102,7 +120,13 @@ public class GameMap implements Serializable, EntityParent {
                 .stream()
                 .filter(e -> visible[Procgen.toIdx(e.x, e.y, width)] != null)
                 .sorted(Comparator.comparing(a -> a.renderOrder.ordinal()))
-                .forEach(e -> panel.write(e.str, e.x + MAP_OFFSET_X, e.y + MAP_OFFSET_Y, e.fg, e.bg));
+                .forEach(e -> {
+                    int renderX = e.x - startX + MAP_OFFSET_X;
+                    int renderY = e.y - startY + MAP_OFFSET_Y;
+                    if (renderX >= 0 && renderX < Application.camera.width && renderY >= 0 && renderY < Application.camera.height) {
+                        panel.write(e.str, renderX, renderY, e.fg, e.bg);
+                    }
+                });
     }
 
     public Integer countAvailableMoves(int x, int y) {

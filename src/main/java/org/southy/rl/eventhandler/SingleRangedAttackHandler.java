@@ -1,6 +1,7 @@
 package org.southy.rl.eventhandler;
 
 import org.southy.rl.Action;
+import org.southy.rl.Application;
 import org.southy.rl.Engine;
 import org.southy.rl.Logger;
 import org.southy.rl.asciipanel.AsciiPanel;
@@ -24,7 +25,13 @@ public class SingleRangedAttackHandler extends SelectIndexEventHandler implement
     public void onRender(AsciiPanel panel) {
         super.onRender(panel);
 
+        int startX = Application.camera.x - (Application.camera.width / 2);
+        int startY = Application.camera.y - (Application.camera.height / 2);
+
         panel.write("Target", 88, 1, Color.WHITE);
+
+        var cursorRenderX = cursorX - startX + GameMap.MAP_OFFSET_X;
+        var cursorRenderY = cursorY - startY + GameMap.MAP_OFFSET_Y;
 
         var tile = engine.gameMap.tiles[cursorX + cursorY * engine.gameMap.width];
         if (tile.fov) {
@@ -33,10 +40,10 @@ public class SingleRangedAttackHandler extends SelectIndexEventHandler implement
             if (target != null) {
                 var text = Logger.wrap(target.name, 16);
                 lines.addAll(text);
-                panel.write(target.str, target.x + GameMap.MAP_OFFSET_X, target.y + GameMap.MAP_OFFSET_Y, target.fg, Color.CYAN);
+                panel.write(target.str, cursorRenderX, cursorRenderY, target.fg, Color.CYAN);
             } else {
                 lines.add("No Target");
-                panel.write(tile.light.ch, cursorX + GameMap.MAP_OFFSET_X, cursorY + GameMap.MAP_OFFSET_Y, tile.light.fg, Color.CYAN);
+                panel.write(tile.light.ch, cursorRenderX, cursorRenderY, tile.light.fg, Color.CYAN);
             }
 
             var yOffset = lines.size() - 1;
@@ -46,7 +53,7 @@ public class SingleRangedAttackHandler extends SelectIndexEventHandler implement
             }
         } else {
             panel.write("No Target", 82, 2);
-            panel.write(tile.dark.ch, cursorX + GameMap.MAP_OFFSET_X, cursorY + GameMap.MAP_OFFSET_Y, tile.dark.fg, Color.CYAN);
+            panel.write(tile.dark.ch, cursorRenderX, cursorRenderY, tile.dark.fg, Color.CYAN);
         }
 
         panel.write("Select a target", 82, 24);

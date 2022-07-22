@@ -1,6 +1,7 @@
 package org.southy.rl.eventhandler;
 
 import org.southy.rl.Action;
+import org.southy.rl.Application;
 import org.southy.rl.ColorUtils;
 import org.southy.rl.Engine;
 import org.southy.rl.Logger;
@@ -35,6 +36,12 @@ public class AreaRangedAttackHandler extends SelectIndexEventHandler implements 
     public void onRender(AsciiPanel panel) {
         super.onRender(panel);
 
+        int startCX = Application.camera.x - (Application.camera.width / 2);
+        int startCY = Application.camera.y - (Application.camera.height / 2);
+
+        var cursorRenderX = cursorX - startCX + GameMap.MAP_OFFSET_X;
+        var cursorRenderY = cursorY - startCY + GameMap.MAP_OFFSET_Y;
+
         panel.write("Target Area", 85, 1, Color.WHITE);
 
         int startX = cursorX - radius - 1;
@@ -49,7 +56,7 @@ public class AreaRangedAttackHandler extends SelectIndexEventHandler implements 
                     if (idx >= 0 && idx < engine.gameMap.tiles.length) {
                         var tile = engine.gameMap.tiles[idx];
                         if (tile.fov) {
-                            panel.write(tile.light.ch, x + GameMap.MAP_OFFSET_X, y + GameMap.MAP_OFFSET_Y, tile.light.fg,
+                            panel.write(tile.light.ch, x - startCX + GameMap.MAP_OFFSET_X, y - startCY + GameMap.MAP_OFFSET_Y, tile.light.fg,
                                     ColorUtils.color(200, 0, 0));
 
                             var entityList = new ArrayList<Entity>();
@@ -64,15 +71,15 @@ public class AreaRangedAttackHandler extends SelectIndexEventHandler implements 
                                         .sorted(Comparator.comparing(a -> a.renderOrder.ordinal()))
                                         .collect(Collectors.toList()).get(entityList.size() - 1);
 
-                                panel.write(entity.str, entity.x + GameMap.MAP_OFFSET_X, entity.y + GameMap.MAP_OFFSET_Y, entity.fg,
+                                panel.write(entity.str, entity.x - startCX + GameMap.MAP_OFFSET_X, entity.y - startCY + GameMap.MAP_OFFSET_Y, entity.fg,
                                         ColorUtils.color(200, 0, 0));
                             }
                         } else {
                             if (engine.gameMap.explored[idx] != null) {
-                                panel.write(tile.light.ch, x + GameMap.MAP_OFFSET_X, y + GameMap.MAP_OFFSET_Y, tile.dark.fg,
+                                panel.write(tile.light.ch, x - startCX + GameMap.MAP_OFFSET_X, y - startCY + GameMap.MAP_OFFSET_Y, tile.dark.fg,
                                         ColorUtils.color(100, 0, 0));
                             } else {
-                                panel.write(Tile.SHROUD.ch, x + GameMap.MAP_OFFSET_X, y + GameMap.MAP_OFFSET_Y, Tile.SHROUD.fg,
+                                panel.write(Tile.SHROUD.ch, x - startCX + GameMap.MAP_OFFSET_X, y - startCY + GameMap.MAP_OFFSET_Y, Tile.SHROUD.fg,
                                         ColorUtils.color(100, 0, 0));
                             }
                         }

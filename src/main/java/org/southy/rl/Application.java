@@ -22,9 +22,9 @@ public class Application extends JFrame {
     public static final int screenWidth = 100;
     public static final int screenHeight = 60;
 
-    public static final int mapWidth = 60;
+    public static final int mapWidth = 120;
 
-    public static final int mapHeight = 43;
+    public static final int mapHeight = 86;
 
     public static final int roomMaxSize = 10;
     public static final int roomMinSize = 6;
@@ -62,6 +62,7 @@ public class Application extends JFrame {
     }
 
     public static Engine engine;
+    public static Camera camera = new Camera();
 
     @SuppressWarnings("InfiniteLoopStatement")
     public void execute() throws InterruptedException, IOException, ClassNotFoundException, Impossible {

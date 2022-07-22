@@ -1,6 +1,7 @@
 package org.southy.rl.eventhandler;
 
 import org.southy.rl.Action;
+import org.southy.rl.Application;
 import org.southy.rl.Engine;
 import org.southy.rl.Logger;
 import org.southy.rl.asciipanel.AsciiPanel;
@@ -24,7 +25,13 @@ public class LookModeEventHandler extends SelectIndexEventHandler implements Eve
     public void onRender(AsciiPanel panel) {
         super.onRender(panel);
 
+        int startX = Application.camera.x - (Application.camera.width / 2);
+        int startY = Application.camera.y - (Application.camera.height / 2);
+
         panel.write("Look", 88, 1, Color.WHITE);
+
+        var cursorRenderX = cursorX - startX + GameMap.MAP_OFFSET_X;
+        var cursorRenderY = cursorY - startY + GameMap.MAP_OFFSET_Y;
 
         var tile = engine.gameMap.tiles[cursorX + cursorY * engine.gameMap.width];
         if (tile.fov) {
@@ -47,13 +54,16 @@ public class LookModeEventHandler extends SelectIndexEventHandler implements Eve
                         .sorted(Comparator.comparing(a -> a.renderOrder.ordinal()))
                         .collect(Collectors.toList()).get(entities.size() - 1);
 
-                panel.write(entity.str, entity.x + GameMap.MAP_OFFSET_X, entity.y + GameMap.MAP_OFFSET_Y, entity.fg, Color.CYAN);
+                var x = entity.x - startX + GameMap.MAP_OFFSET_X;
+                var y = entity.x - startY + GameMap.MAP_OFFSET_Y;
+
+                panel.write(entity.str, cursorRenderX, cursorRenderY, entity.fg, Color.CYAN);
             } else {
                 panel.write(tile.name, 82, 2, Color.WHITE);
-                panel.write(tile.light.ch, cursorX + GameMap.MAP_OFFSET_X, cursorY + GameMap.MAP_OFFSET_Y, tile.light.fg, Color.CYAN);
+                panel.write(tile.light.ch, cursorRenderX, cursorRenderY, tile.light.fg, Color.CYAN);
             }
         } else {
-            panel.write(tile.dark.ch, cursorX + GameMap.MAP_OFFSET_X, cursorY + GameMap.MAP_OFFSET_Y, tile.dark.fg, Color.CYAN);
+            panel.write(tile.dark.ch, cursorRenderX, cursorRenderY, tile.dark.fg, Color.CYAN);
             panel.write("Not Visible", 82, 2, Color.WHITE);
         }
     }

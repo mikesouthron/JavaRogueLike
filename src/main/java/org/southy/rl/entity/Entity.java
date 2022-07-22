@@ -1,5 +1,6 @@
 package org.southy.rl.entity;
 
+import org.southy.rl.Application;
 import org.southy.rl.ColorUtils;
 import org.southy.rl.exceptions.Impossible;
 import org.southy.rl.map.GameMap;
@@ -55,6 +56,8 @@ public class Entity implements Serializable {
     public void place(int x, int y, GameMap map) throws Impossible {
         this.x = x;
         this.y = y;
+        Application.camera.x = x;
+        Application.camera.y = y;
         if (map != null) {
             if (this.parent != null) {
                 this.parent.getEntities().remove(this);

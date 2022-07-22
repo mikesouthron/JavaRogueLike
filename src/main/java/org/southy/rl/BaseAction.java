@@ -204,7 +204,12 @@ public abstract class BaseAction implements Action {
                 }
             }
 
+            if (entity == engine().player) {
+                Application.camera.x += dx;
+                Application.camera.y += dy;
+            }
             entity.move(dx, dy);
+
             return true;
         }
     }
