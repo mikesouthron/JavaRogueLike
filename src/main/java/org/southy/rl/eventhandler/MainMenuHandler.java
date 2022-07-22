@@ -10,7 +10,6 @@ import org.southy.rl.gen.Procgen;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.nio.file.Files;
@@ -79,6 +78,8 @@ public class MainMenuHandler implements EventHandler {
                     if (saveGameAvailable) {
                         try (var os = new ObjectInputStream(new FileInputStream("game.save"))) {
                             Application.engine = (Engine) os.readObject();
+                            Application.camera.x = Application.engine.player.x;
+                            Application.camera.y = Application.engine.player.y;
                             Application.engine.updateFov();
                         } catch (IOException | ClassNotFoundException e) {
                             e.printStackTrace();

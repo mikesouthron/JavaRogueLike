@@ -1,13 +1,13 @@
 package org.southy.rl.map;
 
 import org.southy.rl.Application;
+import org.southy.rl.ColorUtils;
 import org.southy.rl.Engine;
 import org.southy.rl.asciipanel.AsciiPanel;
 import org.southy.rl.entity.Actor;
 import org.southy.rl.entity.Entity;
 import org.southy.rl.entity.EntityParent;
 import org.southy.rl.entity.Item;
-import org.southy.rl.exceptions.Impossible;
 import org.southy.rl.gen.Procgen;
 
 import java.io.Serializable;
@@ -97,7 +97,7 @@ public class GameMap implements Serializable, EntityParent {
                 int renderX = x - startX + MAP_OFFSET_X;
                 int renderY = y - startY + MAP_OFFSET_Y;
 
-                if (renderX < 0 || renderX >= Application.camera.width || renderY < 0 || renderY >= Application.camera.height) {
+                if (x < 0 || y < 0 || x >= width || y >= height) {
                     continue;
                 }
 
@@ -110,7 +110,11 @@ public class GameMap implements Serializable, EntityParent {
                     } else if (explored[idx] != null) {
                         panel.write(tile.dark.ch, renderX, renderY, tile.dark.fg, tile.dark.bg);
                     } else {
-                        panel.write(Tile.SHROUD.ch, renderX, renderY, Tile.SHROUD.fg, Tile.SHROUD.bg);
+                        if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
+                            panel.write(Tile.SHROUD.ch, renderX, renderY, ColorUtils.color(40, 0, 0), ColorUtils.color(40, 0, 0));
+                        } else {
+                            panel.write(Tile.SHROUD.ch, renderX, renderY, Tile.SHROUD.fg, Tile.SHROUD.bg);
+                        }
                     }
                 }
             }
