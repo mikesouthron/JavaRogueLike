@@ -2,6 +2,7 @@ package org.southy.rl.eventhandler;
 
 import org.southy.rl.Application;
 import org.southy.rl.BaseAction;
+import org.southy.rl.ColorUtils;
 import org.southy.rl.Engine;
 import org.southy.rl.exceptions.Impossible;
 import org.southy.rl.gen.Procgen;
@@ -87,7 +88,12 @@ public class MainGameEventHandler implements EventHandler {
         }
 
         if (event.isControlDown() && event.getKeyCode() ==KeyEvent.VK_R) {
-            engine.gameMap = Procgen.generateDungeon(engine, Application.maxRooms, Application.roomMinSize, Application.roomMaxSize, Application.mapWidth, Application.mapHeight, Application.maxMonstersPerRoom, Application.maxItemsPerRoom);
+            try {
+                engine.gameMap = Procgen.generateDungeon(engine, Application.maxRooms, Application.roomMinSize, Application.roomMaxSize,
+                        Application.mapWidth, Application.mapHeight, Application.maxMonstersPerRoom, Application.maxItemsPerRoom);
+            } catch (Impossible e) {
+                engine.logger.addMessage("Unable to generate new map", ColorUtils.IMPOSSIBLE);
+            }
             return Optional.of(new BaseAction.WaitAction(player));
         }
 

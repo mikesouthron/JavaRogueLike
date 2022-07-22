@@ -3,6 +3,7 @@ package org.southy.rl.components;
 import org.southy.rl.Engine;
 import org.southy.rl.entity.Actor;
 import org.southy.rl.entity.Item;
+import org.southy.rl.exceptions.Impossible;
 import org.southy.rl.map.GameMap;
 
 import java.awt.*;
@@ -23,9 +24,9 @@ public class Inventory implements Serializable {
         items = new ArrayList<>();
     }
 
-    public void drop(Item item) {
+    public void drop(Item item) throws Impossible {
         items.remove(item);
-        item.actor = null;
+        item.setParent(null);
         item.place(parent.x, parent.y, gamemap());
         engine().logger.addMessage("You dropped the " + item.name, Color.WHITE);
     }

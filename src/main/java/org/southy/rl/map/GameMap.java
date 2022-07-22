@@ -4,7 +4,9 @@ import org.southy.rl.Engine;
 import org.southy.rl.asciipanel.AsciiPanel;
 import org.southy.rl.entity.Actor;
 import org.southy.rl.entity.Entity;
+import org.southy.rl.entity.EntityParent;
 import org.southy.rl.entity.Item;
+import org.southy.rl.exceptions.Impossible;
 import org.southy.rl.gen.Procgen;
 
 import java.io.Serializable;
@@ -13,7 +15,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-public class GameMap implements Serializable {
+public class GameMap implements Serializable, EntityParent {
 
     public final static Integer MAP_OFFSET_X = 20;
     public final static Integer MAP_OFFSET_Y = 1;
@@ -180,5 +182,10 @@ public class GameMap implements Serializable {
 
     public void setExplored(Tile[] explored) {
         this.explored = explored;
+    }
+
+    @Override
+    public List<Entity> getEntities() {
+        return entities;
     }
 }

@@ -1,6 +1,7 @@
 package org.southy.rl.entity;
 
 import org.southy.rl.ColorUtils;
+import org.southy.rl.exceptions.Impossible;
 import org.southy.rl.map.GameMap;
 
 import java.awt.*;
@@ -8,7 +9,7 @@ import java.io.Serializable;
 
 public class Entity implements Serializable {
 
-    public GameMap parent;
+    public EntityParent parent;
 
     public int x;
     public int y;
@@ -51,12 +52,12 @@ public class Entity implements Serializable {
         this.y += dy;
     }
 
-    public void place(int x, int y, GameMap map) {
+    public void place(int x, int y, GameMap map) throws Impossible {
         this.x = x;
         this.y = y;
         if (map != null) {
             if (this.parent != null) {
-                this.parent.entities.remove(this);
+                this.parent.getEntities().remove(this);
             }
             this.parent = map;
             map.entities.add(this);
@@ -67,7 +68,7 @@ public class Entity implements Serializable {
         return parent.gamemap();
     }
 
-    public void setParent(GameMap parent) {
+    public void setParent(EntityParent parent) {
         this.parent = parent;
     }
 

@@ -25,8 +25,8 @@ public class Consumable implements Serializable {
         throw new Impossible("Not implemented");
     }
 
-    public void consume() {
-        parent.actor.inventory.items.remove(parent);
+    public void consume() throws Impossible {
+        parent.parent.getInventory().items.remove(parent);
     }
 
     public void setParent(Item parent) {

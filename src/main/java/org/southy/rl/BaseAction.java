@@ -271,7 +271,7 @@ public abstract class BaseAction implements Action {
                     }
 
                     engine().gameMap.entities.remove(item);
-                    item.actor = entity;
+                    item.setParent(entity);
                     entity.inventory.items.add(item);
 
                     engine().logger.addMessage("You picked up the " + item.name, Color.WHITE);

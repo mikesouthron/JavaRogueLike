@@ -62,7 +62,7 @@ public class Application extends JFrame {
     }
 
     @SuppressWarnings("InfiniteLoopStatement")
-    public void execute() throws InterruptedException, IOException, ClassNotFoundException {
+    public void execute() throws InterruptedException, IOException, ClassNotFoundException, Impossible {
         Engine engine;
         if (Files.exists(Paths.get("game.save"))) {
             try (var os = new ObjectInputStream(new FileInputStream("game.save"))) {
@@ -94,7 +94,7 @@ public class Application extends JFrame {
         }
     }
 
-    public static void main(String[] args) throws InterruptedException, IOException, ClassNotFoundException {
+    public static void main(String[] args) throws InterruptedException, IOException, ClassNotFoundException, Impossible {
         var app = new Application();
         app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         app.setLocationRelativeTo(null);

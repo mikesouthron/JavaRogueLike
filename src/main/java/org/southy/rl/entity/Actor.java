@@ -3,13 +3,14 @@ package org.southy.rl.entity;
 import org.southy.rl.components.BaseAI;
 import org.southy.rl.components.Fighter;
 import org.southy.rl.components.Inventory;
+import org.southy.rl.exceptions.Impossible;
 import org.southy.rl.map.GameMap;
 
 import java.awt.*;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 
-public class Actor extends Entity implements Serializable {
+public class Actor extends Entity implements Serializable, EntityParent {
 
     public BaseAI ai;
     public Fighter fighter;
@@ -51,7 +52,7 @@ public class Actor extends Entity implements Serializable {
     }
 
     @Override
-    public void setParent(GameMap parent) {
+    public void setParent(EntityParent parent) {
         super.setParent(parent);
     }
 
@@ -93,5 +94,10 @@ public class Actor extends Entity implements Serializable {
     @Override
     public void setRenderOrder(RenderOrder renderOrder) {
         super.setRenderOrder(renderOrder);
+    }
+
+    @Override
+    public Inventory getInventory() {
+        return inventory;
     }
 }
