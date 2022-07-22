@@ -17,6 +17,8 @@ public class Actor extends Entity implements Serializable, EntityParent {
 
     public Inventory inventory;
 
+    public int fovRadius = 8;
+
     public Actor(GameMap parent, char str, Color fg, String name, Fighter fighter, Class<? extends BaseAI> aiClass, Inventory inventory) {
         this(parent, 0, 0, str, fg, name, fighter, aiClass, inventory);
     }
@@ -99,5 +101,9 @@ public class Actor extends Entity implements Serializable, EntityParent {
     @Override
     public Inventory getInventory() {
         return inventory;
+    }
+
+    public void setFovRadius(int fovRadius) {
+        this.fovRadius = fovRadius;
     }
 }

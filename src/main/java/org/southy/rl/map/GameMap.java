@@ -71,7 +71,7 @@ public class GameMap implements Serializable, EntityParent {
     }
 
     public void computeFov(int x, int y) {
-        FoV.computeFov(this, x, y, 8, true, FoV.FoVAlgorithm.FOV_RESTRICTIVE);
+        FoV.computeFov(this, x, y,  engine.player.fovRadius, true, FoV.FoVAlgorithm.FOV_RESTRICTIVE);
     }
 
     public Optional<Entity> getBlockingEntityAtLocation(int x, int y) {

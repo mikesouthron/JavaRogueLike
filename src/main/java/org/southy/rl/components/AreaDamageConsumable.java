@@ -32,7 +32,7 @@ public class AreaDamageConsumable extends Consumable implements Serializable {
     public void activate(BaseAction.ItemAction action) throws Impossible {
         int targetIdx = action.targetX + action.targetY * gamemap().width;
 
-        if (gamemap().visible[targetIdx] == null) {
+        if (engine().player.distance(action.targetX, action.targetY) > engine().player.fovRadius) {
             throw new Impossible("Cannot target an area you cannot see");
         }
 
