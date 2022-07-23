@@ -3,7 +3,6 @@ package org.southy.rl;
 import org.southy.rl.asciipanel.AsciiPanel;
 import org.southy.rl.entity.Actor;
 import org.southy.rl.eventhandler.EventHandler;
-import org.southy.rl.eventhandler.MainGameEventHandler;
 import org.southy.rl.eventhandler.MainMenuHandler;
 import org.southy.rl.exceptions.Impossible;
 import org.southy.rl.map.FastMoveState;
@@ -50,10 +49,14 @@ public class Engine implements Serializable {
 
     public void render(AsciiPanel panel) {
         panel.clear();
-        Render.renderUIBorders(panel, gameMap);
+        if (!gameMap.fullMap) {
+            Render.renderUIBorders(panel, gameMap);
+        }
         gameMap.render(panel);
-        logger.render(panel, 20, 46, 60, 12);
-        Render.renderBar(panel, player.fighter.getHp(), player.fighter.maxHp, 16);
+        if (!gameMap.fullMap) {
+            logger.render(panel, 20, 46, 60, 12);
+            Render.renderBar(panel, player.fighter.getHp(), player.fighter.maxHp, 16);
+        }
         panel.repaint();
     }
 

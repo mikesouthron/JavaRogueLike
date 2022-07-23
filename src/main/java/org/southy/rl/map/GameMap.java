@@ -21,6 +21,8 @@ public class GameMap implements Serializable, EntityParent {
     public final static Integer MAP_OFFSET_X = 20;
     public final static Integer MAP_OFFSET_Y = 1;
 
+    public boolean fullMap = false;
+
     public Engine engine;
 
     public int width;
@@ -94,8 +96,8 @@ public class GameMap implements Serializable, EntityParent {
             for (int y = startY; y < endY; y++) {
                 var idx = x + y * width;
 
-                int renderX = x - startX + MAP_OFFSET_X;
-                int renderY = y - startY + MAP_OFFSET_Y;
+                int renderX = x - startX + (fullMap ? 0 : MAP_OFFSET_X);
+                int renderY = y - startY + (fullMap ? 0 : MAP_OFFSET_Y);
 
                 if (x < 0 || y < 0 || x >= width || y >= height) {
                     continue;
@@ -125,8 +127,8 @@ public class GameMap implements Serializable, EntityParent {
                 .filter(e -> visible[Procgen.toIdx(e.x, e.y, width)] != null)
                 .sorted(Comparator.comparing(a -> a.renderOrder.ordinal()))
                 .forEach(e -> {
-                    int renderX = e.x - startX + MAP_OFFSET_X;
-                    int renderY = e.y - startY + MAP_OFFSET_Y;
+                    int renderX = e.x - startX + (fullMap ? 0 : MAP_OFFSET_X);
+                    int renderY = e.y - startY + (fullMap ? 0 : MAP_OFFSET_Y);
                     if (renderX >= 0 && renderX < Application.camera.width && renderY >= 0 && renderY < Application.camera.height) {
                         panel.write(e.str, renderX, renderY, e.fg, e.bg);
                     }

@@ -1,27 +1,16 @@
 package org.southy.rl.eventhandler;
 
-import org.southy.rl.Application;
-import org.southy.rl.BaseAction;
-import org.southy.rl.ColorUtils;
-import org.southy.rl.Engine;
-import org.southy.rl.Logger;
+import org.southy.rl.*;
 import org.southy.rl.asciipanel.AsciiPanel;
 import org.southy.rl.entity.Entity;
 import org.southy.rl.exceptions.Impossible;
 import org.southy.rl.gen.Procgen;
-import org.southy.rl.map.GameMap;
 import org.southy.rl.ui.Render;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public class MainGameEventHandler implements EventHandler {
 
@@ -123,6 +112,20 @@ public class MainGameEventHandler implements EventHandler {
             return Optional.of(new BaseAction.EscapeAction(player));
         }
 
+        if (event.getKeyCode() == KeyEvent.VK_Z) {
+            if (engine.gameMap.fullMap) {
+                Application.camera = Application.normalCamera;
+                engine.gameMap.fullMap = false;
+                Application.camera.x = player.x;
+                Application.camera.y = player.y;
+            } else {
+                Application.camera = Application.fullMapCamera;
+                engine.gameMap.fullMap = true;
+                Application.camera.x = player.x;
+                Application.camera.y = player.y;
+            }
+        }
+
         return Optional.empty();
     }
 
@@ -133,22 +136,23 @@ public class MainGameEventHandler implements EventHandler {
     @Override
     public void onRender(AsciiPanel panel) {
         EventHandler.super.onRender(panel);
+        if (!engine.gameMap.fullMap) {
+            panel.write("Explore", 87, 1, Color.WHITE);
+            List<Entity> entities = Render.getNamesAtLocation(engine.player.x, engine.player.y, engine.gameMap);
 
-        panel.write("Explore", 87, 1, Color.WHITE);
-        List<Entity> entities = Render.getNamesAtLocation(engine.player.x, engine.player.y, engine.gameMap);
-
-        if (entities.size() > 0) {
-            var lines = new ArrayList<String>();
-            for (Entity entity : entities) {
-                if (entity != engine.player) {
-                    var text = Logger.wrap(entity.name, 16);
-                    lines.addAll(text);
+            if (entities.size() > 0) {
+                var lines = new ArrayList<String>();
+                for (Entity entity : entities) {
+                    if (entity != engine.player) {
+                        var text = Logger.wrap(entity.name, 16);
+                        lines.addAll(text);
+                    }
                 }
-            }
-            var yOffset = lines.size() - 1;
-            for (int i = lines.size() - 1; i >= 0; i--) {
-                panel.write(lines.get(i), 82, yOffset + 2, Color.WHITE);
-                yOffset--;
+                var yOffset = lines.size() - 1;
+                for (int i = lines.size() - 1; i >= 0; i--) {
+                    panel.write(lines.get(i), 82, yOffset + 2, Color.WHITE);
+                    yOffset--;
+                }
             }
         }
     }

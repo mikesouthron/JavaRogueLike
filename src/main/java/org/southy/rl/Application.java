@@ -56,10 +56,14 @@ public class Application extends JFrame {
     }
 
     public static Engine engine;
-    public static Camera camera = new Camera();
+    public static Camera normalCamera = new Camera();
+    public static Camera fullMapCamera = new Camera();
+    public static Camera camera = normalCamera;
 
     @SuppressWarnings("InfiniteLoopStatement")
     public void execute() throws InterruptedException, IOException, ClassNotFoundException, Impossible {
+        fullMapCamera.height = screenHeight;
+        fullMapCamera.width = screenWidth;
         engine = new Engine();
 
         while (true) {
