@@ -8,7 +8,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.IOException;
 
 @SuppressWarnings("BusyWait")
 public class Application extends JFrame {
@@ -29,7 +28,20 @@ public class Application extends JFrame {
 
     KeyEvent keyEvent = null;
 
-    private final AsciiPanel panel;
+    AsciiPanel panel;
+
+    private static Application instance;
+
+    public static void swapPanel(boolean zoom) {
+        instance.remove(instance.panel);
+        if (zoom) {
+            instance.panel = new AsciiPanel(screenWidth * 2, screenHeight * 2, AsciiFont.CP437_8x8);
+        } else {
+            instance.panel = new AsciiPanel(screenWidth, screenHeight, AsciiFont.CP437_16x16);
+        }
+        instance.add(instance.panel);
+        instance.pack();
+    }
 
     public Application() throws HeadlessException {
         addKeyListener(new KeyListener() {
@@ -61,9 +73,9 @@ public class Application extends JFrame {
     public static Camera camera = normalCamera;
 
     @SuppressWarnings("InfiniteLoopStatement")
-    public void execute() throws InterruptedException, IOException, ClassNotFoundException, Impossible {
-        fullMapCamera.height = screenHeight;
-        fullMapCamera.width = screenWidth;
+    public void execute() throws InterruptedException {
+        fullMapCamera.height = screenHeight * 2;
+        fullMapCamera.width = screenWidth * 2;
         engine = new Engine();
 
         while (true) {
@@ -84,8 +96,9 @@ public class Application extends JFrame {
         }
     }
 
-    public static void main(String[] args) throws InterruptedException, IOException, ClassNotFoundException, Impossible {
+    public static void main(String[] args) throws InterruptedException {
         var app = new Application();
+        instance = app;
         app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         app.setLocationRelativeTo(null);
         app.setVisible(true);

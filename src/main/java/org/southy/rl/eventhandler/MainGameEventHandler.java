@@ -25,6 +25,7 @@ public class MainGameEventHandler implements EventHandler {
     }
 
     private static final Map<Integer, Direction> MOVE_KEYS = new HashMap<>();
+
     static {
         MOVE_KEYS.put(KeyEvent.VK_NUMPAD4, new Direction(-1, 0));
         MOVE_KEYS.put(KeyEvent.VK_NUMPAD6, new Direction(1, 0));
@@ -43,6 +44,7 @@ public class MainGameEventHandler implements EventHandler {
         MOVE_KEYS.put(KeyEvent.VK_HOME, new Direction(-1, -1));
         MOVE_KEYS.put(KeyEvent.VK_PAGE_UP, new Direction(1, -1));
     }
+
     private static final Set<Integer> WAIT_KEYS = Set.of(KeyEvent.VK_NUMPAD5, KeyEvent.VK_PERIOD, KeyEvent.VK_CLEAR);
 
     Engine engine;
@@ -86,7 +88,7 @@ public class MainGameEventHandler implements EventHandler {
             return Optional.of(new BaseAction.WaitAction(player));
         }
 
-        if (event.isControlDown() && event.getKeyCode() ==KeyEvent.VK_R) {
+        if (event.isControlDown() && event.getKeyCode() == KeyEvent.VK_R) {
             try {
                 engine.gameMap = Procgen.generateDungeon(engine, Application.maxRooms, Application.roomMinSize, Application.roomMaxSize,
                         Application.mapWidth, Application.mapHeight, Application.maxMonstersPerRoom, Application.maxItemsPerRoom);
@@ -113,17 +115,12 @@ public class MainGameEventHandler implements EventHandler {
         }
 
         if (event.getKeyCode() == KeyEvent.VK_Z) {
-            if (engine.gameMap.fullMap) {
-                Application.camera = Application.normalCamera;
-                engine.gameMap.fullMap = false;
-                Application.camera.x = player.x;
-                Application.camera.y = player.y;
-            } else {
-                Application.camera = Application.fullMapCamera;
-                engine.gameMap.fullMap = true;
-                Application.camera.x = player.x;
-                Application.camera.y = player.y;
-            }
+            Application.camera = Application.fullMapCamera;
+            engine.gameMap.fullMap = true;
+            Application.camera.x = player.x;
+            Application.camera.y = player.y;
+            Application.swapPanel(true);
+            engine.eventHandler = new MapModeEventHandler(engine);
         }
 
         return Optional.empty();
