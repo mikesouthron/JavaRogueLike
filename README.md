@@ -17,7 +17,9 @@
 * Shift + Direction = auto move. 
 * v opens message log.
 * l enters look mode, where you can navigate a cursor and see things in your FoV.
-* Escape to quit.
+* i open inventory.
+* z zoomed out map.
+* Escape to menu.
 
 ## Dev Details
 
@@ -44,3 +46,7 @@ Ported from [fov_restrictive.c](https://github.com/libtcod/libtcod/blob/develop/
 This code is almost an exact replica with some type name changes.
 
 I have left in place the ability to switch to a different FoV algorithm, but not sure if I will bother implementing them.
+
+
+### Notes
+* Hold Tab to highlight items/monsters in FoV, with bg color that maps to key on right hand menu
