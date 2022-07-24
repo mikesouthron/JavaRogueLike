@@ -2,10 +2,9 @@ package org.southy.rl.eventhandler;
 
 import org.southy.rl.Action;
 import org.southy.rl.Engine;
-import org.southy.rl.asciipanel.AsciiPanel;
 import org.southy.rl.exceptions.Impossible;
+import org.southy.sdl.SDL;
 
-import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -32,7 +31,7 @@ public class SelectIndexEventHandler implements EventHandler {
         MOVE_KEYS.put(KeyEvent.VK_PAGE_UP, new MainGameEventHandler.Direction(1, -1));
     }
 
-    static final Set<Integer> CONFIRM_KEYS = Set.of(KeyEvent.VK_ENTER);
+    static final Set<Integer> CONFIRM_KEYS = Set.of(KeyEvent.VK_ENTER, KeyEvent.VK_KP_ENTER);
 
     Engine engine;
 
@@ -46,14 +45,18 @@ public class SelectIndexEventHandler implements EventHandler {
     }
 
     @Override
-    public void handleEvents(KeyEvent event) throws Impossible {
-        if (MOVE_KEYS.containsKey(event.getKeyCode())) {
-            var dir = MOVE_KEYS.get(event.getKeyCode());
-            cursorX = Math.max(0, Math.min(cursorX + (event.isShiftDown() ? dir.x * 5 : dir.x), engine.gameMap.width - 1));
-            cursorY = Math.max(0, Math.min(cursorY + (event.isShiftDown() ? dir.y * 5 : dir.y), engine.gameMap.height - 1));
+    public void handleEvents(SDL sdl) throws Impossible {
+        var keyEvent = sdl.SDLGetEvent();
+        if (keyEvent == null) {
             return;
         }
-        if (CONFIRM_KEYS.contains(event.getKeyCode())) {
+        if (MOVE_KEYS.containsKey(keyEvent.getKeyCode())) {
+            var dir = MOVE_KEYS.get(keyEvent.getKeyCode());
+            cursorX = Math.max(0, Math.min(cursorX + (keyEvent.isShiftDown() ? dir.x * 5 : dir.x), engine.gameMap.width - 1));
+            cursorY = Math.max(0, Math.min(cursorY + (keyEvent.isShiftDown() ? dir.y * 5 : dir.y), engine.gameMap.height - 1));
+            return;
+        }
+        if (CONFIRM_KEYS.contains(keyEvent.getKeyCode())) {
             var action = onIndexSelected();
             if (action != null) {
                 if (action.perform()) {
@@ -66,8 +69,8 @@ public class SelectIndexEventHandler implements EventHandler {
     }
 
     @Override
-    public void onRender(AsciiPanel panel) {
-        EventHandler.super.onRender(panel);
+    public void onRender(SDL sdl) {
+        EventHandler.super.onRender(sdl);
     }
 
     @Override

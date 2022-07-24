@@ -1,8 +1,8 @@
 package org.southy.rl;
 
-import org.southy.rl.asciipanel.AsciiPanel;
 
-import java.awt.*;
+import org.southy.sdl.SDL;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,8 +47,8 @@ public class Logger implements Serializable {
         log.add(new LogEntry(message, fg));
     }
 
-    public void render(AsciiPanel panel, int x, int y, int width, int height) {
-        renderMessages(panel, x, y, width, height, this.log);
+    public void render(SDL sdl, int x, int y, int width, int height) {
+        renderMessages(sdl, x, y, width, height, this.log);
     }
 
     public static java.util.List<String> wrap(String str, int width) {
@@ -73,13 +73,13 @@ public class Logger implements Serializable {
         return list;
     }
 
-    public static void renderMessages(AsciiPanel panel, int x, int y, int width, int height, java.util.List<LogEntry> messages) {
+    public static void renderMessages(SDL sdl, int x, int y, int width, int height, java.util.List<LogEntry> messages) {
         var yOffset = height - 1;
         for (int i = messages.size() - 1; i >= 0; i--) {
             var msg = messages.get(i);
             var lines = wrap(msg.fullText(), width);
             for (int j = lines.size() - 1; j >= 0; j--) {
-                panel.write(lines.get(j), x, y + yOffset, msg.fg);
+                sdl.write(lines.get(j), x, y + yOffset, msg.fg);
                 yOffset--;
                 if (yOffset < 0) {
                     return;

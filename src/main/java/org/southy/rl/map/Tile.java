@@ -1,8 +1,8 @@
 package org.southy.rl.map;
 
+import org.southy.rl.Color;
 import org.southy.rl.ColorUtils;
 
-import java.awt.*;
 import java.io.Serializable;
 
 public class Tile implements Serializable {
@@ -82,14 +82,14 @@ public class Tile implements Serializable {
 
     public static Tile floorTile() {
         return newTile(true, true,
-                new Graphic('.', ColorUtils.color(100, 100, 100), Color.BLACK),
-                new Graphic('.', ColorUtils.color(200, 200, 200), Color.BLACK), "Floor");
+                new Graphic('.', ColorUtils.color(100, 100, 100), ColorUtils.BLACK),
+                new Graphic('.', ColorUtils.color(200, 200, 200), ColorUtils.BLACK), "Floor");
     }
 
     public static Tile wallTile() {
         return newTile(false, false,
-                new Graphic(' ', Color.BLACK, ColorUtils.color(100, 100, 100)),
-                new Graphic(' ', Color.BLACK, ColorUtils.color(200, 200, 200)), "Wall");
+                new Graphic(' ', ColorUtils.BLACK, ColorUtils.color(100, 100, 100)),
+                new Graphic(' ', ColorUtils.BLACK, ColorUtils.color(200, 200, 200)), "Wall");
     }
 
 }

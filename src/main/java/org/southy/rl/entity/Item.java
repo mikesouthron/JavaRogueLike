@@ -1,9 +1,9 @@
 package org.southy.rl.entity;
 
+import org.southy.rl.Color;
 import org.southy.rl.components.Consumable;
 import org.southy.rl.map.GameMap;
 
-import java.awt.*;
 import java.io.Serializable;
 
 public class Item extends Entity implements Serializable {

@@ -1,21 +1,13 @@
 package org.southy.rl.entity;
 
 import org.southy.rl.ColorUtils;
-import org.southy.rl.components.AreaDamageConsumable;
-import org.southy.rl.components.ConfusionConsumable;
-import org.southy.rl.components.Fighter;
-import org.southy.rl.components.HealingConsumable;
-import org.southy.rl.components.HostileEnemy;
-import org.southy.rl.components.Inventory;
-import org.southy.rl.components.RandomTargetDamageConsumable;
+import org.southy.rl.components.*;
 import org.southy.rl.map.GameMap;
-
-import java.awt.*;
 
 public class EntityFactory {
 
     public static Actor player() {
-        return new Actor(null, '@', Color.WHITE, "Player", new Fighter(30, 2, 5), HostileEnemy.class, new Inventory(20));
+        return new Actor(null, '@', ColorUtils.WHITE, "Player", new Fighter(30, 2, 5), HostileEnemy.class, new Inventory(20));
     }
 
     public static void orc(GameMap gameMap, int x, int y) {

@@ -1,11 +1,11 @@
 package org.southy.rl.components;
 
 import org.southy.rl.BaseAction;
+import org.southy.rl.ColorUtils;
 import org.southy.rl.RandomUtils;
 import org.southy.rl.entity.Actor;
 import org.southy.rl.exceptions.Impossible;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +25,7 @@ public class ConfusedEnemy extends BaseAI {
     @Override
     public boolean perform() throws Impossible {
         if (turnsRemaining <= 0) {
-            parent.gamemap().engine.logger.addMessage(parent.name + " is no longer confused", Color.WHITE);
+            parent.gamemap().engine.logger.addMessage(parent.name + " is no longer confused", ColorUtils.WHITE);
             parent.ai = previousAi;
             return false;
         } else {

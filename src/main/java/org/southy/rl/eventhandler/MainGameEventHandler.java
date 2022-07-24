@@ -1,14 +1,12 @@
 package org.southy.rl.eventhandler;
 
 import org.southy.rl.*;
-import org.southy.rl.asciipanel.AsciiPanel;
 import org.southy.rl.entity.Entity;
 import org.southy.rl.exceptions.Impossible;
 import org.southy.rl.gen.Procgen;
 import org.southy.rl.ui.Render;
+import org.southy.sdl.SDL;
 
-import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.*;
 
@@ -49,18 +47,27 @@ public class MainGameEventHandler implements EventHandler {
 
     Engine engine;
 
+    KeyEvent previous = null;
+
     public MainGameEventHandler(Engine engine) {
         this.engine = engine;
     }
 
-    public void handleEvents(KeyEvent event) throws Impossible {
-        var option = keyDown(event);
+    public void handleEvents(SDL sdl) throws Impossible {
+        KeyEvent keyEvent;
+        if (engine().fastMove != null) {
+            keyEvent = previous;
+        } else {
+            keyEvent = sdl.SDLGetEvent();
+        }
+        var option = keyDown(keyEvent);
         if (option.isPresent()) {
             if (option.get().perform()) {
                 engine.handleEnemyTurns();
                 engine.updateFov();
             }
         }
+        previous = keyEvent;
     }
 
     @Override
@@ -114,15 +121,6 @@ public class MainGameEventHandler implements EventHandler {
             return Optional.of(new BaseAction.EscapeAction(player));
         }
 
-        if (event.getKeyCode() == KeyEvent.VK_Z) {
-            Application.camera = Application.fullMapCamera;
-            engine.gameMap.fullMap = true;
-            Application.camera.x = player.x;
-            Application.camera.y = player.y;
-            Application.swapPanel(true);
-            engine.eventHandler = new MapModeEventHandler(engine);
-        }
-
         return Optional.empty();
     }
 
@@ -131,10 +129,10 @@ public class MainGameEventHandler implements EventHandler {
     }
 
     @Override
-    public void onRender(AsciiPanel panel) {
-        EventHandler.super.onRender(panel);
+    public void onRender(SDL sdl) {
+        EventHandler.super.onRender(sdl);
         if (!engine.gameMap.fullMap) {
-            panel.write("Explore", 87, 1, Color.WHITE);
+            sdl.write("Explore", 87, 1, ColorUtils.WHITE);
             List<Entity> entities = Render.getNamesAtLocation(engine.player.x, engine.player.y, engine.gameMap);
 
             if (entities.size() > 0) {
@@ -147,7 +145,7 @@ public class MainGameEventHandler implements EventHandler {
                 }
                 var yOffset = lines.size() - 1;
                 for (int i = lines.size() - 1; i >= 0; i--) {
-                    panel.write(lines.get(i), 82, yOffset + 2, Color.WHITE);
+                    sdl.write(lines.get(i), 82, yOffset + 2, ColorUtils.WHITE);
                     yOffset--;
                 }
             }

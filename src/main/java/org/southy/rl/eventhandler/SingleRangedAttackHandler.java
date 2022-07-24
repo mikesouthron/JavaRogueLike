@@ -1,14 +1,10 @@
 package org.southy.rl.eventhandler;
 
-import org.southy.rl.Action;
-import org.southy.rl.Application;
-import org.southy.rl.Engine;
-import org.southy.rl.Logger;
-import org.southy.rl.asciipanel.AsciiPanel;
+import org.southy.rl.*;
 import org.southy.rl.entity.Actor;
 import org.southy.rl.map.GameMap;
+import org.southy.sdl.SDL;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.function.BiFunction;
 
@@ -22,13 +18,13 @@ public class SingleRangedAttackHandler extends SelectIndexEventHandler implement
     }
 
     @Override
-    public void onRender(AsciiPanel panel) {
-        super.onRender(panel);
+    public void onRender(SDL sdl) {
+        super.onRender(sdl);
 
         int startX = Application.camera.x - (Application.camera.width / 2);
         int startY = Application.camera.y - (Application.camera.height / 2);
 
-        panel.write("Target", 88, 1, Color.WHITE);
+        sdl.write("Target", 88, 1, ColorUtils.WHITE);
 
         var cursorRenderX = cursorX - startX + GameMap.MAP_OFFSET_X;
         var cursorRenderY = cursorY - startY + GameMap.MAP_OFFSET_Y;
@@ -40,24 +36,24 @@ public class SingleRangedAttackHandler extends SelectIndexEventHandler implement
             if (target != null) {
                 var text = Logger.wrap(target.name, 16);
                 lines.addAll(text);
-                panel.write(target.str, cursorRenderX, cursorRenderY, target.fg, Color.CYAN);
+                sdl.write(target.str, cursorRenderX, cursorRenderY, target.fg, ColorUtils.CYAN);
             } else {
                 lines.add("No Target");
-                panel.write(tile.light.ch, cursorRenderX, cursorRenderY, tile.light.fg, Color.CYAN);
+                sdl.write(tile.light.ch, cursorRenderX, cursorRenderY, tile.light.fg, ColorUtils.CYAN);
             }
 
             var yOffset = lines.size() - 1;
             for (int i = lines.size() - 1; i >= 0; i--) {
-                panel.write(lines.get(i), 82, yOffset + 2, Color.WHITE);
+                sdl.write(lines.get(i), 82, yOffset + 2, ColorUtils.WHITE);
                 yOffset--;
             }
         } else {
-            panel.write("No Target", 82, 2);
-            panel.write(tile.dark.ch, cursorRenderX, cursorRenderY, tile.dark.fg, Color.CYAN);
+            sdl.write("No Target", 82, 2);
+            sdl.write(tile.dark.ch, cursorRenderX, cursorRenderY, tile.dark.fg, ColorUtils.CYAN);
         }
 
-        panel.write("Select a target", 82, 24);
-        panel.write("Enter to use", 82, 25);
+        sdl.write("Select a target", 82, 24);
+        sdl.write("Enter to use", 82, 25);
     }
 
     @Override

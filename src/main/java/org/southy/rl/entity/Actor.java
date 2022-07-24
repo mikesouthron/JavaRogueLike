@@ -1,12 +1,11 @@
 package org.southy.rl.entity;
 
+import org.southy.rl.Color;
 import org.southy.rl.components.BaseAI;
 import org.southy.rl.components.Fighter;
 import org.southy.rl.components.Inventory;
-import org.southy.rl.exceptions.Impossible;
 import org.southy.rl.map.GameMap;
 
-import java.awt.*;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 

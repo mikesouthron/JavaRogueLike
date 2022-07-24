@@ -7,7 +7,6 @@ import org.southy.rl.entity.Item;
 import org.southy.rl.exceptions.Impossible;
 import org.southy.rl.map.GameMap;
 
-import java.awt.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +28,7 @@ public class Inventory implements Serializable {
         items.remove(item);
         item.setParent(null);
         item.place(parent.x, parent.y, gamemap());
-        engine().logger.addMessage("You dropped the " + item.name, Color.WHITE);
+        engine().logger.addMessage("You dropped the " + item.name, ColorUtils.WHITE);
     }
 
     public void setParent(Actor parent) {

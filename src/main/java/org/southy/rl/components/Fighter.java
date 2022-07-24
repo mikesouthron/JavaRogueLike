@@ -1,5 +1,6 @@
 package org.southy.rl.components;
 
+import org.southy.rl.Color;
 import org.southy.rl.ColorUtils;
 import org.southy.rl.Engine;
 import org.southy.rl.entity.Actor;
@@ -7,7 +8,6 @@ import org.southy.rl.entity.RenderOrder;
 import org.southy.rl.eventhandler.GameOverEventHandler;
 import org.southy.rl.map.GameMap;
 
-import java.awt.*;
 import java.io.Serializable;
 
 public class Fighter implements Serializable {

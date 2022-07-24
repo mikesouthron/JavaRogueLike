@@ -8,7 +8,6 @@ import org.southy.rl.entity.Item;
 import org.southy.rl.eventhandler.SingleRangedAttackHandler;
 import org.southy.rl.exceptions.Impossible;
 
-import java.awt.*;
 import java.io.Serializable;
 import java.util.Optional;
 

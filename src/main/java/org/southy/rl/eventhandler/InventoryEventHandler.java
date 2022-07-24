@@ -1,14 +1,11 @@
 package org.southy.rl.eventhandler;
 
-import org.southy.rl.BaseAction;
+import org.southy.rl.ColorUtils;
 import org.southy.rl.Engine;
 import org.southy.rl.Logger;
-import org.southy.rl.asciipanel.AsciiPanel;
 import org.southy.rl.entity.Item;
 import org.southy.rl.exceptions.Impossible;
-
-import java.awt.*;
-import java.awt.event.KeyEvent;
+import org.southy.sdl.SDL;
 
 public class InventoryEventHandler implements EventHandler {
 
@@ -27,23 +24,27 @@ public class InventoryEventHandler implements EventHandler {
     }
 
     @Override
-    public void handleEvents(KeyEvent event) throws Impossible {
+    public void handleEvents(SDL sdl) throws Impossible {
+        var keyEvent = sdl.SDLGetEvent();
+        if (keyEvent == null) {
+            return;
+        }
         if (mode == Mode.VIEW) {
-            if (event.getKeyCode() == KeyEvent.VK_X) {
+            if (keyEvent.getKeyCode() == KeyEvent.VK_X) {
                 mode = Mode.EXAMINE;
                 return;
             }
-            if (event.getKeyCode() == KeyEvent.VK_U) {
+            if (keyEvent.getKeyCode() == KeyEvent.VK_U) {
                 mode = Mode.USE;
                 return;
             }
-            if (event.getKeyCode() == KeyEvent.VK_D) {
+            if (keyEvent.getKeyCode() == KeyEvent.VK_D) {
                 mode = Mode.DROP;
                 return;
             }
             engine.eventHandler = new MainGameEventHandler(engine);
         } else if (mode == Mode.EXAMINE) {
-            int idx = event.getKeyChar() - 97;
+            int idx = keyEvent.getKeyChar() - 97;
             if (idx >= 0 && idx < engine.player.inventory.items.size()) {
                 idxToExamine = idx;
             } else {
@@ -51,7 +52,7 @@ public class InventoryEventHandler implements EventHandler {
                 idxToExamine = -1;
             }
         } else if (mode == Mode.USE) {
-            int idx = event.getKeyChar() - 97;
+            int idx = keyEvent.getKeyChar() - 97;
             if (idx >= 0 && idx < engine.player.inventory.items.size()) {
                 var item = engine.player.inventory.items.get(idx);
                 var action = item.consumable.getAction(engine.player);
@@ -66,7 +67,7 @@ public class InventoryEventHandler implements EventHandler {
                 mode = Mode.VIEW;
             }
         } else if (mode == Mode.DROP) {
-            int idx = event.getKeyChar() - 97;
+            int idx = keyEvent.getKeyChar() - 97;
             if (idx >= 0 && idx < engine.player.inventory.items.size()) {
                 var item = engine.player.inventory.items.get(idx);
                 engine.player.inventory.drop(item);
@@ -80,9 +81,9 @@ public class InventoryEventHandler implements EventHandler {
     }
 
     @Override
-    public void onRender(AsciiPanel panel) {
-        EventHandler.super.onRender(panel);
-        panel.write("Inventory", 85, 1, Color.WHITE);
+    public void onRender(SDL sdl) {
+        EventHandler.super.onRender(sdl);
+        sdl.write("Inventory", 85, 1, ColorUtils.WHITE);
 
         int yOffset = 2;
         java.util.List<Item> items = engine.player.inventory.items;
@@ -92,34 +93,34 @@ public class InventoryEventHandler implements EventHandler {
             if (str.length() > 16) {
                 str = str.substring(0, 16);
             }
-            panel.write(str, 82, i + yOffset, Color.WHITE);
+            sdl.write(str, 82, i + yOffset, ColorUtils.WHITE);
         }
 
         switch (mode) {
             case VIEW:
-                panel.write("x to examine", 82, 24);
-                panel.write("u to use", 82, 25);
-                panel.write("d to drop", 82, 26);
+                sdl.write("x to examine", 82, 24);
+                sdl.write("u to use", 82, 25);
+                sdl.write("d to drop", 82, 26);
                 break;
             case EXAMINE:
                 if (idxToExamine == -1) {
-                    panel.write("examine", 82, 24);
-                    panel.write("which item?", 82, 25);
+                    sdl.write("examine", 82, 24);
+                    sdl.write("which item?", 82, 25);
                 } else {
                     var item = items.get(idxToExamine);
                     var str = Logger.wrap(item.name, 16);
                     for (int i = 0; i < str.size(); i++) {
-                        panel.write(str.get(i), 82, 24 + i);
+                        sdl.write(str.get(i), 82, 24 + i);
                     }
                 }
                 break;
             case USE:
-                panel.write("use", 82, 24);
-                panel.write("which item?", 82, 25);
+                sdl.write("use", 82, 24);
+                sdl.write("which item?", 82, 25);
                 break;
             case DROP:
-                panel.write("drop", 82, 24);
-                panel.write("which item?", 82, 25);
+                sdl.write("drop", 82, 24);
+                sdl.write("which item?", 82, 25);
                 break;
         }
     }

@@ -5,10 +5,8 @@ import org.southy.rl.BaseAction;
 import org.southy.rl.ColorUtils;
 import org.southy.rl.entity.Actor;
 import org.southy.rl.eventhandler.AreaRangedAttackHandler;
-import org.southy.rl.eventhandler.SingleRangedAttackHandler;
 import org.southy.rl.exceptions.Impossible;
 
-import java.awt.*;
 import java.io.Serializable;
 import java.util.Optional;
 

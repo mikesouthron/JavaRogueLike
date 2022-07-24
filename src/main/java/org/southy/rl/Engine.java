@@ -1,6 +1,5 @@
 package org.southy.rl;
 
-import org.southy.rl.asciipanel.AsciiPanel;
 import org.southy.rl.entity.Actor;
 import org.southy.rl.eventhandler.EventHandler;
 import org.southy.rl.eventhandler.MainMenuHandler;
@@ -8,6 +7,7 @@ import org.southy.rl.exceptions.Impossible;
 import org.southy.rl.map.FastMoveState;
 import org.southy.rl.map.GameMap;
 import org.southy.rl.ui.Render;
+import org.southy.sdl.SDL;
 
 import java.io.Serializable;
 
@@ -20,7 +20,7 @@ public class Engine implements Serializable {
 
     public EventHandler eventHandler;
 
-    FastMoveState fastMove = null;
+    public FastMoveState fastMove = null;
 
     public Engine() {
         this.logger = new Logger();
@@ -47,17 +47,15 @@ public class Engine implements Serializable {
         }
     }
 
-    public void render(AsciiPanel panel) {
-        panel.clear();
+    public void render(SDL sdl) {
         if (!gameMap.fullMap) {
-            Render.renderUIBorders(panel, gameMap);
+            Render.renderUIBorders(sdl, gameMap);
         }
-        gameMap.render(panel);
+        gameMap.render(sdl);
         if (!gameMap.fullMap) {
-            logger.render(panel, 20, 46, 60, 12);
-            Render.renderBar(panel, player.fighter.getHp(), player.fighter.maxHp, 16);
+            logger.render(sdl, 20, 46, 60, 12);
+            Render.renderBar(sdl, player.fighter.getHp(), player.fighter.maxHp, 16);
         }
-        panel.repaint();
     }
 
     public void setPlayer(Actor player) {

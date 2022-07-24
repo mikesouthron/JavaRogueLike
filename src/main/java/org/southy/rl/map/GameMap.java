@@ -3,12 +3,12 @@ package org.southy.rl.map;
 import org.southy.rl.Application;
 import org.southy.rl.ColorUtils;
 import org.southy.rl.Engine;
-import org.southy.rl.asciipanel.AsciiPanel;
 import org.southy.rl.entity.Actor;
 import org.southy.rl.entity.Entity;
 import org.southy.rl.entity.EntityParent;
 import org.southy.rl.entity.Item;
 import org.southy.rl.gen.Procgen;
+import org.southy.sdl.SDL;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -86,7 +86,7 @@ public class GameMap implements Serializable, EntityParent {
         return Optional.empty();
     }
 
-    public void render(AsciiPanel panel) {
+    public void render(SDL sdl) {
         int startX = Application.camera.x - (Application.camera.width / 2);
         int endX = Application.camera.x + (Application.camera.width / 2);
         int startY = Application.camera.y - (Application.camera.height / 2);
@@ -104,18 +104,18 @@ public class GameMap implements Serializable, EntityParent {
                 }
 
                 if (idx < 0 || idx >= tiles.length) {
-                    panel.write(Tile.SHROUD.ch, renderX, renderY, Tile.SHROUD.fg, Tile.SHROUD.bg);
+                    sdl.write(Tile.SHROUD.ch, renderX, renderY, Tile.SHROUD.fg, Tile.SHROUD.bg);
                 } else {
                     var tile = tiles[idx];
                     if (visible[idx] != null) {
-                        panel.write(tile.light.ch, renderX, renderY, tile.light.fg, tile.light.bg);
+                        sdl.write(tile.light.ch, renderX, renderY, tile.light.fg, tile.light.bg);
                     } else if (explored[idx] != null) {
-                        panel.write(tile.dark.ch, renderX, renderY, tile.dark.fg, tile.dark.bg);
+                        sdl.write(tile.dark.ch, renderX, renderY, tile.dark.fg, tile.dark.bg);
                     } else {
                         if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
-                            panel.write(Tile.SHROUD.ch, renderX, renderY, ColorUtils.color(40, 0, 0), ColorUtils.color(40, 0, 0));
+                            sdl.write(Tile.SHROUD.ch, renderX, renderY, ColorUtils.color(40, 0, 0), ColorUtils.color(40, 0, 0));
                         } else {
-                            panel.write(Tile.SHROUD.ch, renderX, renderY, Tile.SHROUD.fg, Tile.SHROUD.bg);
+                            sdl.write(Tile.SHROUD.ch, renderX, renderY, Tile.SHROUD.fg, Tile.SHROUD.bg);
                         }
                     }
                 }
@@ -130,7 +130,7 @@ public class GameMap implements Serializable, EntityParent {
                     int renderX = e.x - startX + (fullMap ? 0 : MAP_OFFSET_X);
                     int renderY = e.y - startY + (fullMap ? 0 : MAP_OFFSET_Y);
                     if (renderX >= 0 && renderX < Application.camera.width && renderY >= 0 && renderY < Application.camera.height) {
-                        panel.write(e.str, renderX, renderY, e.fg, e.bg);
+                        sdl.write(e.str, renderX, renderY, e.fg, e.bg);
                     }
                 });
     }

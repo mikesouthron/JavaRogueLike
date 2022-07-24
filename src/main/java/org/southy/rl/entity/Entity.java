@@ -1,11 +1,11 @@
 package org.southy.rl.entity;
 
 import org.southy.rl.Application;
+import org.southy.rl.Color;
 import org.southy.rl.ColorUtils;
 import org.southy.rl.exceptions.Impossible;
 import org.southy.rl.map.GameMap;
 
-import java.awt.*;
 import java.io.Serializable;
 
 public class Entity implements Serializable {
@@ -29,7 +29,7 @@ public class Entity implements Serializable {
 
     public Entity(GameMap parent, int x, int y, char str, Color fg, String name, boolean blocksMovement,
                   RenderOrder renderOrder) {
-        this(parent, x, y, str, fg, Color.BLACK, name, blocksMovement, renderOrder);
+        this(parent, x, y, str, fg, ColorUtils.BLACK, name, blocksMovement, renderOrder);
     }
 
     public Entity(GameMap parent, int x, int y, char str, Color fg, Color bg, String name, boolean blocksMovement,

@@ -1,10 +1,9 @@
 package org.southy.rl.eventhandler;
 
+import org.southy.rl.ColorUtils;
 import org.southy.rl.Engine;
-import org.southy.rl.asciipanel.AsciiPanel;
+import org.southy.sdl.SDL;
 
-import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -23,19 +22,21 @@ public class GameOverEventHandler implements EventHandler {
     }
 
     @Override
-    public void handleEvents(KeyEvent event) {
-        if (event.getKeyCode() == KeyEvent.VK_ESCAPE) {
+    public void handleEvents(SDL sdl) {
+        var keyEvent = sdl.SDLGetEvent();
+        if (keyEvent == null) {
+            return;
+        }
+        if (keyEvent.getKeyCode() == KeyEvent.VK_ESCAPE) {
             engine.eventHandler = new MainMenuHandler(engine);
         }
     }
 
     @Override
-    public void onRender(AsciiPanel panel) {
-        panel.clear();
+    public void onRender(SDL sdl) {
         var str = "Game Over";
         //TODO: Add run stats here
-        panel.write(str, (panel.getWidthInCharacters() /  2) - (str.length() / 2), panel.getHeightInCharacters() / 2, Color.RED);
-        panel.repaint();
+        sdl.write(str, (sdl.getWidthInCharacters() /  2) - (str.length() / 2), sdl.getHeightInCharacters() / 2, ColorUtils.color(255, 0, 0));
     }
 
     @Override

@@ -1,7 +1,5 @@
 # JavaRogueLike
 
-[![CircleCI](https://dl.circleci.com/status-badge/img/gh/mikesouthron/JavaRogueLike/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/mikesouthron/JavaRogueLike/tree/master)
-
 ![](https://i.imgur.com/FzwmyyE.png)
 
 ## Install
@@ -25,7 +23,8 @@
 
 Adapting the Python-libtcod tutorial [here](https://rogueliketutorials.com/tutorials/tcod/v2/) directly to Java as much as possible.
 
-Using the code from [AsciiPanel](https://github.com/trystan/AsciiPanel) to drive the basic UI.
+~~Using the code from [AsciiPanel](https://github.com/trystan/AsciiPanel) to drive the basic UI.~~
+Updated to use a custom JNI linkage to SDL2 for all rendering and event handling
 
 No other external libraries.
 
@@ -50,3 +49,20 @@ I have left in place the ability to switch to a different FoV algorithm, but not
 
 ### Notes
 * Hold Tab to highlight items/monsters in FoV, with bg color that maps to key on right hand menu
+* AI
+  * Scout AI
+  * Pack (Leader + Follower)
+  * Defender
+  * Strong Roamer
+* Stats STR, AGI, CON, INT
+* Start at 1-1-1-1
+* Each level up gains you 2 AP
+* Different levels of stats allow picking up of certain Abilities
+  * e.g 3 STR - Power - Add 2 sides to damage die.
+  * e.g 3 AGI + 2 INT - Perception - 'See' montsers beyond FoV 
+* Default max of 4 abilities
+* Stamina - Attacks take stamina (heavier weapon = more stamina) - Moving costs stamina - base restore rate - reduced when in combat?
+* Mana - similar to stamina - using spells costs mana - base restore reduced when using spell?
+* Magic is from spellbooks, higher level spell books need more INT
+* Melee weapons heavier weapons need more strength.
+* Ranged same as melee, accuracy is based on AGI

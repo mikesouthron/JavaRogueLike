@@ -3,13 +3,11 @@ package org.southy.rl.eventhandler;
 import org.southy.rl.Application;
 import org.southy.rl.ColorUtils;
 import org.southy.rl.Engine;
-import org.southy.rl.asciipanel.AsciiPanel;
 import org.southy.rl.entity.EntityFactory;
 import org.southy.rl.exceptions.Impossible;
 import org.southy.rl.gen.Procgen;
+import org.southy.sdl.SDL;
 
-import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -43,17 +41,22 @@ public class MainMenuHandler implements EventHandler {
     }
 
     @Override
-    public void handleEvents(KeyEvent event) throws Impossible {
-        if (event == null) {
+    public void handleEvents(SDL sdl) throws Impossible {
+        if (sdl == null) {
             return;
         }
-        if (event.getKeyCode() == KeyEvent.VK_UP) {
+        var keyEvent = sdl.SDLGetEvent();
+        if (keyEvent == null) {
+            return;
+        }
+
+        if (keyEvent.getKeyCode() == KeyEvent.VK_UP) {
             selectedIdx--;
             if (selectedIdx >= 0 && options.get(selectedIdx) == MenuOptions.CONTINUE && !saveGameAvailable) {
                 selectedIdx--;
             }
         }
-        if (event.getKeyCode() == KeyEvent.VK_DOWN) {
+        if (keyEvent.getKeyCode() == KeyEvent.VK_DOWN) {
             selectedIdx++;
             if (selectedIdx < options.size() && options.get(selectedIdx) == MenuOptions.CONTINUE && !saveGameAvailable) {
                 selectedIdx++;
@@ -67,7 +70,7 @@ public class MainMenuHandler implements EventHandler {
             selectedIdx = 0;
         }
 
-        if (event.getKeyCode() == KeyEvent.VK_ENTER) {
+        if (keyEvent.getKeyCode() == KeyEvent.VK_ENTER || keyEvent.getKeyCode() == KeyEvent.VK_KP_ENTER) {
             switch (options.get(selectedIdx)) {
                 case NEW:
                     engine.eventHandler = new MainGameEventHandler(engine);
@@ -96,25 +99,23 @@ public class MainMenuHandler implements EventHandler {
     }
 
     @Override
-    public void onRender(AsciiPanel panel) {
-        panel.clear();
-        int yOffset = panel.getHeightInCharacters() / 2 - options.size();
-        panel.write("Dread Dungeon", panel.getWidthInCharacters() / 2 - "Dread Dungeon".length() / 2, yOffset - 10, panel.getDefaultForegroundColor(), ColorUtils.color(100, 0, 0));
+    public void onRender(SDL sdl) {
+        int yOffset = sdl.getHeightInCharacters() / 2 - options.size();
+        sdl.write("Dread Dungeon", sdl.getWidthInCharacters() / 2 - "Dread Dungeon".length() / 2, yOffset - 10, sdl.getDefaultForegroundColor(), ColorUtils.color(100, 0, 0));
         for (MenuOptions option : options) {
-            int xOffset = panel.getWidthInCharacters() / 2 - option.display.length() / 2;
+            int xOffset = sdl.getWidthInCharacters() / 2 - option.display.length() / 2;
             boolean selected = option == options.get(selectedIdx);
             if (selected) {
                 xOffset -= 2;
             }
             var display =  selected ? "* " + option.display + " *" : option.display;
-            var color = Color.WHITE;
+            var color = ColorUtils.WHITE;
             if (option == MenuOptions.CONTINUE && !saveGameAvailable) {
-                color = Color.GRAY;
+                color = ColorUtils.color(128, 128, 128);
             }
-            panel.write(display, xOffset, yOffset, color, Color.BLACK);
+            sdl.write(display, xOffset, yOffset, color, ColorUtils.BLACK);
             yOffset += 2;
         }
-        panel.repaint();
     }
 
     @Override

@@ -8,7 +8,6 @@ import org.southy.rl.eventhandler.MainMenuHandler;
 import org.southy.rl.exceptions.Impossible;
 import org.southy.rl.map.FastMoveState;
 
-import java.awt.*;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -280,7 +279,7 @@ public abstract class BaseAction implements Action {
                     item.setParent(entity);
                     entity.inventory.items.add(item);
 
-                    engine().logger.addMessage("You picked up the " + item.name, Color.WHITE);
+                    engine().logger.addMessage("You picked up the " + item.name, ColorUtils.WHITE);
 
                     return true;
                 }

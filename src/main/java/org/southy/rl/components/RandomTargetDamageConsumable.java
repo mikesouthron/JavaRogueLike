@@ -6,7 +6,6 @@ import org.southy.rl.entity.Actor;
 import org.southy.rl.entity.Item;
 import org.southy.rl.exceptions.Impossible;
 
-import java.awt.*;
 import java.io.Serializable;
 
 public class RandomTargetDamageConsumable extends Consumable implements Serializable {
@@ -36,7 +35,7 @@ public class RandomTargetDamageConsumable extends Consumable implements Serializ
 
         if (target != null) {
             target.fighter.takeDamage(damage);
-            engine().logger.addMessage("A lighting bolt strikes the " + target.name + ", for " + damage + " damage!", Color.WHITE);
+            engine().logger.addMessage("A lighting bolt strikes the " + target.name + ", for " + damage + " damage!", ColorUtils.WHITE);
             consume();
         } else {
             throw new Impossible("No target in range");

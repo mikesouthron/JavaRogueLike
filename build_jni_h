@@ -1,0 +1,2 @@
+into org.southy.sdl
+javac -h . ..\rl\Color.java ..\rl\ColorUtils.java ..\rl\eventhandler\KeyEvent.java SDL.java
