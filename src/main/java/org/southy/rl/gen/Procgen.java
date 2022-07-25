@@ -1,22 +1,172 @@
 package org.southy.rl.gen;
 
+import org.southy.rl.Color;
 import org.southy.rl.Engine;
+import org.southy.rl.RandomUtils;
+import org.southy.rl.components.BodyPart;
 import org.southy.rl.entity.Entity;
 import org.southy.rl.entity.EntityFactory;
 import org.southy.rl.exceptions.Impossible;
 import org.southy.rl.map.GameMap;
-import org.southy.rl.RandomUtils;
 import org.southy.rl.map.RectangularRoom;
 import org.southy.rl.map.Tile;
+import org.southy.rl.ui.Render;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
 
 public class Procgen {
+
+    static class ItemDesc {
+        public int id;
+        public String name;
+        public BodyPart bodyPart;
+        public int atkLow, atkHigh, defLow, defHigh;
+        public double strMod, defMod;
+    }
+
+    static class Floor {
+        int floor;
+        int itemSet;
+        int statMultiplier;
+        int chance;
+
+        public Floor(int floor, int itemSet, int statMultiplier, int chance) {
+            this.floor = floor;
+            this.itemSet = itemSet;
+            this.statMultiplier = statMultiplier;
+            this.chance = chance;
+        }
+    }
+
+    static class EnemyDesc {
+        Map<Integer, Floor> floorMap = new HashMap<>();
+        char str;
+        String name;
+        Color color;
+        int strength, agility, constitution, intelligence;
+        int hpRestore;
+        String aiName;
+    }
+
+    static Map<Integer, ItemDesc> itemDescMap = new HashMap<>();
+    static Map<Integer, Set<ItemDesc>> itemSetMap = new HashMap<>();
+
+    static Map<Integer, Set<EnemyDesc>> floorToEnemyMap = new HashMap<>();
+
+    private static void parseLists() throws URISyntaxException, IOException {
+        var path = Path.of(Render.class.getClassLoader().getResource("items.txt").toURI());
+        var lines = Files.readAllLines(path);
+
+        int startIdx = 0;
+        while (startIdx + 4 < lines.size()) {
+            ItemDesc current = new ItemDesc();
+            current.id = Integer.parseInt(lines.get(startIdx));
+            current.name = lines.get(startIdx + 1);
+            current.bodyPart = BodyPart.valueOf(lines.get(startIdx + 2));
+            var s = lines.get(startIdx + 3).split(" ");
+            current.atkLow = Integer.parseInt(s[0]);
+            current.atkHigh = Integer.parseInt(s[1]);
+            current.defLow = Integer.parseInt(s[2]);
+            current.defHigh = Integer.parseInt(s[3]);
+            s = lines.get(startIdx + 4).split(" ");
+            current.strMod = Double.parseDouble(s[0]);
+            current.defMod = Double.parseDouble(s[1]);
+            itemDescMap.put(current.id, current);
+            startIdx += 6;
+        }
+
+        path = Path.of(Render.class.getClassLoader().getResource("itemsets.txt").toURI());
+        lines = Files.readAllLines(path);
+
+        startIdx = 0;
+        while (startIdx + 1 < lines.size()) {
+            int id = Integer.parseInt(lines.get(startIdx));
+            var set = new HashSet<ItemDesc>();
+            for (String s : lines.get(startIdx + 1).split(" ")) {
+                set.add(itemDescMap.get(Integer.parseInt(s)));
+            }
+            itemSetMap.put(id, set);
+            startIdx += 3;
+        }
+
+
+        path = Path.of(Render.class.getClassLoader().getResource("enemies.txt").toURI());
+        lines = Files.readAllLines(path);
+
+        startIdx = 0;
+        while (startIdx + 6 < lines.size()) {
+
+            int id = Integer.parseInt(lines.get(startIdx));
+            var set = new HashSet<ItemDesc>();
+            for (String s : lines.get(startIdx + 1).split(" ")) {
+                set.add(itemDescMap.get(Integer.parseInt(s)));
+            }
+            itemSetMap.put(id, set);
+
+            EnemyDesc enemyDesc = new EnemyDesc();
+
+            var s = lines.get(startIdx).split(" ");
+            int floorIdx = 0;
+            while (floorIdx < s.length) {
+                int floor = Integer.parseInt(s[floorIdx]);
+                int statMultiplier = Integer.parseInt(s[floorIdx + 1]);
+                int itemSet = Integer.parseInt(s[floorIdx + 2]);
+                int chance = Integer.parseInt(s[floorIdx + 3]);
+
+                Floor floorObj = new Floor(floor, itemSet, statMultiplier, chance);
+
+                enemyDesc.floorMap.put(floor, floorObj);
+
+                var enemySet = floorToEnemyMap.getOrDefault(floor, new HashSet<>());
+                enemySet.add(enemyDesc);
+                floorToEnemyMap.putIfAbsent(floor, enemySet);
+
+                floorIdx += 4;
+            }
+
+
+            //char
+            //name
+            //color
+            //stats
+            //ainame
+
+            startIdx += 8;
+        }
+        /*
+        FLOOR STAT_MULTIPLIER ITEM_SET %CHANCE
+char
+name
+color
+str agi con int
+hp_restore
+AI_NAME
+         */
+
+
+
+
+
+
+    }
+
+    static {
+        try {
+            parseLists();
+        } catch (URISyntaxException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public static GameMap generateDungeon(Engine engine, int maxRooms, int roomMinSize, int roomMaxSize, int mapWidth, int mapHeight,
             int maxMonstersPerRoom, int maxItemsPerRoom)
             throws Impossible {
+
+
         var player = engine.player;
         var entities = new ArrayList<Entity>();
         var dungeon = new GameMap(engine, mapWidth, mapHeight, entities);

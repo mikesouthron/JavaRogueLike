@@ -15,7 +15,7 @@ public class GameWorld implements Serializable {
     int roomMinSize;
     int maxMonstersPerRoom;
     int maxItemsPerRoom;
-    int currentFloor = -6;
+    int currentFloor = 0;
 
     public GameWorld(Engine engine, int mapWidth, int mapHeight, int maxRooms, int roomMaxSize, int roomMinSize, int maxMonstersPerRoom, int maxItemsPerRoom) {
         this.engine = engine;

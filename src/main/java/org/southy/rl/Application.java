@@ -33,14 +33,11 @@ public class Application {
     }
 
     public static Engine engine;
-    public static Camera normalCamera = new Camera();
-    public static Camera fullMapCamera = new Camera();
-    public static Camera camera = normalCamera;
+
+    public static Camera camera = new Camera();
 
     @SuppressWarnings("InfiniteLoopStatement")
     public void execute() throws InterruptedException {
-        fullMapCamera.height = screenHeight * 2;
-        fullMapCamera.width = screenWidth * 2;
         engine = new Engine();
 
         while (true) {
