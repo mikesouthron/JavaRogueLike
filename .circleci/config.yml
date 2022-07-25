@@ -29,5 +29,4 @@ jobs:
 workflows:
   build-workflow:
     jobs:
-      - build-linux
       - build-windows
