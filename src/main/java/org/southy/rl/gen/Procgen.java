@@ -7,6 +7,7 @@ import org.southy.rl.exceptions.Impossible;
 import org.southy.rl.map.GameMap;
 import org.southy.rl.RandomUtils;
 import org.southy.rl.map.RectangularRoom;
+import org.southy.rl.map.Tile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,8 @@ public class Procgen {
         var dungeon = new GameMap(engine, mapWidth, mapHeight, entities);
 
         var rooms = new ArrayList<RectangularRoom>();
+
+        int lastRoomCentre = 0;
 
         for (int i = 0; i < maxRooms; i++) {
             var roomWidth = RandomUtils.randomInt(roomMinSize, roomMaxSize);
@@ -55,15 +58,14 @@ public class Procgen {
 
             placeEntities(newRoom, dungeon, maxMonstersPerRoom, maxItemsPerRoom);
 
+            lastRoomCentre = newRoom.centre(mapWidth);
+
             rooms.add(newRoom);
         }
 
-        //        var roomOne = new RectangularRoom(20, 15, 10, 15);
-        //        var roomTwo = new RectangularRoom(35, 5, 10, 10);
-        //
-        //        dungeon.dig(roomOne);
-        //        dungeon.dig(roomTwo);
-        //        dungeon.digTunnel(roomOne, roomTwo);
+        dungeon.tiles[lastRoomCentre] = Tile.upStairs();
+        dungeon.upstairsX = lastRoomCentre % mapWidth;
+        dungeon.upstairsY = lastRoomCentre / mapWidth;
 
         return dungeon;
     }

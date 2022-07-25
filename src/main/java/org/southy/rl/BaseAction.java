@@ -289,4 +289,20 @@ public abstract class BaseAction implements Action {
             throw new Impossible("There is nothing to pickup");
         }
     }
+
+    public static class TakeStairsAction extends BaseAction {
+        public TakeStairsAction(Actor entity) {
+            super(entity);
+        }
+
+        @Override
+        public boolean perform() throws Impossible {
+            if (entity.x == engine().gameMap.upstairsX && entity.y == engine().gameMap.upstairsY) {
+                engine().logger.addMessage("You ascend the stairs.", ColorUtils.DESCEND);
+                engine().gameWorld.generateFloor();
+                return true;
+            }
+            throw new Impossible("No stairs here");
+        }
+    }
 }

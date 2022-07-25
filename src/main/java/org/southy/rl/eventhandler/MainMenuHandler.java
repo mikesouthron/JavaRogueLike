@@ -3,9 +3,9 @@ package org.southy.rl.eventhandler;
 import org.southy.rl.Application;
 import org.southy.rl.ColorUtils;
 import org.southy.rl.Engine;
+import org.southy.rl.GameWorld;
 import org.southy.rl.entity.EntityFactory;
 import org.southy.rl.exceptions.Impossible;
-import org.southy.rl.gen.Procgen;
 import org.southy.sdl.SDL;
 
 import java.io.FileInputStream;
@@ -75,7 +75,8 @@ public class MainMenuHandler implements EventHandler {
                 case NEW:
                     engine.eventHandler = new MainGameEventHandler(engine);
                     engine.player = EntityFactory.player();
-                    engine.gameMap = Procgen.generateDungeon(engine, Application.maxRooms, Application.roomMinSize, Application.roomMaxSize, Application.mapWidth, Application.mapHeight, Application.maxMonstersPerRoom, Application.maxItemsPerRoom);
+                    engine.gameWorld = new GameWorld(engine, Application.mapWidth, Application.mapHeight, Application.maxRooms, Application.roomMaxSize, Application.roomMinSize, Application.maxMonstersPerRoom, Application.maxItemsPerRoom);
+                    engine.gameWorld.generateFloor();
                     engine.updateFov();
                     break;
                 case CONTINUE:

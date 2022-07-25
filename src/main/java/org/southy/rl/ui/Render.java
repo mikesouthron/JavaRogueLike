@@ -37,10 +37,10 @@ public class Render {
         }
     }
 
-    public static void renderBar(SDL sdl, int currentValue, int maxValue, int totalWidth) {
-
+    public static void renderBar(SDL sdl, int currentValue, int maxValue, int totalWidth, int dungeonLevel) {
         int barWidth = (int) ((float) currentValue / maxValue * totalWidth);
-        sdl.write("HP:" + currentValue + "/" + maxValue, 2, 2, ColorUtils.BAR_TEXT);
+        sdl.write("DLvl " + dungeonLevel, 2, 2, ColorUtils.BAR_TEXT);
+        sdl.write("HP   " + currentValue + "/" + maxValue, 2, 3, ColorUtils.BAR_TEXT);
 //        for (int i = 0; i < totalWidth; i++) {
 //            if (i >= 1 && (i - 1) < str.length) {
 //                sdl.write(str[i - 1], i + 2, 2, ColorUtils.BAR_TEXT, i < barWidth ? ColorUtils.BAR_FILLED : ColorUtils.BAR_EMPTY);

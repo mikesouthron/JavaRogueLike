@@ -17,6 +17,7 @@ public class Engine implements Serializable {
     public Logger logger;
 
     public GameMap gameMap;
+    public GameWorld gameWorld;
 
     public EventHandler eventHandler;
 
@@ -54,7 +55,7 @@ public class Engine implements Serializable {
         gameMap.render(sdl);
         if (!gameMap.fullMap) {
             logger.render(sdl, 20, 46, 60, 12);
-            Render.renderBar(sdl, player.fighter.getHp(), player.fighter.maxHp, 16);
+            Render.renderBar(sdl, player.fighter.getHp(), player.fighter.maxHp, 16, gameWorld.currentFloor);
         }
     }
 
@@ -76,5 +77,9 @@ public class Engine implements Serializable {
 
     public void setFastMove(FastMoveState fastMove) {
         this.fastMove = fastMove;
+    }
+
+    public void setGameWorld(GameWorld gameWorld) {
+        this.gameWorld = gameWorld;
     }
 }

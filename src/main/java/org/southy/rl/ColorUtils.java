@@ -23,6 +23,8 @@ public class ColorUtils {
     public final static Color NEEDS_TARGET = color(0x3F, 0xFF, 0xFF);
     public final static Color STATUS_EFFECT_APPLIED = color(0x3F, 0xFF, 0x3F);
 
+    public final static Color DESCEND = color(0x9F, 0x3F, 0xFF);
+
     public final static Color BLACK = color(0,0,0);
     public final static Color WHITE = color(255,255,255);
     public final static Color CYAN = color(0, 255, 255);

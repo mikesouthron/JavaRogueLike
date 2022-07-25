@@ -36,6 +36,9 @@ public class GameMap implements Serializable, EntityParent {
 
     public Tile[] explored;
 
+    public int upstairsX = 0;
+    public int upstairsY = 0;
+
     public GameMap(Engine engine, int width, int height, List<Entity> entities) {
         this.engine = engine;
         this.width = width;
