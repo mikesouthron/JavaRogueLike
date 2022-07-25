@@ -63,6 +63,7 @@ public class MainGameEventHandler implements EventHandler {
         var option = keyDown(keyEvent);
         if (option.isPresent()) {
             if (option.get().perform()) {
+                engine.showNames = false;
                 engine.handleEnemyTurns();
                 engine.updateFov();
             }
@@ -123,6 +124,10 @@ public class MainGameEventHandler implements EventHandler {
 
         if (event.getKeyCode() == KeyEvent.VK_ESCAPE) {
             return Optional.of(new BaseAction.EscapeAction(player));
+        }
+
+        if (event.getKeyCode() == KeyEvent.VK_TAB) {
+            engine.showNames = !engine.showNames;
         }
 
         return Optional.empty();

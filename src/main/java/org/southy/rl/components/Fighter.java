@@ -4,7 +4,6 @@ import org.southy.rl.Color;
 import org.southy.rl.ColorUtils;
 import org.southy.rl.Engine;
 import org.southy.rl.entity.Actor;
-import org.southy.rl.entity.RenderOrder;
 import org.southy.rl.eventhandler.GameOverEventHandler;
 import org.southy.rl.map.GameMap;
 
@@ -57,12 +56,7 @@ public class Fighter implements Serializable {
             deathMessageColor = ColorUtils.ENEMY_DIE;
         }
 
-        parent.str = '%';
-        parent.fg = ColorUtils.color(191, 0, 0);
-        parent.blocksMovement = false;
-        parent.ai = null;
-        parent.name = "Remains of " + parent.name;
-        parent.renderOrder = RenderOrder.CORPSE;
+        engine().gameMap.entities.remove(parent);
 
         engine().logger.addMessage(deathMessage, deathMessageColor);
     }

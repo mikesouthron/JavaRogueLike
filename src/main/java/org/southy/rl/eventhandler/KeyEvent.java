@@ -54,6 +54,8 @@ public class KeyEvent {
     public static int VK_PERIOD = '.';
     public static int VK_CLEAR = -1;
 
+    public static int VK_TAB = 9;
+
     boolean keyUp = false;
     boolean keyDown = false;
 

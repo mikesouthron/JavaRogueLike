@@ -23,6 +23,8 @@ public class Engine implements Serializable {
 
     public FastMoveState fastMove = null;
 
+    public boolean showNames = false;
+
     public Engine() {
         this.logger = new Logger();
         eventHandler = new MainMenuHandler(this);

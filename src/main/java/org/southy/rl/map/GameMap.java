@@ -11,10 +11,7 @@ import org.southy.rl.gen.Procgen;
 import org.southy.sdl.SDL;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class GameMap implements Serializable, EntityParent {
 
@@ -77,12 +74,21 @@ public class GameMap implements Serializable, EntityParent {
     }
 
     public void computeFov(int x, int y) {
-        FoV.computeFov(this, x, y,  engine.player.fovRadius, true, FoV.FoVAlgorithm.FOV_RESTRICTIVE);
+        FoV.computeFov(this, x, y, engine.player.fovRadius, true, FoV.FoVAlgorithm.FOV_RESTRICTIVE);
     }
 
     public Optional<Entity> getBlockingEntityAtLocation(int x, int y) {
         for (Entity entity : entities) {
             if (entity.blocksMovement && entity.x == x && entity.y == y) {
+                return Optional.of(entity);
+            }
+        }
+        return Optional.empty();
+    }
+
+    public Optional<Entity> getEntityAt(int x, int y) {
+        for (Entity entity : entities) {
+            if (entity.x == x && entity.y == y) {
                 return Optional.of(entity);
             }
         }
@@ -125,6 +131,8 @@ public class GameMap implements Serializable, EntityParent {
             }
         }
 
+        List<Integer> tilesWithNameIn = new ArrayList<>();
+
         entities
                 .stream()
                 .filter(e -> visible[Procgen.toIdx(e.x, e.y, width)] != null)
@@ -134,6 +142,58 @@ public class GameMap implements Serializable, EntityParent {
                     int renderY = e.y - startY + (fullMap ? 0 : MAP_OFFSET_Y);
                     if (renderX >= 0 && renderX < Application.camera.width && renderY >= 0 && renderY < Application.camera.height) {
                         sdl.write(e.str, renderX, renderY, e.fg, e.bg);
+                        //This feels quite hacky, and maybe slow if there are lots of entities on the screen?
+                        if (engine.showNames) {
+                            boolean validPlus = false;
+                            boolean validMinus = false;
+                            Map<Integer, List<Integer>> tileListMap = new HashMap<>();
+                            int offset = -1;
+                            while (!validPlus && !validMinus) {
+                                offset++;
+                                int y1 = renderY + offset;
+                                int y2 = renderY - offset;
+
+                                List<Integer> tilesPlus = new ArrayList<>();
+                                List<Integer> tilesMinus = new ArrayList<>();
+
+                                tileListMap.put(y1, tilesPlus);
+                                tileListMap.put(y2, tilesMinus);
+
+                                validPlus = true;
+                                validMinus = true;
+                                for (int x = renderX + 1; x < renderX + 1 + e.name.length(); x++) {
+                                    int i1 = x + y1 * width;
+                                    int i2 = x + y2 * width;
+                                    if (tilesWithNameIn.contains(i1) || getEntityAt(e.x + (x - renderX), e.y + offset).isPresent()) {
+                                        validPlus = false;
+                                    } else {
+                                        tilesPlus.add(i1);
+                                    }
+                                    if (tilesWithNameIn.contains(i2) || getEntityAt(e.x + (x - renderX), e.y - offset).isPresent()) {
+                                        validMinus = false;
+                                    } else {
+                                        tilesMinus.add(i2);
+                                    }
+                                }
+                            }
+
+                            List<Integer> tileList;
+                            int y;
+                            if (validPlus) {
+                                tileList = tileListMap.get(renderY + offset);
+                                y = renderY + offset;
+                            } else {
+                                tileList = tileListMap.get(renderY - offset);
+                                y = renderY - offset;
+                            }
+                            if (tileList != null) {
+                                tilesWithNameIn.addAll(tileList);
+                                sdl.write(e.name, renderX + 1, y, ColorUtils.WHITE, ColorUtils.color(255, 0, 0));
+                                if (y != renderY) {
+                                    //TODO: Draw a line from renderX, renderY, to renderX + 1, y
+                                }
+                            }
+                        }
                     }
                 });
     }
