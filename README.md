@@ -48,17 +48,18 @@ I have left in place the ability to switch to a different FoV algorithm, but not
 
 
 ### Notes
-* Hold Tab to highlight items/monsters in FoV, with bg color that maps to key on right hand menu
+~~* Hold Tab to highlight items/monsters in FoV, with bg color that maps to key on right hand menu~~
 * AI
   * Scout AI
   * Pack (Leader + Follower)
-  * Defender
+  * Defender (assigned a room to defend)
   * Strong Roamer
+* Demon generator rooms
 * Stats STR, AGI, CON, INT
 * Start at 1-1-1-1
-* Each level up gains you 2 AP
+* Each dungeon level increase gains you 2 AP (can this be modified based on things happening on level?)
 * Different levels of stats allow picking up of certain Abilities
-  * e.g 3 STR - Power - Add 2 sides to damage die.
+  * e.g 3 STR - Power - Slide damage window up
   * e.g 3 AGI + 2 INT - Perception - 'See' montsers beyond FoV 
 * Default max of 4 abilities
 * Stamina - Attacks take stamina (heavier weapon = more stamina) - Moving costs stamina - base restore rate - reduced when in combat?
@@ -66,3 +67,8 @@ I have left in place the ability to switch to a different FoV algorithm, but not
 * Magic is from spellbooks, higher level spell books need more INT
 * Melee weapons heavier weapons need more strength.
 * Ranged same as melee, accuracy is based on AGI
+* Damage is a range based on weapon base * str modifier
+* Crits % based chance, calculated based on AGI * Base crit rate of weapon
+  * Crit damage is multiplier of max weapon damage (multiplier is different for different weapons)
+* No consumables? All magic through spellbook equip and ability trees, Interesting choice for fantasy based RL! No health or status effecting items then!
+* Enemy stats, equipment and abilities are based on DLVL (don't need tons of "enemy types" just stronger versions).
