@@ -7,15 +7,15 @@ import org.southy.rl.map.GameMap;
 public class EntityFactory {
 
     public static Actor player() {
-        return new Actor(null, '@', ColorUtils.WHITE, "Player", new Fighter(30, 2, 5), HostileEnemy.class, new Inventory(20));
+        return new Actor(null, '@', ColorUtils.WHITE, "Player", new Fighter(1, 1, 1, 1), HostileEnemy.class, new Inventory(20));
     }
 
     public static void orc(GameMap gameMap, int x, int y) {
-        new Actor(gameMap, x, y, 'o', ColorUtils.color(127, 127, 127), "Orc", new Fighter(10, 0, 3), HostileEnemy.class, new Inventory(0));
+        new Actor(gameMap, x, y, 'o', ColorUtils.color(127, 127, 127), "Orc", new Fighter(0, 1, 1, 1), HostileEnemy.class, new Inventory(0));
     }
 
     public static void troll(GameMap gameMap, int x, int y) {
-        new Actor(gameMap, x, y, 'T', ColorUtils.color(0, 127, 0), "Troll", new Fighter(16, 1, 4), HostileEnemy.class, new Inventory(0));
+        new Actor(gameMap, x, y, 'T', ColorUtils.color(0, 127, 0), "Troll", new Fighter(0, 1, 2, 1), HostileEnemy.class, new Inventory(0));
     }
 
     public static void potion(GameMap gameMap, int x, int y) {

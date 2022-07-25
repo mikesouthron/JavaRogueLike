@@ -3,6 +3,7 @@ package org.southy.rl;
 import org.southy.rl.entity.Actor;
 import org.southy.rl.entity.Entity;
 import org.southy.rl.entity.Item;
+import org.southy.rl.eventhandler.LevelUpEventHandler;
 import org.southy.rl.eventhandler.MainGameEventHandler;
 import org.southy.rl.eventhandler.MainMenuHandler;
 import org.southy.rl.exceptions.Impossible;
@@ -107,7 +108,12 @@ public abstract class BaseAction implements Action {
                 throw new Impossible("Nothing to attack");
             }
 
-            var damage = entity.fighter.power - target.get().fighter.defence;
+            /*
+            weapon damage range + slide up based on strength * weapon.strmod
+            defense range - based on armour - base = 1-2
+             */
+
+            var damage = (entity.fighter.strength * 5) - (target.get().fighter.constitution * 2);
 
             var attackDesc = entity.name.toUpperCase() + " attacks " + target.get().name;
 
@@ -299,7 +305,7 @@ public abstract class BaseAction implements Action {
         public boolean perform() throws Impossible {
             if (entity.x == engine().gameMap.upstairsX && entity.y == engine().gameMap.upstairsY) {
                 engine().logger.addMessage("You ascend the stairs.", ColorUtils.DESCEND);
-                engine().gameWorld.generateFloor();
+                engine().eventHandler = new LevelUpEventHandler(engine(), 2);
                 return true;
             }
             throw new Impossible("No stairs here");

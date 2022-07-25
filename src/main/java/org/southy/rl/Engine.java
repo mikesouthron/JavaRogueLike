@@ -57,7 +57,7 @@ public class Engine implements Serializable {
         gameMap.render(sdl);
         if (!gameMap.fullMap) {
             logger.render(sdl, 20, 46, 60, 12);
-            Render.renderBar(sdl, player.fighter.getHp(), player.fighter.maxHp, 16, gameWorld.currentFloor);
+            Render.renderBar(sdl, player.fighter.getHp(), player.fighter.getMaxHp(), 16, gameWorld.currentFloor);
         }
     }
 

@@ -56,7 +56,7 @@ public class Procgen {
                 dungeon.digTunnel(newRoom, rooms.get(rooms.size() - 1));
             }
 
-            placeEntities(newRoom, dungeon, maxMonstersPerRoom, maxItemsPerRoom);
+//            placeEntities(newRoom, dungeon, maxMonstersPerRoom, maxItemsPerRoom);
 
             lastRoomCentre = newRoom.centre(mapWidth);
 

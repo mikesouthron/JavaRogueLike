@@ -10,10 +10,16 @@ import org.southy.rl.map.GameMap;
 import java.io.Serializable;
 
 public class Fighter implements Serializable {
-    public int maxHp;
+
+
+    public int strength;
+    public int agility;
+    public int constitution;
+    public int intelligence;
+
+    public int hpMod = 10;
+
     int hp;
-    public int defence;
-    public int power;
 
     Actor parent;
 
@@ -26,11 +32,12 @@ public class Fighter implements Serializable {
     }
 
 
-    public Fighter(int maxHp, int defence, int power) {
-        this.maxHp = maxHp;
-        this.hp = maxHp;
-        this.defence = defence;
-        this.power = power;
+    public Fighter(int strength, int agility, int constitution, int intelligence) {
+        this.hp = constitution * hpMod;
+        this.strength = strength;
+        this.agility = agility;
+        this.constitution = constitution;
+        this.intelligence = intelligence;
     }
 
     public int getHp() {
@@ -38,10 +45,14 @@ public class Fighter implements Serializable {
     }
 
     public void setHp(int hp) {
-        this.hp = Math.max(0, Math.min(hp, maxHp));
+        this.hp = Math.max(0, Math.min(hp, getMaxHp()));
         if (this.hp == 0 && parent.isAlive()) {
             die();
         }
+    }
+
+    public int getMaxHp() {
+        return constitution * hpMod;
     }
 
     private void die() {
@@ -62,13 +73,13 @@ public class Fighter implements Serializable {
     }
 
     public int heal(int amount) {
-        if (hp == maxHp) {
+        if (hp == getMaxHp()) {
             return 0;
         }
 
         var newHpValue = hp + amount;
-        if (newHpValue > maxHp) {
-            newHpValue = maxHp;
+        if (newHpValue > getMaxHp()) {
+            newHpValue = getMaxHp();
         }
 
         var amountRecovered = newHpValue - hp;
@@ -82,16 +93,11 @@ public class Fighter implements Serializable {
         setHp(hp - amount);
     }
 
-    public void setMaxHp(int maxHp) {
-        this.maxHp = maxHp;
-    }
-
-    public void setDefence(int defence) {
-        this.defence = defence;
-    }
-
-    public void setPower(int power) {
-        this.power = power;
+    public void levelUp(int strength, int agility, int constitution, int intelligence) {
+        this.strength += strength;
+        this.agility += agility;
+        this.constitution += constitution;
+        this.intelligence += intelligence;
     }
 
     public void setEntity(Actor entity) {
@@ -106,4 +112,23 @@ public class Fighter implements Serializable {
         return parent;
     }
 
+    public void setStrength(int strength) {
+        this.strength = strength;
+    }
+
+    public void setAgility(int agility) {
+        this.agility = agility;
+    }
+
+    public void setConstitution(int constitution) {
+        this.constitution = constitution;
+    }
+
+    public void setIntelligence(int intelligence) {
+        this.intelligence = intelligence;
+    }
+
+    public void setHpMod(int hpMod) {
+        this.hpMod = hpMod;
+    }
 }
