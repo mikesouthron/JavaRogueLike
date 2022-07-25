@@ -38,7 +38,19 @@ public class EntityFactory {
 //    }
 
     public static void sword(GameMap gameMap, int x, int y) {
-        new Equipable(gameMap, x, y, '|', ColorUtils.WHITE, "Sword", BodyPart.HAND, 2, 8, 1.2, 0, 0, 0, 0, 0);
+        new Equipable(gameMap, x, y, '|', ColorUtils.WHITE, "Sword", BodyPart.HAND, 2, 8, 0, 0, 0, 0, 0, 0);
+    }
+
+    public static void ringOfAtk(GameMap gameMap, int x, int y) {
+        new Equipable(gameMap, x, y, '|', ColorUtils.WHITE, "Atk Ring", BodyPart.FINGER, 2, 2, 0, 0, 0, 0, 0, 0);
+    }
+
+    public static void ringOfDef(GameMap gameMap, int x, int y) {
+        new Equipable(gameMap, x, y, '|', ColorUtils.WHITE, "Def Ring", BodyPart.FINGER, 0, 0, 0, 2, 2, 0, 0, 0);
+    }
+
+    public static void ringOfAtkDef(GameMap gameMap, int x, int y) {
+        new Equipable(gameMap, x, y, '|', ColorUtils.WHITE, "Lord Ring", BodyPart.FINGER, 2, 2, 0, 2, 2, 0, 0, 0);
     }
 }
 

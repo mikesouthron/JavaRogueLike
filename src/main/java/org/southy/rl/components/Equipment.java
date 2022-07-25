@@ -37,6 +37,43 @@ public class Equipment implements Serializable {
         return new Range(baseEquipmentDamage.low * dmgMod, baseEquipmentDamage.high * dmgMod);
     }
 
+    public Range getMeleeAtkRange(Equipable remove, Equipable add) {
+        int str = parent.fighter.strength;
+
+        Range baseEquipmentDamage = new Range(0, 1);
+        double equipmentStrMod = 0;
+
+        for (Equipable item : items) {
+            if (item == null) {
+                continue;
+            }
+            if (item == remove) {
+                if (add.atk != null) {
+                    baseEquipmentDamage.low += add.atk.low;
+                    baseEquipmentDamage.high += add.atk.high;
+                }
+                equipmentStrMod += add.strMod;
+            } else {
+                if (item.atk != null) {
+                    baseEquipmentDamage.low += item.atk.low;
+                    baseEquipmentDamage.high += item.atk.high;
+                }
+                equipmentStrMod += item.strMod;
+            }
+        }
+
+        if (remove == null) {
+            if (add.atk != null) {
+                baseEquipmentDamage.low += add.atk.low;
+                baseEquipmentDamage.high += add.atk.high;
+            }
+            equipmentStrMod += add.strMod;
+        }
+
+        int dmgMod = (int)(equipmentStrMod + str);
+        return new Range(baseEquipmentDamage.low * dmgMod, baseEquipmentDamage.high * dmgMod);
+    }
+
     public int calculateMeleeDamage() {
         return getMeleeAtkRange().random();
     }
@@ -55,6 +92,44 @@ public class Equipment implements Serializable {
             }
 
             equipmentArmourMod += item.armourMod;
+        }
+
+        return new Range((int)(baseEquipmentArmour.low * equipmentArmourMod), (int)(baseEquipmentArmour.high * equipmentArmourMod));
+    }
+
+    public Range getMeleeDefenseRange(Equipable remove, Equipable add) {
+        Range baseEquipmentArmour = new Range(1, 2);
+        double equipmentArmourMod = 1;
+
+        for (Equipable item : items) {
+            if (item == null) {
+                continue;
+            }
+            if (item == remove) {
+                if (add.def != null) {
+                    baseEquipmentArmour.low += add.def.low;
+                    baseEquipmentArmour.high += add.def.high;
+                }
+
+                equipmentArmourMod += add.armourMod;
+            } else {
+                if (item.def != null) {
+                    baseEquipmentArmour.low += item.def.low;
+                    baseEquipmentArmour.high += item.def.high;
+                }
+
+                equipmentArmourMod += item.armourMod;
+            }
+
+        }
+
+        if (remove == null) {
+            if (add.def != null) {
+                baseEquipmentArmour.low += add.def.low;
+                baseEquipmentArmour.high += add.def.high;
+            }
+
+            equipmentArmourMod += add.armourMod;
         }
 
         return new Range((int)(baseEquipmentArmour.low * equipmentArmourMod), (int)(baseEquipmentArmour.high * equipmentArmourMod));

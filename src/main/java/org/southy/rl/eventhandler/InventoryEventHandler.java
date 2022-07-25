@@ -60,6 +60,7 @@ public class InventoryEventHandler implements EventHandler {
                     if (action.get().perform()) {
                         engine.handleEnemyTurns();
                         engine.updateFov();
+                        engine.endOfTurn();
                     }
                 }
                 mode = Mode.VIEW;
@@ -73,6 +74,7 @@ public class InventoryEventHandler implements EventHandler {
                 engine.player.inventory.drop(item);
                 engine.handleEnemyTurns();
                 engine.updateFov();
+                engine.endOfTurn();
                 mode = Mode.VIEW;
             } else {
                 mode = Mode.VIEW;

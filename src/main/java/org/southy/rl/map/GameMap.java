@@ -3,6 +3,7 @@ package org.southy.rl.map;
 import org.southy.rl.Application;
 import org.southy.rl.ColorUtils;
 import org.southy.rl.Engine;
+import org.southy.rl.components.Equipable;
 import org.southy.rl.entity.Actor;
 import org.southy.rl.entity.Entity;
 import org.southy.rl.entity.EntityParent;
@@ -230,6 +231,16 @@ public class GameMap implements Serializable, EntityParent {
         for (Entity entity : entities) {
             if (entity instanceof Item) {
                 items.add((Item) entity);
+            }
+        }
+        return items;
+    }
+
+    public List<Equipable> getEquipment() {
+        List<Equipable> items= new ArrayList<>();
+        for (Entity entity : entities) {
+            if (entity instanceof Equipable) {
+                items.add((Equipable) entity);
             }
         }
         return items;

@@ -50,6 +50,8 @@ public class MainMenuHandler implements EventHandler {
             return;
         }
 
+        System.out.println(keyEvent.getKeyCode());
+
         if (keyEvent.getKeyCode() == KeyEvent.VK_UP) {
             selectedIdx--;
             if (selectedIdx >= 0 && options.get(selectedIdx) == MenuOptions.CONTINUE && !saveGameAvailable) {

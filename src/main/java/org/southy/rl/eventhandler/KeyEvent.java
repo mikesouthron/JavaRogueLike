@@ -56,6 +56,9 @@ public class KeyEvent {
 
     public static int VK_TAB = 9;
 
+    public static int VK_1 = 49;
+    public static int VK_2 = 50;
+
     boolean keyUp = false;
     boolean keyDown = false;
 

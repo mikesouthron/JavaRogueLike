@@ -1,8 +1,10 @@
 package org.southy.rl;
 
+import org.southy.rl.components.Equipable;
 import org.southy.rl.entity.Actor;
 import org.southy.rl.entity.Entity;
 import org.southy.rl.entity.Item;
+import org.southy.rl.eventhandler.EquipEventHandler;
 import org.southy.rl.eventhandler.LevelUpEventHandler;
 import org.southy.rl.eventhandler.MainGameEventHandler;
 import org.southy.rl.eventhandler.MainMenuHandler;
@@ -278,23 +280,13 @@ public abstract class BaseAction implements Action {
 
         @Override
         public boolean perform() throws Impossible {
-            for (Item item : engine().gameMap.getItems()) {
+            for (Equipable item : engine().gameMap.getEquipment()) {
                 if (entity.x == item.x && entity.y == item.y) {
-                    if (entity.inventory.items.size() >= entity.inventory.capacity) {
-                        throw new Impossible("Your inventory is full");
-                    }
-
-                    engine().gameMap.entities.remove(item);
-                    item.setParent(entity);
-                    entity.inventory.items.add(item);
-
-                    engine().logger.addMessage("You picked up the " + item.name, ColorUtils.WHITE);
-
-                    return true;
+                    engine().eventHandler = new EquipEventHandler(engine(), entity, item);
+                    return false;
                 }
 
             }
-
             throw new Impossible("There is nothing to pickup");
         }
     }

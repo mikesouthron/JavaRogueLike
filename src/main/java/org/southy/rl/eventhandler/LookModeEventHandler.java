@@ -3,6 +3,8 @@ package org.southy.rl.eventhandler;
 import org.southy.rl.Application;
 import org.southy.rl.ColorUtils;
 import org.southy.rl.Engine;
+import org.southy.rl.components.EquipSlot;
+import org.southy.rl.components.Equipable;
 import org.southy.rl.entity.Actor;
 import org.southy.rl.entity.Entity;
 import org.southy.rl.exceptions.Impossible;
@@ -34,77 +36,91 @@ public class LookModeEventHandler extends SelectIndexEventHandler implements Eve
         }
         sdl.write(actor.name, x, 1, sdl.getDefaultForegroundColor(), bg);
 
-        sdl.write("Str " + actor.fighter.strength, x,  2, sdl.getDefaultForegroundColor(), bg);
-        sdl.write("Agi " + actor.fighter.agility, x, 3, sdl.getDefaultForegroundColor(), bg);
-        sdl.write("Con " + actor.fighter.constitution, x, 4, sdl.getDefaultForegroundColor(), bg);
-        sdl.write("Int " + actor.fighter.intelligence, x, 5, sdl.getDefaultForegroundColor(), bg);
-        sdl.write("HP " + actor.fighter.getHp() + " / " + actor.fighter.getMaxHp(), x, 7, sdl.getDefaultForegroundColor(), bg);
+        sdl.write("Str " + actor.fighter.strength, x,  3, sdl.getDefaultForegroundColor(), bg);
+        sdl.write("Agi " + actor.fighter.agility, x, 4, sdl.getDefaultForegroundColor(), bg);
+        sdl.write("Con " + actor.fighter.constitution, x, 5, sdl.getDefaultForegroundColor(), bg);
+        sdl.write("Int " + actor.fighter.intelligence, x, 6, sdl.getDefaultForegroundColor(), bg);
+        sdl.write("HP " + actor.fighter.getHp() + " / " + actor.fighter.getMaxHp(), x, 8, sdl.getDefaultForegroundColor(), bg);
 
         var atk = actor.equipment.getMeleeAtkRange();
-        sdl.write("Atk: " + atk.low + "-" + atk.high, x, 9, ColorUtils.color(200, 100, 0), bg);
+        sdl.write("Atk: " + atk.low + "-" + atk.high, x, 10, ColorUtils.color(200, 100, 0), bg);
 
         var def = actor.equipment.getMeleeDefenseRange();
-        sdl.write("Def: " + def.low + "-" + def.high, x, 10, ColorUtils.color(100, 200, 0), bg);
+        sdl.write("Def: " + def.low + "-" + def.high, x, 11, ColorUtils.color(100, 200, 0), bg);
 
-        /*
-        x = sdl.getWidthInCharacters() - Application.rightUIWidth;
-        sdl.write("Equipment", x, 1);
-        int y = 3;
-        sdl.write("Head", x, y);
-        if (player.equipment.items[EquipSlot.HEAD.idx] != null) {
-            sdl.write(player.equipment.items[EquipSlot.HEAD.idx].name, x + 15, y++, ColorUtils.INVENTORY);
+        int y = 13;
+
+        sdl.write("Equipment", x, y, sdl.getDefaultForegroundColor(), bg);
+
+        y+= 2;
+
+        sdl.write("Head", x, y, sdl.getDefaultForegroundColor(), bg);
+        if (actor.equipment.items[EquipSlot.HEAD.idx] != null) {
+            sdl.write(actor.equipment.items[EquipSlot.HEAD.idx].name, x + 15, y++, ColorUtils.INVENTORY, bg);
         } else {
-            sdl.write("-", x + 15, y++, ColorUtils.color(100, 0, 0));
+            sdl.write("-", x + 15, y++, ColorUtils.color(100, 0, 0), bg);
         }
-        sdl.write("Neck", x, y);
-        if (player.equipment.items[EquipSlot.NECK.idx] != null) {
-            sdl.write(player.equipment.items[EquipSlot.NECK.idx].name, x + 15, y++, ColorUtils.INVENTORY);
+        sdl.write("Neck", x, y, sdl.getDefaultForegroundColor(), bg);
+        if (actor.equipment.items[EquipSlot.NECK.idx] != null) {
+            sdl.write(actor.equipment.items[EquipSlot.NECK.idx].name, x + 15, y++, ColorUtils.INVENTORY, bg);
         } else {
-            sdl.write("-", x + 15, y++, ColorUtils.color(100, 0, 0));
+            sdl.write("-", x + 15, y++, ColorUtils.color(100, 0, 0), bg);
         }
-        sdl.write("Body", x, y);
-        if (player.equipment.items[EquipSlot.BODY.idx] != null) {
-            sdl.write(player.equipment.items[EquipSlot.BODY.idx].name, x + 15, y++, ColorUtils.INVENTORY);
+        sdl.write("Body", x, y, sdl.getDefaultForegroundColor(), bg);
+        if (actor.equipment.items[EquipSlot.BODY.idx] != null) {
+            sdl.write(actor.equipment.items[EquipSlot.BODY.idx].name, x + 15, y++, ColorUtils.INVENTORY, bg);
         } else {
-            sdl.write("-", x + 15, y++, ColorUtils.color(100, 0, 0));
+            sdl.write("-", x + 15, y++, ColorUtils.color(100, 0, 0), bg);
         }
-        sdl.write("Back", x, y);
-        if (player.equipment.items[EquipSlot.BACK.idx] != null) {
-            sdl.write(player.equipment.items[EquipSlot.BACK.idx].name, x + 15, y++, ColorUtils.INVENTORY);
+        sdl.write("Back", x, y, sdl.getDefaultForegroundColor(), bg);
+        if (actor.equipment.items[EquipSlot.BACK.idx] != null) {
+            sdl.write(actor.equipment.items[EquipSlot.BACK.idx].name, x + 15, y++, ColorUtils.INVENTORY, bg);
         } else {
-            sdl.write("-", x + 15, y++, ColorUtils.color(100, 0, 0));
+            sdl.write("-", x + 15, y++, ColorUtils.color(100, 0, 0), bg);
         }
-        sdl.write("Right Hand", x, y);
-        if (player.equipment.items[EquipSlot.RIGHT_HAND.idx] != null) {
-            sdl.write(player.equipment.items[EquipSlot.RIGHT_HAND.idx].name, x + 15, y++, ColorUtils.INVENTORY);
+        sdl.write("Right Hand", x, y, sdl.getDefaultForegroundColor(), bg);
+        if (actor.equipment.items[EquipSlot.RIGHT_HAND.idx] != null) {
+            sdl.write(actor.equipment.items[EquipSlot.RIGHT_HAND.idx].name, x + 15, y++, ColorUtils.INVENTORY, bg);
         } else {
-            sdl.write("-", x + 15, y++, ColorUtils.color(100, 0, 0));
+            sdl.write("-", x + 15, y++, ColorUtils.color(100, 0, 0), bg);
         }
-        sdl.write("Left Hand", x, y);
-        if (player.equipment.items[EquipSlot.LEFT_HAND.idx] != null) {
-            sdl.write(player.equipment.items[EquipSlot.LEFT_HAND.idx].name, x + 15, y++, ColorUtils.INVENTORY);
+        sdl.write("Left Hand", x, y, sdl.getDefaultForegroundColor(), bg);
+        if (actor.equipment.items[EquipSlot.LEFT_HAND.idx] != null) {
+            sdl.write(actor.equipment.items[EquipSlot.LEFT_HAND.idx].name, x + 15, y++, ColorUtils.INVENTORY, bg);
         } else {
-            sdl.write("-", x + 15, y++, ColorUtils.color(100, 0, 0));
+            sdl.write("-", x + 15, y++, ColorUtils.color(100, 0, 0), bg);
         }
-        sdl.write("Right Finger", x, y);
-        if (player.equipment.items[EquipSlot.RIGHT_FINGER.idx] != null) {
-            sdl.write(player.equipment.items[EquipSlot.RIGHT_FINGER.idx].name, x + 15, y++, ColorUtils.INVENTORY);
+        sdl.write("Right Finger", x, y, sdl.getDefaultForegroundColor(), bg);
+        if (actor.equipment.items[EquipSlot.RIGHT_FINGER.idx] != null) {
+            sdl.write(actor.equipment.items[EquipSlot.RIGHT_FINGER.idx].name, x + 15, y++, ColorUtils.INVENTORY, bg);
         } else {
-            sdl.write("-", x + 15, y++, ColorUtils.color(100, 0, 0));
+            sdl.write("-", x + 15, y++, ColorUtils.color(100, 0, 0), bg);
         }
-        sdl.write("Left Finger", x, y);
-        if (player.equipment.items[EquipSlot.LEFT_FINGER.idx] != null) {
-            sdl.write(player.equipment.items[EquipSlot.LEFT_FINGER.idx].name, x + 15, y++, ColorUtils.INVENTORY);
+        sdl.write("Left Finger", x, y, sdl.getDefaultForegroundColor(), bg);
+        if (actor.equipment.items[EquipSlot.LEFT_FINGER.idx] != null) {
+            sdl.write(actor.equipment.items[EquipSlot.LEFT_FINGER.idx].name, x + 15, y++, ColorUtils.INVENTORY, bg);
         } else {
-            sdl.write("-", x + 15, y++, ColorUtils.color(100, 0, 0));
+            sdl.write("-", x + 15, y++, ColorUtils.color(100, 0, 0), bg);
         }
-        sdl.write("Feet", x, y);
-        if (player.equipment.items[EquipSlot.FEET.idx] != null) {
-            sdl.write(player.equipment.items[EquipSlot.FEET.idx].name, x + 15, y++, ColorUtils.INVENTORY);
+        sdl.write("Feet", x, y, sdl.getDefaultForegroundColor(), bg);
+        if (actor.equipment.items[EquipSlot.FEET.idx] != null) {
+            sdl.write(actor.equipment.items[EquipSlot.FEET.idx].name, x + 15, y++, ColorUtils.INVENTORY, bg);
         } else {
-            sdl.write("-", x + 15, y++, ColorUtils.color(100, 0, 0));
+            sdl.write("-", x + 15, y++, ColorUtils.color(100, 0, 0), bg);
         }
-         */
+    }
+
+    private void renderEquipmentInfo(SDL sdl, Equipable equipable) {
+        var bg = ColorUtils.color(100, 100, 100);
+
+        int x = Application.screenWidth - Application.rightUIWidth;
+
+        for (int _x = x; _x < Application.screenWidth; _x++) {
+            for (int y = 0; y < Application.screenHeight; y++) {
+                sdl.write(" ", _x, y, sdl.getDefaultForegroundColor(), bg);
+            }
+        }
+        sdl.write(equipable.name, x, 1, sdl.getDefaultForegroundColor(), bg);
     }
 
     @Override
@@ -132,6 +148,9 @@ public class LookModeEventHandler extends SelectIndexEventHandler implements Eve
                 if (renderInfo) {
                     if (entity instanceof Actor) {
                         renderActorInfo(sdl, (Actor) entity);
+                    }
+                    if (entity instanceof Equipable) {
+                        renderEquipmentInfo(sdl, (Equipable) entity);
                     }
                 }
 

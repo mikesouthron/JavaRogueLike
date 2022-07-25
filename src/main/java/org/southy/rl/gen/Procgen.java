@@ -92,6 +92,25 @@ public class Procgen {
             }
         }
 
+
+        for (int x = room.x1 + 1; x < room.x2; x++) {
+            var y = room.y1 + 1;
+            int idx = x - room.x1;
+            if (idx == 1) {
+                EntityFactory.sword(map, x, y);
+            }
+            if (idx == 2) {
+                EntityFactory.ringOfAtk(map, x, y);
+            }
+            if (idx == 3) {
+                EntityFactory.ringOfDef(map, x, y);
+            }
+            if (idx == 4) {
+                EntityFactory.ringOfAtkDef(map, x, y);
+            }
+        }
+
+        /*
         var numberOfItems = RandomUtils.randomInt(0, maxItemsPerRoom);
         for (int i = 0; i < numberOfItems; i++) {
             var x = RandomUtils.randomInt(room.x1 + 1, room.x2 - 1);
@@ -111,6 +130,7 @@ public class Procgen {
                 }
             }
         }
+         */
     }
 
     public static List<Integer> tunnel(int start, int end, int mapWidth) {

@@ -62,6 +62,10 @@ public class Engine implements Serializable {
         sdl.write("Int " + player.fighter.intelligence, x, 4);
         sdl.write("HP " + player.fighter.getHp() + " / " + player.fighter.getMaxHp(), x, 6);
 
+        if (player.inCombat > 0) {
+            sdl.write("In Combat [" + "*".repeat(player.inCombat) + "]", x, 7, sdl.getDefaultForegroundColor(), ColorUtils.color(200, 0, 0));
+        }
+
         var atk = player.equipment.getMeleeAtkRange();
         sdl.write("Atk: " + atk.low + "-" + atk.high, x, 8, ColorUtils.color(200, 100, 0));
 
@@ -129,8 +133,8 @@ public class Engine implements Serializable {
 
     public void render(SDL sdl) {
         gameMap.render(sdl);
-        //logger.render(sdl, 20, 46, 60, 12);
         renderUI(sdl);
+        logger.render(sdl, Application.screenWidth - Application.rightUIWidth, Application.screenHeight - 12, Application.rightUIWidth, 12);
     }
 
     public void setPlayer(Actor player) {
