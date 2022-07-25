@@ -113,7 +113,7 @@ public abstract class BaseAction implements Action {
             defense range - based on armour - base = 1-2
              */
 
-            var damage = (entity.fighter.strength * 5) - (target.get().fighter.constitution * 2);
+            var damage = entity.equipment.calculateMeleeDamage() - target.get().equipment.calculateMeleeDefense();
 
             var attackDesc = entity.name.toUpperCase() + " attacks " + target.get().name;
 
@@ -125,6 +125,9 @@ public abstract class BaseAction implements Action {
             } else {
                 engine().logger.addMessage(attackDesc + " but does no damage", attackColor);
             }
+
+            entity.inCombat = 3;
+            target.get().inCombat = 3;
 
             return true;
         }

@@ -50,6 +50,10 @@ public class Engine implements Serializable {
         }
     }
 
+    public void endOfTurn() {
+        gameMap.getActors().forEach(Actor::endOfTurn);
+    }
+
     public void render(SDL sdl) {
         if (!gameMap.fullMap) {
             Render.renderUIBorders(sdl, gameMap);

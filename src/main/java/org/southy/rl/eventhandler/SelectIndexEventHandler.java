@@ -62,6 +62,7 @@ public class SelectIndexEventHandler implements EventHandler {
                 if (action.perform()) {
                     engine.handleEnemyTurns();
                     engine.updateFov();
+                    engine.endOfTurn();
                 }
             }
         }

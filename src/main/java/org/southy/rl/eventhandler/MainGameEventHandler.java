@@ -66,6 +66,7 @@ public class MainGameEventHandler implements EventHandler {
                 engine.showNames = false;
                 engine.handleEnemyTurns();
                 engine.updateFov();
+                engine.endOfTurn();
             }
         }
         previous = keyEvent;

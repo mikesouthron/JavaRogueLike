@@ -56,7 +56,7 @@ public class Procgen {
                 dungeon.digTunnel(newRoom, rooms.get(rooms.size() - 1));
             }
 
-//            placeEntities(newRoom, dungeon, maxMonstersPerRoom, maxItemsPerRoom);
+            placeEntities(newRoom, dungeon, maxMonstersPerRoom, maxItemsPerRoom);
 
             lastRoomCentre = newRoom.centre(mapWidth);
 
@@ -106,14 +106,8 @@ public class Procgen {
             }
             if (!existingEntity) {
                 int rand = RandomUtils.randomInt(0, 10);
-                if (rand < 7) {
-                    EntityFactory.potion(map, x, y);
-                } else if (rand < 8) {
-                    EntityFactory.fireballScroll(map, x, y);
-                } else if (rand < 9) {
-                    EntityFactory.confusionScroll(map, x, y);
-                } else {
-                    EntityFactory.litScroll(map, x, y);
+                if (rand > 9) {
+                    EntityFactory.sword(map, x, y);
                 }
             }
         }

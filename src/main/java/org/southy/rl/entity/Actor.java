@@ -2,6 +2,7 @@ package org.southy.rl.entity;
 
 import org.southy.rl.Color;
 import org.southy.rl.components.BaseAI;
+import org.southy.rl.components.Equipment;
 import org.southy.rl.components.Fighter;
 import org.southy.rl.components.Inventory;
 import org.southy.rl.map.GameMap;
@@ -16,14 +17,20 @@ public class Actor extends Entity implements Serializable, EntityParent {
 
     public Inventory inventory;
 
+    public Equipment equipment;
+
     public int fovRadius = 8;
 
-    public Actor(GameMap parent, char str, Color fg, String name, Fighter fighter, Class<? extends BaseAI> aiClass, Inventory inventory) {
-        this(parent, 0, 0, str, fg, name, fighter, aiClass, inventory);
+    public int inCombat = 0;
+
+    public int baseHpRestore;
+
+    public Actor(GameMap parent, char str, Color fg, String name, Fighter fighter, Class<? extends BaseAI> aiClass, Inventory inventory, int baseHpRestore) {
+        this(parent, 0, 0, str, fg, name, fighter, aiClass, inventory, baseHpRestore);
     }
 
 
-    public Actor(GameMap parent, int x, int y, char str, Color fg, String name, Fighter fighter, Class<? extends BaseAI> aiClass, Inventory inventory) {
+    public Actor(GameMap parent, int x, int y, char str, Color fg, String name, Fighter fighter, Class<? extends BaseAI> aiClass, Inventory inventory, int baseHpRestore) {
         super(parent, x, y, str, fg, name, true, RenderOrder.ACTOR);
         try {
             ai = aiClass.getDeclaredConstructor(Actor.class).newInstance(this);
@@ -34,6 +41,20 @@ public class Actor extends Entity implements Serializable, EntityParent {
         this.fighter.setEntity(this);
         this.inventory = inventory;
         this.inventory.setParent(this);
+        this.equipment = new Equipment(this);
+        this.baseHpRestore = baseHpRestore;
+    }
+
+    public void endOfTurn() {
+        //TODO: Tweak these values with real world testing.
+        if (inCombat == 0) {
+            this.fighter.heal(baseHpRestore + equipment.calculateHpRestore());
+        } else {
+            this.fighter.heal(equipment.calculateInCombatHpRestore());
+        }
+        if (inCombat > 0) {
+            inCombat--;
+        }
     }
 
     public BaseAI getAi() {
@@ -104,5 +125,21 @@ public class Actor extends Entity implements Serializable, EntityParent {
 
     public void setFovRadius(int fovRadius) {
         this.fovRadius = fovRadius;
+    }
+
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
+    }
+
+    public void setEquipment(Equipment equipment) {
+        this.equipment = equipment;
+    }
+
+    public void setInCombat(int inCombat) {
+        this.inCombat = inCombat;
+    }
+
+    public void setBaseHpRestore(int baseHpRestore) {
+        this.baseHpRestore = baseHpRestore;
     }
 }
