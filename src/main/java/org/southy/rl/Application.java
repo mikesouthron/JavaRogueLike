@@ -13,6 +13,11 @@ public class Application {
 
     public static final int mapHeight = 86;
 
+    public static final int rightUIWidth = 30;
+    public static final int leftUIWidth = 10;
+    public static final int topUIHeight = 0;
+    public static final int bottomUIHeight = 0;
+
     public static final int roomMaxSize = 10;
     public static final int roomMinSize = 6;
     public static final int maxRooms = 30;

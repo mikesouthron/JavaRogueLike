@@ -6,7 +6,6 @@ import org.southy.rl.eventhandler.MainMenuHandler;
 import org.southy.rl.exceptions.Impossible;
 import org.southy.rl.map.FastMoveState;
 import org.southy.rl.map.GameMap;
-import org.southy.rl.ui.Render;
 import org.southy.sdl.SDL;
 
 import java.io.Serializable;
@@ -55,14 +54,8 @@ public class Engine implements Serializable {
     }
 
     public void render(SDL sdl) {
-        if (!gameMap.fullMap) {
-            Render.renderUIBorders(sdl, gameMap);
-        }
         gameMap.render(sdl);
-        if (!gameMap.fullMap) {
-            logger.render(sdl, 20, 46, 60, 12);
-            Render.renderBar(sdl, player.fighter.getHp(), player.fighter.getMaxHp(), 16, gameWorld.currentFloor);
-        }
+        //logger.render(sdl, 20, 46, 60, 12);
     }
 
     public void setPlayer(Actor player) {

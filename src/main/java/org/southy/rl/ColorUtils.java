@@ -29,6 +29,8 @@ public class ColorUtils {
     public final static Color WHITE = color(255,255,255);
     public final static Color CYAN = color(0, 255, 255);
 
+    public final static Color INVENTORY = color(100, 255, 0);
+
     public static Color color(int red, int green, int blue) {
         return new Color(red, green, blue);
     }

@@ -9,8 +9,6 @@ import org.southy.rl.map.GameMap;
 import java.io.Serializable;
 
 public class Equipable extends Entity implements Serializable {
-
-    public String name;
     public BodyPart bodyPart;
 
     public Range atk;
