@@ -1,5 +1,7 @@
 package org.southy.rl.components;
 
+import org.southy.rl.RandomUtils;
+
 import java.io.Serializable;
 
 public class Range implements Serializable {
@@ -18,6 +20,10 @@ public class Range implements Serializable {
 
     public void setHigh(int high) {
         this.high = high;
+    }
+
+    public int random() {
+        return RandomUtils.randomInt(low, high);
     }
 
 }

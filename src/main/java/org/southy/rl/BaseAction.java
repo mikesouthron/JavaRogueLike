@@ -314,4 +314,5 @@ public abstract class BaseAction implements Action {
             throw new Impossible("No stairs here");
         }
     }
+
 }

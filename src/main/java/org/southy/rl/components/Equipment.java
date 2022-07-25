@@ -1,6 +1,5 @@
 package org.southy.rl.components;
 
-import org.southy.rl.RandomUtils;
 import org.southy.rl.entity.Actor;
 
 import java.io.Serializable;
@@ -16,7 +15,7 @@ public class Equipment implements Serializable {
         this.parent = parent;
     }
 
-    public int calculateMeleeDamage() {
+    public Range getMeleeAtkRange() {
         int str = parent.fighter.strength;
 
         Range baseEquipmentDamage = new Range(0, 1);
@@ -35,12 +34,16 @@ public class Equipment implements Serializable {
         }
 
         int dmgMod = (int)(equipmentStrMod + str);
-        return RandomUtils.randomInt(baseEquipmentDamage.low * dmgMod, baseEquipmentDamage.high * dmgMod);
+        return new Range(baseEquipmentDamage.low * dmgMod, baseEquipmentDamage.high * dmgMod);
     }
 
-    public int calculateMeleeDefense() {
+    public int calculateMeleeDamage() {
+        return getMeleeAtkRange().random();
+    }
+
+    public Range getMeleeDefenseRange() {
         Range baseEquipmentArmour = new Range(1, 2);
-        double equipmentArmourMod = 0;
+        double equipmentArmourMod = 1;
 
         for (Equipable item : items) {
             if (item == null) {
@@ -54,7 +57,11 @@ public class Equipment implements Serializable {
             equipmentArmourMod += item.armourMod;
         }
 
-        return RandomUtils.randomInt((int)(baseEquipmentArmour.low * equipmentArmourMod), (int)(baseEquipmentArmour.high * equipmentArmourMod));
+        return new Range((int)(baseEquipmentArmour.low * equipmentArmourMod), (int)(baseEquipmentArmour.high * equipmentArmourMod));
+    }
+
+    public int calculateMeleeDefense() {
+        return getMeleeDefenseRange().random();
     }
 
     public int calculateHpRestore() {

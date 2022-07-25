@@ -4,7 +4,6 @@ import org.southy.rl.Application;
 import org.southy.rl.BaseAction;
 import org.southy.rl.ColorUtils;
 import org.southy.rl.Engine;
-import org.southy.rl.components.EquipSlot;
 import org.southy.rl.exceptions.Impossible;
 import org.southy.rl.gen.Procgen;
 import org.southy.sdl.SDL;
@@ -145,70 +144,7 @@ public class MainGameEventHandler implements EventHandler {
     @Override
     public void onRender(SDL sdl) {
         EventHandler.super.onRender(sdl);
-        int x = 0;
-        sdl.write("Str " + engine.player.fighter.strength, x,  1);
-        sdl.write("Agi " + engine.player.fighter.agility, x, 2);
-        sdl.write("Con " + engine.player.fighter.constitution, x, 3);
-        sdl.write("Int " + engine.player.fighter.intelligence, x, 4);
-        sdl.write("HP " + engine.player.fighter.getHp() + " / " + engine.player.fighter.getMaxHp(), x, 6);
 
-        x = sdl.getWidthInCharacters() - Application.rightUIWidth;
-        sdl.write("Equipment", x, 1);
-        int y = 3;
-        sdl.write("Head", x, y);
-        if (engine.player.equipment.items[EquipSlot.HEAD.idx] != null) {
-            sdl.write(engine.player.equipment.items[EquipSlot.HEAD.idx].name, x + 15, y++, ColorUtils.INVENTORY);
-        } else {
-            sdl.write("-", x + 15, y++, ColorUtils.color(100, 0, 0));
-        }
-        sdl.write("Neck", x, y);
-        if (engine.player.equipment.items[EquipSlot.NECK.idx] != null) {
-            sdl.write(engine.player.equipment.items[EquipSlot.NECK.idx].name, x + 15, y++, ColorUtils.INVENTORY);
-        } else {
-            sdl.write("-", x + 15, y++, ColorUtils.color(100, 0, 0));
-        }
-        sdl.write("Body", x, y);
-        if (engine.player.equipment.items[EquipSlot.BODY.idx] != null) {
-            sdl.write(engine.player.equipment.items[EquipSlot.BODY.idx].name, x + 15, y++, ColorUtils.INVENTORY);
-        } else {
-            sdl.write("-", x + 15, y++, ColorUtils.color(100, 0, 0));
-        }
-        sdl.write("Back", x, y);
-        if (engine.player.equipment.items[EquipSlot.BACK.idx] != null) {
-            sdl.write(engine.player.equipment.items[EquipSlot.BACK.idx].name, x + 15, y++, ColorUtils.INVENTORY);
-        } else {
-            sdl.write("-", x + 15, y++, ColorUtils.color(100, 0, 0));
-        }
-        sdl.write("Right Hand", x, y);
-        if (engine.player.equipment.items[EquipSlot.RIGHT_HAND.idx] != null) {
-            sdl.write(engine.player.equipment.items[EquipSlot.RIGHT_HAND.idx].name, x + 15, y++, ColorUtils.INVENTORY);
-        } else {
-            sdl.write("-", x + 15, y++, ColorUtils.color(100, 0, 0));
-        }
-        sdl.write("Left Hand", x, y);
-        if (engine.player.equipment.items[EquipSlot.LEFT_HAND.idx] != null) {
-            sdl.write(engine.player.equipment.items[EquipSlot.LEFT_HAND.idx].name, x + 15, y++, ColorUtils.INVENTORY);
-        } else {
-            sdl.write("-", x + 15, y++, ColorUtils.color(100, 0, 0));
-        }
-        sdl.write("Right Finger", x, y);
-        if (engine.player.equipment.items[EquipSlot.RIGHT_FINGER.idx] != null) {
-            sdl.write(engine.player.equipment.items[EquipSlot.RIGHT_FINGER.idx].name, x + 15, y++, ColorUtils.INVENTORY);
-        } else {
-            sdl.write("-", x + 15, y++, ColorUtils.color(100, 0, 0));
-        }
-        sdl.write("Left Finger", x, y);
-        if (engine.player.equipment.items[EquipSlot.LEFT_FINGER.idx] != null) {
-            sdl.write(engine.player.equipment.items[EquipSlot.LEFT_FINGER.idx].name, x + 15, y++, ColorUtils.INVENTORY);
-        } else {
-            sdl.write("-", x + 15, y++, ColorUtils.color(100, 0, 0));
-        }
-        sdl.write("Feet", x, y);
-        if (engine.player.equipment.items[EquipSlot.FEET.idx] != null) {
-            sdl.write(engine.player.equipment.items[EquipSlot.FEET.idx].name, x + 15, y++, ColorUtils.INVENTORY);
-        } else {
-            sdl.write("-", x + 15, y++, ColorUtils.color(100, 0, 0));
-        }
 
         /*
             sdl.write("Explore", 87, 1, ColorUtils.WHITE);
