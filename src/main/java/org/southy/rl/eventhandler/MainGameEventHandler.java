@@ -106,7 +106,7 @@ public class MainGameEventHandler implements EventHandler {
 
         if (event.isControlDown() && event.getKeyCode() == KeyEvent.VK_R) {
             try {
-                engine.gameMap = Procgen.generateDungeon(engine, Application.maxRooms, Application.roomMinSize, Application.roomMaxSize,
+                engine.gameMap = Procgen.generateDungeon(engine, engine.gameWorld.currentFloor, Application.maxRooms, Application.roomMinSize, Application.roomMaxSize,
                         Application.mapWidth, Application.mapHeight, Application.maxMonstersPerRoom, Application.maxItemsPerRoom);
             } catch (Impossible e) {
                 engine.logger.addMessage("Unable to generate new map", ColorUtils.IMPOSSIBLE);

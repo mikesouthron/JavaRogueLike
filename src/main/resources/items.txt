@@ -3,28 +3,33 @@ Dagger
 HAND
 1 2 0 0
 0 0
+1
 -
 2
 Sword
 HAND
 2 4 0 0
 0 0
+1
 -
 3
 Leather Armour
 BODY
 0 0 1 1
 0 0
+1
 -
 4
 Leather Helm
 HEAD
 0 0 0 1
 0 0
+1
 -
 5
 Atk Ring
 FINGER
 0 0 0 0
 1.1 0
+2
 -

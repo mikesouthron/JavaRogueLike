@@ -1,24 +1,16 @@
-FLOOR STAT_MULTIPLIER ITEM_SET %CHANCE
-char
-name
-color
-str agi con int
-hp_restore
-AI_NAME
+SCOUT
+s
+1 1 1 1
 -
-1 1 1 75 2 2 1 45 3 3 1 10
-d
-Lesser Demon
-100 50 50
-2 1 1 1
-0
-hostile
--
-1 1 2 25 2 2 2 55 3 3 2 90
-D
-Greater Demon
-200 50 50
+PATROL
+p
 2 2 1 1
-0
-hostile
+-
+PATROL_LEADER
+P
+4 2 1 1
+-
+DEFENDER
+D
+6 3 1 1
 -

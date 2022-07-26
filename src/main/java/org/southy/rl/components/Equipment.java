@@ -19,7 +19,7 @@ public class Equipment implements Serializable {
         int str = parent.fighter.strength;
 
         Range baseEquipmentDamage = new Range(0, 1);
-        double equipmentStrMod = 0;
+        double equipmentStrMod = 1;
 
         for (Equipable item : items) {
             if (item == null) {
@@ -30,18 +30,18 @@ public class Equipment implements Serializable {
                 baseEquipmentDamage.high += item.atk.high;
             }
 
-            equipmentStrMod += item.strMod;
+            equipmentStrMod += (item.strMod / 100);
         }
 
-        int dmgMod = (int)(equipmentStrMod + str);
-        return new Range(baseEquipmentDamage.low * dmgMod, baseEquipmentDamage.high * dmgMod);
+        var dmgMod = (equipmentStrMod + (str / 10.0));
+        return new Range((int)(baseEquipmentDamage.low * dmgMod), (int)(baseEquipmentDamage.high * dmgMod));
     }
 
     public Range getMeleeAtkRange(Equipable remove, Equipable add) {
         int str = parent.fighter.strength;
 
         Range baseEquipmentDamage = new Range(0, 1);
-        double equipmentStrMod = 0;
+        double equipmentStrMod = 1;
 
         for (Equipable item : items) {
             if (item == null) {
@@ -52,13 +52,13 @@ public class Equipment implements Serializable {
                     baseEquipmentDamage.low += add.atk.low;
                     baseEquipmentDamage.high += add.atk.high;
                 }
-                equipmentStrMod += add.strMod;
+                equipmentStrMod += (add.strMod / 100);
             } else {
                 if (item.atk != null) {
                     baseEquipmentDamage.low += item.atk.low;
                     baseEquipmentDamage.high += item.atk.high;
                 }
-                equipmentStrMod += item.strMod;
+                equipmentStrMod += (item.strMod / 100);
             }
         }
 
@@ -67,11 +67,11 @@ public class Equipment implements Serializable {
                 baseEquipmentDamage.low += add.atk.low;
                 baseEquipmentDamage.high += add.atk.high;
             }
-            equipmentStrMod += add.strMod;
+            equipmentStrMod += (add.strMod / 100);
         }
 
-        int dmgMod = (int)(equipmentStrMod + str);
-        return new Range(baseEquipmentDamage.low * dmgMod, baseEquipmentDamage.high * dmgMod);
+        var dmgMod = (equipmentStrMod + (str / 10.0));
+        return new Range((int)(baseEquipmentDamage.low * dmgMod), (int)(baseEquipmentDamage.high * dmgMod));
     }
 
     public int calculateMeleeDamage() {
@@ -91,7 +91,7 @@ public class Equipment implements Serializable {
                 baseEquipmentArmour.high += item.def.high;
             }
 
-            equipmentArmourMod += item.armourMod;
+            equipmentArmourMod += (item.armourMod / 100);
         }
 
         return new Range((int)(baseEquipmentArmour.low * equipmentArmourMod), (int)(baseEquipmentArmour.high * equipmentArmourMod));
@@ -111,14 +111,14 @@ public class Equipment implements Serializable {
                     baseEquipmentArmour.high += add.def.high;
                 }
 
-                equipmentArmourMod += add.armourMod;
+                equipmentArmourMod += (add.armourMod / 100);
             } else {
                 if (item.def != null) {
                     baseEquipmentArmour.low += item.def.low;
                     baseEquipmentArmour.high += item.def.high;
                 }
 
-                equipmentArmourMod += item.armourMod;
+                equipmentArmourMod += (item.armourMod / 100);
             }
 
         }
@@ -129,7 +129,7 @@ public class Equipment implements Serializable {
                 baseEquipmentArmour.high += add.def.high;
             }
 
-            equipmentArmourMod += add.armourMod;
+            equipmentArmourMod += (add.armourMod / 100);
         }
 
         return new Range((int)(baseEquipmentArmour.low * equipmentArmourMod), (int)(baseEquipmentArmour.high * equipmentArmourMod));

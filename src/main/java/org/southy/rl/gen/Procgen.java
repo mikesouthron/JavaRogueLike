@@ -1,11 +1,11 @@
 package org.southy.rl.gen;
 
-import org.southy.rl.Color;
+import org.southy.rl.ColorUtils;
 import org.southy.rl.Engine;
 import org.southy.rl.RandomUtils;
-import org.southy.rl.components.BodyPart;
+import org.southy.rl.components.*;
+import org.southy.rl.entity.Actor;
 import org.southy.rl.entity.Entity;
-import org.southy.rl.entity.EntityFactory;
 import org.southy.rl.exceptions.Impossible;
 import org.southy.rl.map.GameMap;
 import org.southy.rl.map.RectangularRoom;
@@ -16,7 +16,11 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Procgen {
 
@@ -26,37 +30,32 @@ public class Procgen {
         public BodyPart bodyPart;
         public int atkLow, atkHigh, defLow, defHigh;
         public double strMod, defMod;
+        public int level; //Minimum dlvl Item can appear on
     }
+    //For items with attack the floor level > 1 can cause strMod to appear + 1 == strMod of 1.025, + 2 == strMod of 1.05
 
-    static class Floor {
-        int floor;
-        int itemSet;
-        int statMultiplier;
-        int chance;
+    enum EnemyType {
+        SCOUT("Scout", 's'), PATROL("Wanderer", 'w'), PATROL_LEADER("Leader", 'L'), DEFENDER("Defender", 'D');
 
-        public Floor(int floor, int itemSet, int statMultiplier, int chance) {
-            this.floor = floor;
-            this.itemSet = itemSet;
-            this.statMultiplier = statMultiplier;
-            this.chance = chance;
+        String name;
+        char symbol;
+
+        EnemyType(String name, char symbol) {
+            this.name = name;
+            this.symbol = symbol;
         }
     }
 
     static class EnemyDesc {
-        Map<Integer, Floor> floorMap = new HashMap<>();
         char str;
-        String name;
-        Color color;
         int strength, agility, constitution, intelligence;
-        int hpRestore;
-        String aiName;
     }
 
     static Map<Integer, ItemDesc> itemDescMap = new HashMap<>();
-    static Map<Integer, Set<ItemDesc>> itemSetMap = new HashMap<>();
 
-    static Map<Integer, Set<EnemyDesc>> floorToEnemyMap = new HashMap<>();
+    static Map<EnemyType, EnemyDesc> enemyMap = new HashMap<>();
 
+    @SuppressWarnings("ConstantConditions")
     private static void parseLists() throws URISyntaxException, IOException {
         var path = Path.of(Render.class.getClassLoader().getResource("items.txt").toURI());
         var lines = Files.readAllLines(path);
@@ -75,10 +74,12 @@ public class Procgen {
             s = lines.get(startIdx + 4).split(" ");
             current.strMod = Double.parseDouble(s[0]);
             current.defMod = Double.parseDouble(s[1]);
+            current.level = Integer.parseInt(lines.get(startIdx + 5));
             itemDescMap.put(current.id, current);
-            startIdx += 6;
+            startIdx += 7;
         }
 
+        /*
         path = Path.of(Render.class.getClassLoader().getResource("itemsets.txt").toURI());
         lines = Files.readAllLines(path);
 
@@ -92,66 +93,27 @@ public class Procgen {
             itemSetMap.put(id, set);
             startIdx += 3;
         }
+         */
 
 
         path = Path.of(Render.class.getClassLoader().getResource("enemies.txt").toURI());
         lines = Files.readAllLines(path);
 
         startIdx = 0;
-        while (startIdx + 6 < lines.size()) {
-
-            int id = Integer.parseInt(lines.get(startIdx));
-            var set = new HashSet<ItemDesc>();
-            for (String s : lines.get(startIdx + 1).split(" ")) {
-                set.add(itemDescMap.get(Integer.parseInt(s)));
-            }
-            itemSetMap.put(id, set);
-
+        while (startIdx + 2 < lines.size()) {
             EnemyDesc enemyDesc = new EnemyDesc();
+            EnemyType type = EnemyType.valueOf(lines.get(startIdx));
+            enemyDesc.str = lines.get(startIdx + 1).toCharArray()[0];
+            var stats = lines.get(startIdx + 2).split(" ");
+            enemyDesc.strength = Integer.parseInt(stats[0]);
+            enemyDesc.constitution = Integer.parseInt(stats[1]);
+            enemyDesc.agility = Integer.parseInt(stats[2]);
+            enemyDesc.intelligence = Integer.parseInt(stats[3]);
 
-            var s = lines.get(startIdx).split(" ");
-            int floorIdx = 0;
-            while (floorIdx < s.length) {
-                int floor = Integer.parseInt(s[floorIdx]);
-                int statMultiplier = Integer.parseInt(s[floorIdx + 1]);
-                int itemSet = Integer.parseInt(s[floorIdx + 2]);
-                int chance = Integer.parseInt(s[floorIdx + 3]);
+            enemyMap.put(type, enemyDesc);
 
-                Floor floorObj = new Floor(floor, itemSet, statMultiplier, chance);
-
-                enemyDesc.floorMap.put(floor, floorObj);
-
-                var enemySet = floorToEnemyMap.getOrDefault(floor, new HashSet<>());
-                enemySet.add(enemyDesc);
-                floorToEnemyMap.putIfAbsent(floor, enemySet);
-
-                floorIdx += 4;
-            }
-
-
-            //char
-            //name
-            //color
-            //stats
-            //ainame
-
-            startIdx += 8;
+            startIdx += 4;
         }
-        /*
-        FLOOR STAT_MULTIPLIER ITEM_SET %CHANCE
-char
-name
-color
-str agi con int
-hp_restore
-AI_NAME
-         */
-
-
-
-
-
-
     }
 
     static {
@@ -162,10 +124,83 @@ AI_NAME
         }
     }
 
-    public static GameMap generateDungeon(Engine engine, int maxRooms, int roomMinSize, int roomMaxSize, int mapWidth, int mapHeight,
-            int maxMonstersPerRoom, int maxItemsPerRoom)
+    private static void spawnEquipableFromItemDesc(ItemDesc itemDesc, int level, GameMap gameMap, int x, int y) {
+        double strMod = itemDesc.strMod;
+        double defMod = itemDesc.defMod;
+
+        String name = itemDesc.name;
+
+        if (level > itemDesc.level) {
+            if (itemDesc.atkHigh > 0) {
+                if (strMod == 0) {
+                    strMod = 1;
+                }
+                strMod += itemDesc.level * 0.1;
+            }
+            if (itemDesc.defHigh > 0) {
+                if (defMod == 0) {
+                    defMod = 1;
+                }
+                defMod += itemDesc.level * 0.1;
+            }
+            name = name + " +" + (level - itemDesc.level);
+        }
+        new Equipable(gameMap, x, y, itemDesc.bodyPart.symbol, ColorUtils.WHITE, name, itemDesc.bodyPart, itemDesc.atkLow, itemDesc.atkHigh, strMod, itemDesc.defLow, itemDesc.defHigh, defMod, 0, 0);
+    }
+
+    private static Equipable createEquipableFromItemDesc(ItemDesc itemDesc, int level) {
+        double strMod = itemDesc.strMod;
+        double defMod = itemDesc.defMod;
+
+        String name = itemDesc.name;
+
+        if (level > itemDesc.level) {
+            if (itemDesc.atkHigh > 0) {
+                if (strMod == 0) {
+                    strMod = 1;
+                }
+                strMod += itemDesc.level * 0.05;
+            }
+            if (itemDesc.defHigh > 0) {
+                if (defMod == 0) {
+                    defMod = 1;
+                }
+                defMod += itemDesc.level * 0.05;
+            }
+            name = name + " +" + (level - itemDesc.level);
+        }
+        return new Equipable(null, 0, 0, itemDesc.bodyPart.symbol, ColorUtils.WHITE, name, itemDesc.bodyPart, itemDesc.atkLow, itemDesc.atkHigh, strMod, itemDesc.defLow, itemDesc.defHigh, defMod, 0, 0);
+    }
+
+    private static void spawnEnemyFromEnemyDesc(EnemyDesc enemyDesc, EnemyType type, int level, GameMap gameMap, int x, int y) {
+
+        int strength = enemyDesc.strength;
+        int agility = enemyDesc.agility;
+        int constitution = enemyDesc.constitution;
+        int intelligence = enemyDesc.intelligence;
+        if (level > 1) {
+            strength *= (level / 2.0);
+            agility *= (level / 2.0);
+            constitution *= (level / 2.0);
+            intelligence *= (level / 2.0);
+        }
+        var actor = new Actor(gameMap, x, y, type.symbol, ColorUtils.color(0, 200, 200), type.name, new Fighter(strength, agility, constitution, intelligence), HostileEnemy.class, new Inventory(0), 0);
+        var weapon = createEquipableFromItemDesc(itemDescMap.get(1), level);
+        weapon.setParent(actor);
+        actor.equipment.items[EquipSlot.RIGHT_HAND.idx] = weapon;
+    }
+
+    public static GameMap generateDungeon(Engine engine, int level, int maxRooms, int roomMinSize, int roomMaxSize, int mapWidth, int mapHeight,
+                                          int maxMonstersPerRoom, int maxItemsPerRoom)
             throws Impossible {
 
+        var itemPool = itemDescMap.values().stream().filter(i -> level >= i.level).collect(Collectors.toList());
+
+        //Tweak all of these numbers!
+        int maxItemsPerItemRoom = level * 2;
+        int itemRooms = level * 3; //FIXME: Maybe make this number better?
+        int monsterSpawns = level * 4;
+        int monsterGenRooms = (int) Math.ceil(level / 2.0);
 
         var player = engine.player;
         var entities = new ArrayList<Entity>();
@@ -206,7 +241,25 @@ AI_NAME
                 dungeon.digTunnel(newRoom, rooms.get(rooms.size() - 1));
             }
 
-            placeEntities(newRoom, dungeon, maxMonstersPerRoom, maxItemsPerRoom);
+            if (i > 0 && i < maxRooms - 1) {
+                switch (RandomUtils.randomInt(0, 2)) {
+                    case 0:
+                        if (itemRooms > 0 && itemPool.size() > 0) {
+                            spawnItems(maxItemsPerItemRoom, itemPool, level, dungeon, newRoom);
+                            itemRooms--;
+                        }
+                        break;
+                    case 1:
+                        if (monsterSpawns > 0) {
+                            spawnMonsters(level, dungeon, newRoom);
+                            monsterSpawns--;
+                        }
+                        break;
+                    case 2:
+                        //Do Monster Gen
+                        break;
+                }
+            }
 
             lastRoomCentre = newRoom.centre(mapWidth);
 
@@ -220,67 +273,38 @@ AI_NAME
         return dungeon;
     }
 
-    private static void placeEntities(RectangularRoom room, GameMap map, int maxMonstersPerRoom, int maxItemsPerRoom) {
-        var numberOfMonsters = RandomUtils.randomInt(0, maxMonstersPerRoom);
-        for (int i = 0; i < numberOfMonsters; i++) {
-            var x = RandomUtils.randomInt(room.x1 + 1, room.x2 - 1);
-            var y = RandomUtils.randomInt(room.y1 + 1, room.y2 - 1);
-
-            boolean existingEntity = false;
-            for (Entity entity : map.entities) {
-                if (entity.x == x && entity.y == y) {
-                    existingEntity = true;
-                    break;
-                }
-            }
-            if (!existingEntity) {
-                if (RandomUtils.randomInt(0, 10) < 8) {
-                    EntityFactory.orc(map, x, y);
-                } else {
-                    EntityFactory.troll(map, x, y);
-                }
+    private static void spawnItems(int maxItemsPerItemRoom, List<ItemDesc> itemPool, int level, GameMap map, RectangularRoom room) {
+        int x = room.x1 + 1;
+        int y = room.y1 + 1;
+        int numItems = RandomUtils.randomInt(1, maxItemsPerItemRoom);
+        for (int j = 0; j < numItems; j++) {
+            if (itemPool.size() > 0) {
+                var item = itemPool.get(RandomUtils.randomInt(0, itemPool.size() - 1));
+                itemPool.remove(item); //Only 1 item of each type is possible to appear
+                spawnEquipableFromItemDesc(item, level, map, x, y);
+                x++;
             }
         }
 
-
-        for (int x = room.x1 + 1; x < room.x2; x++) {
-            var y = room.y1 + 1;
-            int idx = x - room.x1;
-            if (idx == 1) {
-                EntityFactory.sword(map, x, y);
-            }
-            if (idx == 2) {
-                EntityFactory.ringOfAtk(map, x, y);
-            }
-            if (idx == 3) {
-                EntityFactory.ringOfDef(map, x, y);
-            }
-            if (idx == 4) {
-                EntityFactory.ringOfAtkDef(map, x, y);
-            }
+        int centre = room.centre(map.width);
+        for (int i = 0; i < Math.min(level - 1, 5) ; i++) {
+            spawnEnemyFromEnemyDesc(enemyMap.get(EnemyType.DEFENDER), EnemyType.DEFENDER, level, map, (centre % map.width) + i, (centre / map.width) + i);
         }
 
-        /*
-        var numberOfItems = RandomUtils.randomInt(0, maxItemsPerRoom);
-        for (int i = 0; i < numberOfItems; i++) {
-            var x = RandomUtils.randomInt(room.x1 + 1, room.x2 - 1);
-            var y = RandomUtils.randomInt(room.y1 + 1, room.y2 - 1);
+    }
 
-            boolean existingEntity = false;
-            for (Entity entity : map.entities) {
-                if (entity.x == x && entity.y == y) {
-                    existingEntity = true;
-                    break;
-                }
-            }
-            if (!existingEntity) {
-                int rand = RandomUtils.randomInt(0, 10);
-                if (rand > 9) {
-                    EntityFactory.sword(map, x, y);
-                }
-            }
+    private static void spawnMonsters(int level, GameMap map, RectangularRoom room) {
+        int centre = room.centre(map.width);
+        int monsterType = RandomUtils.randomInt(0, 1);
+
+        switch (monsterType) {
+            case 0:
+                spawnEnemyFromEnemyDesc(enemyMap.get(EnemyType.SCOUT), EnemyType.SCOUT, level, map, centre % map.width, centre / map.width);
+                break;
+            case 1:
+                spawnEnemyFromEnemyDesc(enemyMap.get(EnemyType.PATROL), EnemyType.PATROL, level, map, centre % map.width, centre / map.width);
+                break;
         }
-         */
     }
 
     public static List<Integer> tunnel(int start, int end, int mapWidth) {

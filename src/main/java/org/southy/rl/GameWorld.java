@@ -15,7 +15,7 @@ public class GameWorld implements Serializable {
     int roomMinSize;
     int maxMonstersPerRoom;
     int maxItemsPerRoom;
-    int currentFloor = 0;
+    public int currentFloor = 0;
 
     public GameWorld(Engine engine, int mapWidth, int mapHeight, int maxRooms, int roomMaxSize, int roomMinSize, int maxMonstersPerRoom, int maxItemsPerRoom) {
         this.engine = engine;
@@ -30,7 +30,7 @@ public class GameWorld implements Serializable {
 
     public void generateFloor() throws Impossible {
         currentFloor++;
-        engine.gameMap = Procgen.generateDungeon(engine, maxRooms, roomMinSize, roomMaxSize, mapWidth, mapHeight, maxMonstersPerRoom, maxItemsPerRoom);
+        engine.gameMap = Procgen.generateDungeon(engine, currentFloor, maxRooms, roomMinSize, roomMaxSize, mapWidth, mapHeight, maxMonstersPerRoom, maxItemsPerRoom);
     }
 
 

@@ -7,10 +7,7 @@ import org.southy.rl.map.GameMap;
 public class EntityFactory {
 
     public static Actor player() {
-        var player = new Actor(null, '@', ColorUtils.WHITE, "Player", new Fighter(2, 2, 2, 2), HostileEnemy.class, new Inventory(20), 1);
-        var dagger = new Equipable(null, 0, 0, '|', ColorUtils.WHITE, "Dagger", BodyPart.HAND, 1, 4, 0, 0, 0, 0, 0, 0);
-        player.equipment.items[EquipSlot.RIGHT_HAND.idx] = dagger;
-        return player;
+        return new Actor(null, '@', ColorUtils.WHITE, "Player", new Fighter(2, 2, 2, 2), HostileEnemy.class, new Inventory(20), 1);
     }
 
     public static void orc(GameMap gameMap, int x, int y) {
