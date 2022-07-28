@@ -98,4 +98,10 @@ public class Tile implements Serializable {
                 new Graphic('<', ColorUtils.color(200, 200, 200), ColorUtils.BLACK), "Up Stairs");
     }
 
+    public static Tile portal() {
+        return newTile(false, true,
+                new Graphic('#', ColorUtils.color(100, 100, 100), ColorUtils.BLACK),
+                new Graphic('#', ColorUtils.color(200, 200, 200), ColorUtils.BLACK), "Portal");
+    }
+
 }

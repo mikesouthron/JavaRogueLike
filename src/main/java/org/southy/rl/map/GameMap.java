@@ -32,6 +32,8 @@ public class GameMap implements Serializable, EntityParent {
 
     public Tile[] explored;
 
+    public List<Location> portalList = new ArrayList<>();
+
     public int upstairsX = 0;
     public int upstairsY = 0;
 

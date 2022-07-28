@@ -5,8 +5,10 @@ import org.southy.rl.entity.Actor;
 import org.southy.rl.eventhandler.EventHandler;
 import org.southy.rl.eventhandler.MainMenuHandler;
 import org.southy.rl.exceptions.Impossible;
+import org.southy.rl.gen.Procgen;
 import org.southy.rl.map.FastMoveState;
 import org.southy.rl.map.GameMap;
+import org.southy.rl.map.Location;
 import org.southy.sdl.SDL;
 
 import java.io.Serializable;
@@ -25,6 +27,8 @@ public class Engine implements Serializable {
 
     public boolean showNames = false;
 
+    private int spawnCounter = 100;
+
     public Engine() {
         this.logger = new Logger();
         eventHandler = new MainMenuHandler(this);
@@ -39,6 +43,30 @@ public class Engine implements Serializable {
                 }
             }
         }
+
+        if (spawnCounter <= 0) {
+            System.out.println("Spawn!");
+            spawnCounter = 100;
+            int numToSpawn = gameWorld.currentFloor;
+            for (Location location : gameMap.portalList) {
+                for (int x = location.x - 1; x <= location.x + 1; x++) {
+                    for (int y = location.y - 1; y <= location.y + 1; y++) {
+                        if (numToSpawn == 0) {
+                            break;
+                        }
+                        Procgen.spawnEnemyFromEnemyDesc(Procgen.enemyMap.get(Procgen.EnemyType.PATROL), Procgen.EnemyType.PATROL, gameWorld.currentFloor, gameMap, x, y);
+                        numToSpawn--;
+                    }
+                    if (numToSpawn == 0) {
+                        break;
+                    }
+                }
+
+            }
+        } else {
+            spawnCounter--;
+        }
+
     }
 
     public void updateFov() {
@@ -71,6 +99,8 @@ public class Engine implements Serializable {
 
         var def = player.equipment.getMeleeDefenseRange();
         sdl.write("Def: " + def.low + "-" + def.high, x, 9, ColorUtils.color(100, 200, 0));
+
+        sdl.write(player.x + "," + player.y, x, 10, ColorUtils.WHITE);
 
         x = sdl.getWidthInCharacters() - Application.rightUIWidth;
         sdl.write("Equipment", x, 1);

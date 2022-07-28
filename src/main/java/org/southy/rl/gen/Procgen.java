@@ -8,6 +8,7 @@ import org.southy.rl.entity.Actor;
 import org.southy.rl.entity.Entity;
 import org.southy.rl.exceptions.Impossible;
 import org.southy.rl.map.GameMap;
+import org.southy.rl.map.Location;
 import org.southy.rl.map.RectangularRoom;
 import org.southy.rl.map.Tile;
 import org.southy.rl.ui.Render;
@@ -34,7 +35,7 @@ public class Procgen {
     }
     //For items with attack the floor level > 1 can cause strMod to appear + 1 == strMod of 1.025, + 2 == strMod of 1.05
 
-    enum EnemyType {
+    public enum EnemyType {
         SCOUT("Scout", 's'), PATROL("Wanderer", 'w'), PATROL_LEADER("Leader", 'L'), DEFENDER("Defender", 'D');
 
         String name;
@@ -46,14 +47,14 @@ public class Procgen {
         }
     }
 
-    static class EnemyDesc {
+    public static class EnemyDesc {
         char str;
         int strength, agility, constitution, intelligence;
     }
 
-    static Map<Integer, ItemDesc> itemDescMap = new HashMap<>();
+    public static Map<Integer, ItemDesc> itemDescMap = new HashMap<>();
 
-    static Map<EnemyType, EnemyDesc> enemyMap = new HashMap<>();
+    public static Map<EnemyType, EnemyDesc> enemyMap = new HashMap<>();
 
     @SuppressWarnings("ConstantConditions")
     private static void parseLists() throws URISyntaxException, IOException {
@@ -172,7 +173,7 @@ public class Procgen {
         return new Equipable(null, 0, 0, itemDesc.bodyPart.symbol, ColorUtils.WHITE, name, itemDesc.bodyPart, itemDesc.atkLow, itemDesc.atkHigh, strMod, itemDesc.defLow, itemDesc.defHigh, defMod, 0, 0);
     }
 
-    private static void spawnEnemyFromEnemyDesc(EnemyDesc enemyDesc, EnemyType type, int level, GameMap gameMap, int x, int y) {
+    public static void spawnEnemyFromEnemyDesc(EnemyDesc enemyDesc, EnemyType type, int level, GameMap gameMap, int x, int y) {
 
         int strength = enemyDesc.strength;
         int agility = enemyDesc.agility;
@@ -201,6 +202,7 @@ public class Procgen {
         int itemRooms = level * 3; //FIXME: Maybe make this number better?
         int monsterSpawns = level * 4;
         int monsterGenRooms = (int) Math.ceil(level / 2.0);
+        int genRoomCount = 0;
 
         var player = engine.player;
         var entities = new ArrayList<Entity>();
@@ -234,8 +236,9 @@ public class Procgen {
 
             dungeon.dig(newRoom);
 
+            int centre = newRoom.centre(mapWidth);
+
             if (rooms.size() == 0) {
-                int centre = newRoom.centre(mapWidth);
                 player.place(centre % mapWidth, centre / mapWidth, dungeon);
             } else {
                 dungeon.digTunnel(newRoom, rooms.get(rooms.size() - 1));
@@ -250,15 +253,27 @@ public class Procgen {
                         }
                         break;
                     case 1:
-                        if (monsterSpawns > 0) {
-                            spawnMonsters(level, dungeon, newRoom);
-                            monsterSpawns--;
-                        }
+//                        if (monsterSpawns > 0) {
+//                            spawnMonsters(level, dungeon, newRoom);
+//                            monsterSpawns--;
+//                        }
                         break;
                     case 2:
-                        //Do Monster Gen
+                        if (monsterGenRooms > 0) {
+                            System.out.println("Portal Created " + centre % mapWidth + "," + centre / mapWidth);
+                            dungeon.portalList.add(new Location(centre % mapWidth, centre / mapWidth));
+                            monsterGenRooms--;
+                            genRoomCount++;
+                        }
                         break;
                 }
+            }
+
+            if (i == maxRooms - 2 && genRoomCount == 0) {
+                System.out.println("Portal Created " + centre % mapWidth + "," + centre / mapWidth);
+                dungeon.portalList.add(new Location(centre % mapWidth, centre / mapWidth));
+                monsterGenRooms--;
+                genRoomCount++;
             }
 
             lastRoomCentre = newRoom.centre(mapWidth);
@@ -269,6 +284,10 @@ public class Procgen {
         dungeon.tiles[lastRoomCentre] = Tile.upStairs();
         dungeon.upstairsX = lastRoomCentre % mapWidth;
         dungeon.upstairsY = lastRoomCentre / mapWidth;
+
+        for (Location location : dungeon.portalList) {
+            dungeon.tiles[location.x + location.y * mapWidth] = Tile.portal();
+        }
 
         return dungeon;
     }
